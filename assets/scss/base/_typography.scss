@@ -1,0 +1,53 @@
+@import '../abstracts/_variables.scss';
+@import '../base/_text.scss';
+
+h1, h2, h3 {
+    text-transform: uppercase;
+    margin: 0
+}
+
+h1, h2, .h1 {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+    line-height: 2rem;
+}
+
+h5 {
+    font-size: inherit;
+    margin: 0
+}
+
+.title {
+    @extend .text_black;
+
+    font-weight: bold;
+    text-transform: uppercase;
+    user-select: none;
+    font-size: 3rem;
+    line-height: 1.25;
+    background: -webkit-linear-gradient(right, rgba(239, 255, 25, 1), rgba(0, 255, 181, 1));
+    background-clip: text;
+    -webkit-text-stroke: 3px transparent;
+}
+
+@media (min-width: map-get($break-points, sm)) {
+    .title {
+        font-size: 3.5rem
+    }
+}
+
+@media (min-width: map-get($break-points, md)) {
+    .title {
+        font-size: 3.75rem;
+    }
+}
+
+@media (min-width: map-get($break-points, lg)) {
+    .title {
+        font-size: 6rem;
+    }
+}

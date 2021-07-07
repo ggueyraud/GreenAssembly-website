@@ -1,0 +1,26 @@
+@import '../abstracts/_variables.scss';
+
+.container {
+    max-width: 640px
+}
+
+@media (min-width: map-get($break-points, md)) {
+    .container {
+        max-width: 700px
+    }
+}
+@media (min-width: map-get($break-points, lg)) {
+    .container {
+        max-width: 947px
+    }
+}
+@media (min-width: map-get($break-points, xl)) {
+    .container {
+        max-width: 1183px
+    }
+}
+@media (min-width: map-get($break-points, xxl)) {
+    .container {
+        max-width: 1420px
+    }
+}

@@ -1,0 +1,28 @@
+@import '../base/_width.scss';
+@import '../components/_input.scss';
+@import '../layout/_banner.scss';
+@import '../base/_display.scss';
+
+.stepper__wrapper__step {
+    .step_title {
+        @extend .text_lg, .my_4;
+
+        text-align: center
+    }
+
+    > :first-child {
+        @extend .md_w_4\/5, .md_mx_auto;
+    }
+}
+
+.next_btn {
+    transition: opacity 250ms linear;
+    opacity: 0;
+    color: white;
+
+    svg {
+        @extend .ml_2;
+
+        vertical-align: middle;
+    }
+}

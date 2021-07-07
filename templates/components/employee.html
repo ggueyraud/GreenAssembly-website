@@ -1,0 +1,22 @@
+<picture class="lazy">
+    <source data-srcset="{{ picture }}.webp" />
+
+    <img
+        data-src="{{ picture }}.png"
+        alt="{{ fullname }}"
+        width="350"
+        height="350"
+    />
+</picture>
+
+<figure>
+    <div class="about">
+        <figcaption>{{ fullname }}</figcaption>
+
+        {{ position_held }}
+    </div>
+
+    <blockquote>
+        <p>{{ description }}</p>
+    </blockquote>
+</figure>

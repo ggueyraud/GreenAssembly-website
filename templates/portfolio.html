@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Portfolio{% endblock %}
+
+{% block meta %}
+    <meta name="description" content="Site e-commerce, site vitrine, identité visuelle, motion design. Découvrez les projets originaux GreenAssembly – Agence digitale spécialisée éco-conception web." />
+
+    <link rel="stylesheet" href="/pages/portfolio.css" />
+{% endblock %}
+
+{% block banner %}
+    <header id="banner" style="--bg-img: url(/static/img/bg.webp)">
+        <h1>Portfolio</h1>
+
+        <button id="scroll-down">
+            <svg xmlns="http://www.w3.org/2000/svg" class="animate-bounce icon" fill="none" viewBox="0 0 24 24" stroke="#fff">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+        </button>
+    </header>
+{% endblock %}
+
+{% block content %}
+    <section class="mt_12 md_mt_8 text_center">
+        <p class="h1">Soyez notre premier bourgeon à apparaitre ici !</p>
+        <a
+            o-follow
+            o-preload-once
+            href="/contact"
+            class="underline mt_4 text_lg inline_block"
+        >
+            J'ai un projet !
+        </a>
+    </section>
+{% endblock %}

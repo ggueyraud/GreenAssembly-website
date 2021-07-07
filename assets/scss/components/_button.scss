@@ -1,0 +1,24 @@
+@import '../abstracts/_variables.scss';
+@import '../base/_margins.scss';
+
+button {
+    font-size: 100%;
+    padding: 0;
+    border: 0;
+    font-size: inherit;
+    background-color: transparent;
+    cursor: pointer
+}
+
+.btn {
+    @extend .px_4, .py_2;
+    outline: none;
+
+    &--gradient {
+        background: linear-gradient(265.27deg, #EFFF19 29.55%, #00FFB5 71.37%);
+    }
+
+    &--lg {
+        @extend .px_3, .py_1;
+    }
+}

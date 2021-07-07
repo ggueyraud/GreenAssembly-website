@@ -1,0 +1,17 @@
+@import '../abstracts/_variables.scss';
+
+@for $i from 0 through 10 {
+    .opacity_#{$i * 10} {
+        opacity: $i * 10
+    }
+}
+
+@each $name, $width in $break-points {
+    @media (min-width: #{$width}) {
+        @for $i from 0 through 10 {
+            .opacity_#{$i * 10} {
+                opacity: $i * 10
+            }
+        }
+    }
+}

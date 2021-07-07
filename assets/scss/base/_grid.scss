@@ -1,0 +1,45 @@
+@import '../abstracts/_variables.scss';
+
+@for $i from 1 through 12 {
+    .col_span_#{$i} {
+        grid-column: span $i / span $i;
+    }
+
+    .grid_cols_#{$i} {
+        grid-template-columns: repeat($i, minmax(0, 1fr));
+    }
+}
+
+.grid_cols_none {
+    grid-template-columns: none
+}
+
+@for $i from 1 through 12 {
+    .grid_rows_#{$i} {
+        grid-template-rows: repeat($i, minmax(0, 1fr));
+    }
+}
+
+.grid_rows_none {
+    grid-template-rows: none
+}
+
+@each $name, $width in $break-points {
+    @media (min-width: #{$width}) {
+        @for $i from 1 through 12 {
+            .#{$name}_col_span_#{$i} {
+                grid-column: span $i / span $i;
+            }
+
+            .#{$name}_grid_cols_#{$i} {
+                grid-template-columns: repeat($i, minmax(0, 1fr));
+            }
+        }
+
+        @for $i from 1 through 12 {
+            .#{$name}_grid_rows_#{$i} {
+                grid-template-rows: repeat($i, minmax(0, 1fr));
+            }
+        }
+    }
+}

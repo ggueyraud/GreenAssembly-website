@@ -1,0 +1,106 @@
+@import '../abstracts/_variables.scss';
+
+.text_sm {
+    font-size: .85rem;
+}
+
+.text_base {
+    font-size: inherit;
+}
+
+.text_lg {
+    font-size: 1.125rem;
+}
+
+@mixin textxl($index) {
+    line-height: ($index * 0.888888889) + rem !important;
+    font-size: ($index * 0.888888889) + rem !important
+}
+
+.text_xl {
+    @include textxl(1.4);
+}
+
+@for $i from 2 through 9 {
+    .text_#{$i}xl {
+        @include textxl($i)
+    }
+}
+
+@each $name, $width in $break-points {
+    @media (min-width: #{$width}) {
+        .#{$name}_text_xl {
+            font-size: 1.25rem
+        }
+
+        .#{$name}_text_right {
+            text-align: right
+        }
+        .#{$name}_text_left {
+            text-align: left
+        }
+        .#{$name}_text_justify {
+            text-align: justify
+        }
+        .#{$name}_text_center {
+            text-align: center
+        }
+
+        @for $i from 2 through 9 {
+            .#{$name}_text_#{$i}xl {
+                @include textxl($i)
+            }
+        }
+    }
+}
+
+@each $name, $color in $colors {
+    .text_#{$name} {
+        color: #{$color}
+    }
+}
+
+.text_gradient {
+    background: -webkit-linear-gradient(right, #efff19 50%, #00ffb5);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.text_right {
+    text-align: right
+}
+.text_left {
+    text-align: left
+}
+.text_justify {
+    text-align: justify
+}
+.text_center {
+    text-align: center
+}
+
+.font_bold {
+    font-weight: bold
+}
+
+.underline {
+    text-decoration: underline
+}
+.uppercase {
+    text-transform: uppercase
+}
+
+@each $name, $color in $colors {
+    .text_outline_#{$name} {
+        -webkit-text-stroke: 2px #{$color};
+        color: transparent;
+        user-select: none;
+    }
+}
+
+.text_outline_gradient {
+    background: -webkit-linear-gradient(right, rgba(239, 255, 25, 1), rgba(0, 255, 181, 1));
+    background-clip: text;
+    -webkit-text-stroke: 3px transparent;
+    user-select: none;
+}

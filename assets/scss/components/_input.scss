@@ -1,0 +1,78 @@
+@import '../base/_margins.scss';
+@import '../base/_text.scss';
+@import '../base/_background.scss';
+@import '../base/_borders.scss';
+
+label {
+    display: inline-block
+}
+
+input, textarea, select {
+    @extend .border_1, .border_white, .border_solid, .text_white;
+
+    font-size: 100%;
+    background-color: transparent;
+    display: block;
+    margin: 0;
+    width: 100%;
+    border-radius: 0.375rem;
+}
+
+input, textarea {
+    @extend .py_2, .px_3;
+
+    transition: border 200ms ease-out;
+
+    &:focus {
+        outline: none
+    }
+}
+
+select {
+    @extend .pr_10, .py_2, .pl_4;
+
+    outline: none;
+}
+
+.fv-error {
+    @extend .text_warning;
+
+    line-height: 1;
+    transition: opacity 200ms ease-out;
+    font-size: 0;
+    opacity: 0;
+
+    &.active {
+        @extend .mt_1;
+
+        font-size: inherit;
+        opacity: 100;
+        line-height: 1.25rem;
+    }
+}
+
+label.checkbox {
+    @extend .px_6, .py_2, .text_black;
+
+    position: relative;
+    cursor: pointer;
+    text-align: center;
+    outline: none;
+    border-radius: 0.5rem;
+
+    input[type=checkbox], input[type=radio] {
+        position: absolute;
+        border-style: none;
+        width: 100%;
+        left: 0;
+        top: 0;
+        appearance: none;
+        height: 100%;
+        background-color: #C4C4C4 !important;
+        z-index: -1;
+
+        &:checked{
+            @extend .text_success;
+        }
+    }
+}

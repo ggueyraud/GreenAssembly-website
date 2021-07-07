@@ -1,0 +1,27 @@
+@import "../../../node_modules/swiper/swiper.scss";
+@import "../../../node_modules/swiper/components/pagination/pagination.scss";
+@import '../base/_borders.scss';
+
+.swiper-wrapper {
+    margin-bottom: calc(1rem + 24px);
+}
+
+.swiper-pagination {
+    bottom: 0 !important;
+    width: 100%;
+
+    .swiper-pagination-bullet {
+        @extend .border_white, .border_solid, .border_1;
+
+        background-color: transparent;
+        opacity: 100;
+        height: 15px !important;
+        width: 15px !important;
+        margin: 0 .35rem !important;
+    
+        &.swiper-pagination-bullet-active {
+            border-color: transparent;
+            background: linear-gradient(180deg, #EFFF19 0%, #01FFB5 100%);
+        }
+    }
+}

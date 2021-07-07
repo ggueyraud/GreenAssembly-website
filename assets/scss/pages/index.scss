@@ -1,0 +1,380 @@
+@import '../base/_animations.scss';
+@import '../base/_margins.scss';
+@import '../base/_text.scss';
+@import '../base/_typography.scss';
+@import '../base/_placement.scss';
+@import '../base/_background.scss';
+@import '../base/_space.scss';
+
+#engagements {
+    @extend .md_my_12, .mt_32;
+
+    .swiper-card {
+        @extend .py_4, .px_3, .bg_black;
+
+        border-radius: 3rem;
+        text-align: center;
+
+        img {
+            margin: 0 auto;
+            display: inline-block;
+            width: 55%;
+        }
+
+        &:nth-child(2n) {
+            &::before {
+                bottom: -60px;
+                left: -50px;
+                top: auto !important;
+                right: auto !important;
+            }
+        }
+
+        h3 {
+            @extend .text_lg, .my_6, .text_white;
+
+            text-transform: uppercase;
+            font-weight: bold;
+            text-align: center
+        }
+    }
+}
+
+.read_more {
+    @extend .pt_4;
+
+    text-align: right;
+    width: 100%;
+
+    a {
+        @extend .text_lg, .text_white;
+
+        display: inline-block;
+
+        img {
+            vertical-align: middle;
+        }
+    }
+}
+
+header#home_banner {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+    background-repeat: no-repeat;
+    background-position: top;
+    background-size: contain;
+    background-image: url(/static/img/bg_home_mobile.webp);
+
+    #shape {
+        @extend .bottom_4, .text_black;
+
+        width: 270px;
+        height: 250px;
+        align-items: center;
+        position: absolute;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        &::before {
+            @extend .animation_spin;
+
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 0;
+            height: 100%;
+            content: '';
+            background-size: 100%;
+            background-repeat: no-repeat;
+            background-image: url(/static/img/bg_shape.svg);
+        }
+
+        h1, a {
+            z-index: 10
+        }
+
+        a {
+            @extend .mt_1;
+
+            span {
+                @extend .mr_1;
+
+                text-decoration: underline;
+            }
+
+            img {
+                filter: brightness(0);
+                // display: inline-block;
+                vertical-align: middle;
+            }
+        }
+    
+        h1 {
+            @extend .px_2;
+
+            line-height: 1.25;
+            font-weight: bold;
+            text-transform: uppercase
+        }
+    }
+}
+
+.prestation {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+
+    h2 {
+        @extend .title; // , .-top_8
+
+        position: absolute;
+    }
+
+    .preview {
+        @extend .mt_12;
+
+        img {
+            display: block;
+            margin: 0 auto
+        }
+
+        video {
+            width: 100%
+        }
+    }
+
+    .description {
+        @extend .mt_4;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center
+    }
+}
+
+@media (orientation: landscape) {
+    .swiper-card > img {
+        width: 35% !important
+    }
+
+    .prestation .preview img {
+        max-width: 60%
+    }
+}
+
+@media (orientation: portrait) {
+    #home_banner #shape {
+        bottom: 3rem !important
+    }
+}
+
+@media (min-height: 660px) and (orientation: portrait) {
+    #home_banner #shape {
+        bottom: 6rem !important
+    }
+}
+
+@media (min-width: map-get($break-points, sm)) {
+    .swiper-card > img {
+        width: 35% !important
+    }
+
+    .prestation {
+        .preview {
+            margin-top: 1.5rem;
+
+            // img {
+            //     width: 80%
+            // }
+        }
+
+        .description p {
+            max-width: 80%
+        }
+    }
+
+    #home_banner {
+        background-size: cover !important;
+        align-items: center !important;
+        background-position: 25% bottom !important;
+        background-image: url(/static/img/bg_home.webp) !important;
+
+        #shape {
+            right: 1rem;
+            bottom: auto !important;
+        }
+    }
+}
+
+@media (min-width: map-get($break-points, sm)) and (orientation: landscape) {
+    .swiper-card > img {
+        width: 25% !important
+    }
+}
+
+@media (min-width: map-get($break-points, md)) {
+    #engagements {
+        margin-top: 3rem;
+    }
+
+    .prestation {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+        .preview {
+            display: flex;
+            align-items: center;
+            margin-top: 0;
+
+            img {
+                max-width: 80%
+            }
+        }
+
+        .description {
+            margin-top: 0
+        }
+    }
+
+    #home_banner #shape {
+        width: 370px !important;
+        height: 350px !important
+    }
+}
+
+@media (min-width: map-get($break-points, md)) and (orientation: landscape) {
+    .swiper-card > img {
+        width: 40% !important
+    }
+}
+
+@media (min-width: map-get($break-points, xl)) {
+    #engagements {
+        margin-bottom: 0;
+
+        .swiper-wrapper {
+            padding-top: 30px;
+            padding-bottom: 66px;
+    
+            :nth-child(even) {
+                .swiper-card {
+                    &::before {
+                        bottom: 0;
+                        left: 0;
+                        top: auto !important;
+                        right: auto !important;
+                    }
+            
+                    &:hover {
+                        &::before {
+                            bottom: -60px;
+                            left: -50px;
+                        }
+                    }
+                }
+            }
+    
+            .swiper-slide {
+                flex-shrink: inherit;
+                height: auto
+            }
+    
+            .swiper-card {
+                position: relative;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                // flex-shrink: 1;
+                margin: 33px;
+    
+                p {
+                    opacity: 0;
+                    transition: opacity 0.3s ease-in-out;
+                }
+
+                img {
+                    width: 50%
+                }
+    
+                &:hover {
+                    &:hover {
+                        &::before {
+                            top: -60px;
+                            right: -50px;
+                        }
+                    }
+        
+                    &::after {
+                        opacity: 100;
+                    }
+    
+                    p {
+                        opacity: 100;
+                    }
+                }
+    
+                &::before {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    width: 120px;
+                    height: 120px;
+                    z-index: -1;
+                    background-image: url(/static/img/engagement_form.svg);
+                    background-repeat: no-repeat;
+                    background-size: 100%;
+                    content: '';
+                    transition: 0.3s linear;
+                }
+    
+                &::after {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    opacity: 0;
+                    border-radius: 3rem;
+                    content: '';
+                    box-shadow: 1px 1px 12px 4px #01FFB5;
+                    transition: opacity 0.3s ease-in-out;
+                }
+            }
+        }
+    }
+
+    #home_banner {
+        background-position: left bottom !important;
+
+        #shape {
+            width: 470px !important;
+            height: 450px !important;
+
+            h1 {
+                font-size: 2.25rem !important;
+                line-height: 2.5rem !important;
+            }
+        }
+    }
+}
+
+@media (max-width: map-get($break-points, sm)) and (orientation: landscape) {
+    header#home_banner {
+        display: flex;
+        align-items: center;
+        background-image: url(/static/img/bg_home.webp) !important;
+        background-position: center bottom !important;
+        background-size: cover !important;
+
+        #shape {
+            right: 1rem;
+            bottom: auto
+        }
+    }
+}

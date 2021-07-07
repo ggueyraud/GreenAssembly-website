@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Agence{% endblock %}
+
+{% block meta %}
+    <meta name="description" content="Démarquez-vous sur le web avec un site éco-conçu sur mesure – Une identité visuelle unique et singulière – Des vidéos Motion Design créatives et originales." />
+
+    <link rel="stylesheet" href="/pages/swiper.css" />
+    <link rel="stylesheet" href="/pages/agence.css" />
+
+    <script src="/swiper.js" async></script>
+    <script src="/agence.js" async></script>
+{% endblock %}
+
+{% block banner %}
+    <header id="banner" style="--bg-img: url(/static/img/bg.webp)">
+        <h1>Agence</h1>
+
+        <button id="scroll-down">
+            <svg height="auto" width="24px" xmlns="http://www.w3.org/2000/svg" class="animate-bounce icon" fill="none" viewBox="0 0 24 24" stroke="#fff">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+        </button>
+    </header>
+{% endblock %}
+
+{% block content %}
+    <div class="space_y_12 md_space_y_24 mt_12 md_mt_8">
+        <section id="approach">
+            <h2>Notre démarche</h2>
+
+            <p class="sm_mr_10 md_mr_20 lg_mr_40">
+                Parce que le web fait désormais partie de notre quotidien, il est aujourd’hui urgent de trouver des solutions pour <b>limiter ses effets sur notre environnement</b>.<br /><br />
+                Chez GreenAssembly, nous nous sommes donnés pour mission de trouver les bons compromis pour préserver notre planète tout en continuant de profiter des atouts du digital.<br /><br />
+                <b>De la conception</b> (ergonomie, contenu, graphisme, développement) <b>à la livraison</b> (référencement, hébergement, suivi et maintenance), chaque étape dans la conception de votre site-web prend en compte cet <b>aspect écologique</b> qui nous tient à cœur.<br /><br />
+                Pour cela, nous avons choisi une solution simple : utiliser la technologie à bon escient.<br /><br />
+                En créant des sites-web dynamiques qui vont à l’<b>essentiel</b> avec le développement de <b>fonctionnalités</b> dont vous avez réellement besoin, sur lesquelles nous vous <b>formons</b> afin de <b>vous rendre autonome</b> par la suite.<br /><br />
+                Des sites également <b>moins</b> gourmands en <b>énergie</b> que les sites web traditionnels grâce à des <b>technologies modernes très performantes</b>, permettant un affichage <b>rapide</b> et <b>sécurisé</b>.<br /><br />
+                Et parce que la qualité est notre priorité, nous réalisons systématiquement un <b>contrôle qualité</b> avant la mise en ligne du site afin de vérifier que tout fonctionne correctement, pour une <b>expérience utilisateur optimale</b>.
+            </p>
+        </section>
+
+        <section id="story">
+            <h2>Notre histoire</h2>
+
+            <p class="sm_ml_10 md_ml_20 lg_ml_40">
+                GreenAssembly, c’est une <b>équipe de passionnés</b> du web et de tout ce qui a trait aux nouvelles technologies. Une équipe pour qui l’émancipation et la liberté sont des critères fondamentaux dans l’épanouissement professionnel et personnel de chacun de ses membres.<br /><br />
+                Alors quand l’occasion de créer leur société s’est présentée, le rêve de laisser libre cours à leur imagination et de proposer un concept novateur a rapidement fait place à la réalité.<br /><br />
+                Aujourd’hui, l’agence est fière de pouvoir accomplir des missions qui l’inspirent en mettant la technologie au service de la créativité.<br /><br />
+                Avec pour objectif de créer ce qu’on ne voit pas ailleurs et, ainsi, <b>aider ses clients à se démarquer</b>.
+            </p>
+        </section>
+
+        <section id="team">
+            <h2>Notre Équipe</h2>
+
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    {% for employee in employees %}
+                        <div class="swiper-slide">
+                            {{ employee|safe }}
+                        </div>
+                    {% endfor %}
+                </div>
+    
+                <div class="swiper-pagination"></div>
+            </div>
+        </section>
+    </div>
+{% endblock %}

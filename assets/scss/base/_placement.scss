@@ -1,0 +1,65 @@
+@import '../abstracts/_variables.scss';
+
+@for $i from 0 through 96 {
+    $value: ($i * .25) + rem;
+
+    .top_#{$i} {
+        top: $value
+    }
+    .right_#{$i} {
+        right: $value
+    }
+    .bottom_#{$i} {
+        bottom: $value
+    }
+    .left_#{$i} {
+        left: $value
+    }
+
+    .-top_#{$i} {
+        top: -$value
+    }
+    .-right_#{$i} {
+        right: -$value
+    }
+    .-bottom_#{$i} {
+        bottom: -$value
+    }
+    .-left_#{$i} {
+        left: -$value
+    }
+}
+
+@each $name, $width in $break-points {
+    @media (min-width: #{$width}) {
+        @for $i from 0 through 96 {
+            $value: ($i * .25) + rem;
+        
+            .#{$name}_top_#{$i} {
+                top: $value !important
+            }
+            .#{$name}_right_#{$i} {
+                right: $value !important
+            }
+            .#{$name}_bottom_#{$i} {
+                bottom: $value !important
+            }
+            .#{$name}_left_#{$i} {
+                left: $value !important
+            }
+
+            .#{$name}_-top_#{$i} {
+                top: -$value !important
+            }
+            .#{$name}_-right_#{$i} {
+                right: -$value !important
+            }
+            .#{$name}_-bottom_#{$i} {
+                bottom: -$value !important
+            }
+            .#{$name}_-left_#{$i} {
+                left: -$value !important
+            }
+        }
+    }
+}

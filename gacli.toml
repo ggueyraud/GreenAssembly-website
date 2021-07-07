@@ -1,0 +1,35 @@
+[[purgecss]]
+css = "pages/global.css"
+content = ["templates/base.html", ".build/production/global.js"]
+
+[[purgecss]]
+css = "pages/index.css"
+content = ["templates/index.html"]
+
+[[purgecss]]
+css = "pages/agency.css"
+content = ["templates/agency.html"]
+
+[[purgecss]]
+css = "pages/portfolio.css"
+content = ["templates/portfolio.html"]
+
+[[purgecss]]
+css = "pages/contact.css"
+content = ["templates/contact.html"]
+
+[[purgecss]]
+css = "pages/swiper.css"
+content = ["templates/agency.html", "templates/index.html", ".build/production/swiper.js"]
+
+
+[sass]
+entries = [
+    "pages/agency.scss",
+    "pages/global.scss",
+    "pages/index.scss",
+    "pages/contact.scss",
+    "pages/swiper.scss",
+    "pages/portfolio.scss",
+    "components/stepper.scss"
+]

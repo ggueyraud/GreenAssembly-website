@@ -1,0 +1,36 @@
+@import '../base/_placement.scss';
+@import '../base/_animations.scss';
+@import '../base/_text.scss';
+
+header#banner {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    --bg-img: url(/static/img/bg_home_mobile.webp);
+    background-size: cover;
+    background-image: var(--bg-img);
+
+    h1 {
+        @extend .text_4xl, .sm_text_5xl, .lg_text_9xl;
+
+        font-weight: bold;
+        text-transform: uppercase
+    }
+
+    #scroll-down {
+        @extend .animation_bounce, .bottom_2;
+
+        position: absolute
+    }
+}
+
+@media (min-width: map-get($break-points, sm)) {
+    header#banner {
+        --bg-img: url(/static/img/bg_home.webp);
+    }
+}

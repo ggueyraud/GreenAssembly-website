@@ -1,0 +1,125 @@
+@import '../abstracts/_variables.scss';
+
+.mx_auto {
+    margin: 0 auto
+}
+
+@each $name, $width in $break-points {
+    @media (min-width: #{$width}) {
+        .#{$name}_mx_auto {
+            margin: 0 auto
+        }
+    }
+}
+
+@for $i from 0 through 96 {
+    $value: ($i * .25) + rem !important;
+
+    .m_#{$i} {
+        margin: $value
+    }
+    .my_#{$i} {
+        margin-top: $value;
+        margin-bottom: $value
+    }
+    .mx_#{$i} {
+        margin-right: $value;
+        margin-left: $value
+    }
+
+    .mt_#{$i} {
+        margin-top: $value
+    }
+    .mr_#{$i} {
+        margin-right: $value
+    }
+    .mb_#{$i} {
+        margin-bottom: $value
+    }
+    .ml_#{$i} {
+        margin-left: $value
+    }
+    
+    .p_#{$i} {
+        padding: $value
+    }
+    .py_#{$i} {
+        padding-top: $value;
+        padding-bottom: $value
+    }
+    .px_#{$i} {
+        padding-right: $value;
+        padding-left: $value
+    }
+
+    .pt_#{$i} {
+        padding-top: $value
+    }
+    .pr_#{$i} {
+        padding-right: $value
+    }
+    .pb_#{$i} {
+        padding-bottom: $value
+    }
+    .pl_#{$i} {
+        padding-left: $value
+    }
+}
+
+@each $name, $width in $break-points {
+    @media (min-width: #{$width}) {
+        @for $i from 0 through 96 {
+            $value: ($i * .25) + rem;
+
+            .#{$name}_m_#{$i} {
+                margin: $value
+            }
+            .#{$name}_my_#{$i} {
+                margin-top: $value;
+                margin-bottom: $value
+            }
+            .#{$name}_mx_#{$i} {
+                margin-right: $value;
+                margin-left: $value
+            }
+    
+            .#{$name}_mt_#{$i} {
+                margin-top: $value
+            }
+            .#{$name}_mr_#{$i} {
+                margin-right: $value
+            }
+            .#{$name}_mb_#{$i} {
+                margin-bottom: $value
+            }
+            .#{$name}_ml_#{$i} {
+                margin-left: $value
+            }
+    
+            .#{$name}_p_#{$i} {
+                padding: $value
+            }
+            .#{$name}_py_#{$i} {
+                padding-top: $value;
+                padding-bottom: $value
+            }
+            .#{$name}_px_#{$i} {
+                padding-right: $value;
+                padding-left: $value
+            }
+        
+            .#{$name}_pt_#{$i} {
+                padding-top: $value
+            }
+            .#{$name}_pr_#{$i} {
+                padding-right: $value
+            }
+            .#{$name}_pb_#{$i} {
+                padding-bottom: $value
+            }
+            .#{$name}_pl_#{$i} {
+                padding-left: $value
+            }
+        }
+    }
+}

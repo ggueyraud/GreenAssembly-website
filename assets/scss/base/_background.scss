@@ -1,0 +1,12 @@
+@import '../abstracts/_variables.scss';
+
+@each $name, $color in $colors {
+    .bg_#{$name} {
+        background-color: $color
+    }
+}
+
+// @each $name, $width in $break-points {
+//     @media (min-width: #{$width}) {
+//     }
+// }

@@ -1,0 +1,13 @@
+.icon {
+    display: inline-block;
+    height: auto;
+    width: 24px;
+
+    &--sm {
+        width: 18px
+    }
+    
+    &--lg {
+        width: 28px;
+    }
+}
