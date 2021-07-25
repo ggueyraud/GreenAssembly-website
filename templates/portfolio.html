@@ -2,17 +2,23 @@
 
 {% block title %}Portfolio{% endblock %}
 
-{% block meta %}
-    <meta name="description" content="Site e-commerce, site vitrine, identité visuelle, motion design. Découvrez les projets originaux GreenAssembly – Agence digitale spécialisée éco-conception web." />
+{% block head %}
+    <meta
+        name="description"
+        content="Site e-commerce, site vitrine, identité visuelle, motion design. Découvrez les projets originaux GreenAssembly – Agence digitale spécialisée éco-conception web."
+    />
 
-    <link rel="stylesheet" href="/pages/portfolio.css" />
+    <link rel="stylesheet" href="/css/pages/portfolio.css" />
 {% endblock %}
 
 {% block banner %}
-    <header id="banner" style="--bg-img: url(/static/img/bg.webp)">
+    <header
+        id="banner"
+        style="--sm_webp_bg_img: url(/img/bg/sm_global.webp); --sm_bg_img: url(/img/bg/sm_global.jpg); --webp_bg_img: url(/img/bg/global.webp); --bg_img: url(/img/bg/global.jpg)"
+    >
         <h1>Portfolio</h1>
 
-        <button id="scroll-down">
+        <button id="scroll_down">
             <svg xmlns="http://www.w3.org/2000/svg" class="animate-bounce icon" fill="none" viewBox="0 0 24 24" stroke="#fff">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>

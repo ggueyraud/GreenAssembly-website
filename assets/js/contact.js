@@ -2,33 +2,41 @@ import Form from './components/form';
 import { post } from './utils/http';
 
 const on_mount = () => {
-    console.log('ok')
     const budget_label = document.querySelector('[for="budget"]');
         const budget_input = document.querySelector('[name="budget"]');
         const services_label = document.querySelector('[for=services]');
         const services = document.querySelector('#services');
         const company_label = document.querySelector('[for="company"]');
         const company_input = document.querySelector('[name="company"]');
+        // const resume_label = document.querySelector('[for=resume]');
+        // const resume_input = document.querySelector('[name=resume]');
         
         let stepper = null;
 
         import('../wasm/pkg/wasm_bg.js')
         .then(wasm => {
-            console.log(wasm)
-            stepper = wasm.Stepper.new(document.querySelector('.stepper'));
+            stepper = wasm.Stepper.new(document.querySelector('.stepper'), wasm.Options.new(false));
             stepper.on(wasm.Event.StepChange, (index) => {
-                if (index === 0 && body.new_project === false) {
-                    
-                    personal_informations_form.add_field(company_input);
-                    project_form.add_field('services');
-        
-                    company_label.classList.remove('hidden');
-                    company_input.classList.remove('hidden');
-                    budget_label.classList.remove('hidden');
-                    budget_input.classList.remove('hidden');
-                    services.classList.remove('hidden');
-                    services_label.classList.remove('hidden');
-                    
+                if (index === 0) {
+                    if (body.new_project === false) {
+                        personal_informations_form.add_field(company_input);
+                        project_form.add_field('services');
+            
+                        company_label.classList.remove('hidden');
+                        company_input.classList.remove('hidden');
+                        budget_label.classList.remove('hidden');
+                        budget_input.classList.remove('hidden');
+                        services.style.removeProperty('display');
+                        services_label.style.removeProperty('display');
+                        // resume_label.classList.add('hidden');
+                        // resume_input.classList.add('hidden');
+                    }
+
+                    document
+                        .querySelectorAll('[name=why_for')
+                        .forEach(chk => {
+                            chk.checked = false
+                        })
                 }
             })
         })
@@ -54,7 +62,7 @@ const on_mount = () => {
         
                 Object.assign(body, e.detail);
         
-                // stepper.next();
+                stepper.next();
             });
         const project_form = new Form(document.querySelector('[name="project"]'), {
             fields: {
@@ -118,7 +126,7 @@ const on_mount = () => {
                 if (e.detail.why_for === 'new_project') {
                     body.new_project = true;
         
-                    message_label.innerHTML = 'Description';
+                    message_label.innerHTML = 'Description *';
                 } else {
                     body.new_project = false;
         
@@ -127,11 +135,18 @@ const on_mount = () => {
         
                     company_label.classList.add('hidden');
                     company_input.classList.add('hidden');
-                    message_label.innerHTML = 'Message';
+                    message_label.innerHTML = 'Message *';
                     budget_label.classList.add('hidden');
                     budget_input.classList.add('hidden');
-                    services.classList.add('hidden');
-                    services_label.classList.add('hidden');
+                    // services.classList.add('hidden');
+                    // services_label.classList.add('hidden');
+                    services.style.setProperty('display', 'none', 'important');
+                    services_label.style.setProperty('display', 'none', 'important');
+
+                    // if (e.detail.why_for === 'internship') {
+                    //     resume_label.classList.remove('hidden');
+                    //     resume_input.classList.remove('hidden');
+                    // }
                 }
         
                 stepper.next()

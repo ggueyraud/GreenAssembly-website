@@ -2,30 +2,34 @@
 
 {% block title %}Mentions légales{% endblock %}
 
+{% block head %}
+    <link rel="stylesheet" href="/css/pages/legals.css" />
+{% endblock %}
+
 {% block content %}
     <section>
         <h1 class="title pb_14 pt_28 sm_pb_20 sm_pt_40 md_pb_32 md_pt_64 text_center">Mentions légales</h1>
 
-        <h2 class="font_bold py_8 sm_pb_12">Informations générales</h2>
+        <h2>Informations générales</h2>
         <p>Le présent site-web est la propriété de GreenAssembly – SARL au capital de 2000 euros.</p>
-        <h5 class="font_bold mt_2 mb_1">Siège social</h5>
+        <h5 class="mt_2 mb_1">Siège social</h5>
         <p class="mb_2">
             78 allée primavera<br />
             Centre UBIDOCA, 18764<br />
             74370 Annecy<br />
             France
         </p>
-        <h5 class="font_bold">Hébergeur</h5>
+        <h5>Hébergeur</h5>
         <p class="mb_2">
             OVH<br />
             2 Rue Kellermann<br />
             59100 Roubaix<br />
             France
         </p>
-        <h5 class="font_bold">Directeur de publication</h5>
+        <h5>Directeur de publication</h5>
         <p>M. Gueyraud Guillaume</p>
         
-        <h2 class="font_bold py_8 sm_py_12">Protection des Données personnelles</h2>
+        <h2>Protection des Données personnelles</h2>
         <p>
             Lors de la navigation sur le site-web <a href="/" class="underline">greenassembly.fr</a> sont collectés l'URL de provenance de l'utilisateur, son adresse IP et l'agent utilisateur de son navigateur.<br />
             GreenAssembly collecte des informations relatives à l'utilisateur dans l'unique but d'effectuer une analyse de son trafic. L'utilisateur fournit ces informations en toute connaissance de cause, notamment lorsqu'il procède par lui-même à leur saisie. Il est alors précisé à l'utilisateur l'obligation ou non de fournir ces informations.<br /><br />
@@ -33,23 +37,33 @@
             Aucune informations personnelles de l'utilisateur du site-web <a href="/" class="underline">greenassembly.fr</a> n'est publiée à l'insu de l'utilisateur, échangée, tranférée, cédée ou vendue sur un support quelconque à des tiers. Seule l'hypothèse du rachat de GreenAssembly et de ses droits permettrait la transmission des dites informations à l'éventuel acquéreur qui serait à son tour tenu de la même obligation de conservation et de modification des données vis à vis de l'utilisateur du site-web <a href="/" class="underline">greenassembly.fr</a>.
         </p>
 
-        <h2 class="font_bold py_8 sm_py_12">Liens hypertextes</h2>
+        <h2>Liens hypertextes</h2>
         <p>
             Les liens hypertextes sur le présent site-web redirigeant l'utilisateur en direction de sites-web externes, sont proposés pour apporter des compléments d'informations ou pour présenter une réalisation. Leurs contenus ou les liens qu'ils contiennent ne sauraient engager la responsabilité de GreenAssembly.<br /><br />
             GreenAssembly autorise tout site-web ou tout support à mettre en place un lien hypertexte en direction de son contenu. Néanmoins GreenAssembly n'est en aucun cas tenue responsable du contenu ainsi que des produits ou services proposés sur les sites-web auxquels le site-web <a href="/" class="underline">greenassembly.fr</a> se trouverait lié par des liens hypertextes ou tout autre type de lien.
         </p>
 
-        <h2 class="font_bold py_8 sm_py_12">Droits de propriété intellectuelle</h2>
+        <h2>Droits de propriété intellectuelle</h2>
         <p>
             GreenAssembly est propriétaire des droits de propriété intellectuelle ou détient les droits d'usage sur tous les éléments accessibles sur le site-web, notamment les textes, photos, images, logos, son ou logiciels.<br />
             Toute reproduction, représentation, modification, publication, adaptation de tout ou partie des éléments du site-web, quel que soit le moyen ou procédé utilisé, est interdite, sauf autorisation écrite préalable de GreenAssembly.<br />
             Toute exploitation non-autorisée du site-web ou de l'un quelconque des éléments qu'il contient sera considéré comme constitutive d'une contrefaçon et poursuivie conformément aux dispositions des articles L.335-2 et suivantes du Code de la Propriété Intellectuelle.
         </p>
 
-        <h2 class="font_bold py_8 sm_py_12">Droit applicable</h2>
+        <h2>Droit applicable</h2>
         <p>
             Le site-web <a href="/" class="underline">greenassembly.fr</a> et les présentes mentions légales sont soumises au droit français et sont rédigées en français.<br />
             GreenAssembly se réserve le droit de modifier les présentes mentions à tout moment. L'utilisateur s'engage à les consulter régulièrement.
         </p>
+
+        <picture class="lazy">
+            <source data-srcset="/img/gouv.webp" />
+
+            <img
+                data-src="/img/gouv.jpg"
+                class="block mx_auto pt_8 sm_pt_12 md_pt_32"
+                alt="Financé par le Gouvernement français"
+            />
+        </picture>
     </section>
 {% endblock %}

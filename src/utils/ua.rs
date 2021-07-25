@@ -49,7 +49,6 @@ pub struct UserAgent {
     // pub product: Product
 }
 
-// TODO : parse UA with our own regex, speedup parsing in native Rust
 impl FromRequest for UserAgent {
     type Error = Error;
     type Future = Ready<Result<Self, Self::Error>>;

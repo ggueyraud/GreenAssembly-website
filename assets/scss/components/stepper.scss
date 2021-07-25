@@ -44,7 +44,6 @@
                 }
 
                 background-color: map-get($colors, success);
-                // color: map-get($colors, 'black');
                 border-color: map-get($colors, success);
 
                 svg {
@@ -110,11 +109,3 @@
         }
     }
 }
-
-// @media (min-width: map-get($break-points, sm)) {
-//     .stepper {
-//         nav a {
-//             margin-right: 2.5rem !important;
-//         }
-//     }
-// }

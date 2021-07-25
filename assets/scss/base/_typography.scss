@@ -7,8 +7,8 @@ h1, h2, h3 {
 }
 
 h1, h2, .h1 {
-    font-size: 1.875rem;
-    line-height: 2.25rem;
+    font-size: 2.25rem;
+    line-height: 2.5rem;
 }
 
 h3 {
@@ -22,12 +22,12 @@ h5 {
 }
 
 .title {
-    @extend .text_black;
-
+    @extend .text_4xl, .lg_text_5xl;
+    color: map-get($colors, 'black');
     font-weight: bold;
     text-transform: uppercase;
     user-select: none;
-    font-size: 3rem;
+    // font-size: 3rem;
     line-height: 1.25;
     background: -webkit-linear-gradient(right, rgba(239, 255, 25, 1), rgba(0, 255, 181, 1));
     background-clip: text;

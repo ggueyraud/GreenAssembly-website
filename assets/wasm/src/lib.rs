@@ -25,6 +25,24 @@ pub enum Event {
     Init
 }
 
+#[wasm_bindgen]
+pub struct Options {
+    allow_touch_move: bool
+}
+
+#[wasm_bindgen]
+impl Options {
+//     pub fn default() -> Self {
+//         Self {
+//             allow_touch_move: true
+//         }
+//     }
+
+    pub fn new(allow_touch_move: bool) -> Self {
+        Self { allow_touch_move }
+    }
+}
+
 impl std::convert::Into<JsValue> for Event {
     fn into(self) -> JsValue {
         match self {
@@ -45,7 +63,7 @@ pub struct Stepper {
 
 #[wasm_bindgen]
 impl Stepper {
-    pub fn new(container: HtmlElement) -> Self {
+    pub fn new(container: HtmlElement, options: Options) -> Self {
         let container = Rc::new(container);
         let wrapper = container.query_selector(".stepper__wrapper").unwrap().expect("Can't find wrapper element");
         let wrapper = wrapper.dyn_ref::<HtmlElement>().unwrap();
@@ -72,100 +90,129 @@ impl Stepper {
             index += 1;
         }
 
-        // Handling touch behavior
-        let start_x = Rc::new(RefCell::new(0));
-        let start_y = Rc::new(RefCell::new(0));
         let wrapper = Rc::new(wrapper.clone());
-        let steps_len = Rc::new(steps.length());
+        if options.allow_touch_move {
+            // Handling touch behavior
+            let start_x = Rc::new(RefCell::new(0));
+            let start_y = Rc::new(RefCell::new(0));
+            
+            let steps_len = Rc::new(steps.length());
+    
+            let x = start_x.clone();
+            let y = start_y.clone();
+            let w = wrapper.clone();
+            
+            let on_touchstart = Closure::wrap(Box::new(move |e: &web_sys::TouchEvent| {
+                (*w).style().set_property("transition-duration", &format!("{}ms", 0));
+                (*w).style().set_property("will-change", "transform");
+                let touch = e.touches().get(0).unwrap();
+                *x.clone().borrow_mut() = touch.page_x();
+                *y.clone().borrow_mut() = touch.page_y();
+            }) as Box<dyn FnMut(&web_sys::TouchEvent)>);
+    
+            wrapper.set_ontouchstart(Some(on_touchstart.as_ref().unchecked_ref()));
+    
+            on_touchstart.forget();
+    
+            let x = start_x.clone();
+            let y = start_y.clone();
+            let w = wrapper.clone();
+            let cs = current_step.clone();
+            let s = steps_len.clone();
+    
+            let step_percent = Rc::new(RefCell::new(0.0));
+            let sp = step_percent.clone();
+    
+            let on_touchmove = Closure::wrap(Box::new(move |e: &web_sys::TouchEvent| {
+                e.prevent_default();
+    
+                let touch = e.touches().get(0).unwrap();
+                let step_width = e.target().unwrap().dyn_ref::<HtmlElement>().unwrap().get_bounding_client_rect().width();
+                *sp.borrow_mut() = 1.0 - (((*x.clone().borrow() - touch.page_x()) * 100) as f64 / step_width);
+                let wrapper_percent = 1.0 - (((*x.clone().borrow() - touch.page_x()) * 100) as f64 / (*w).get_bounding_client_rect().width());
+    
+                (*w).style().set_property(
+                    "transform",
+                    &format!(
+                        "translate3d({}%, 0, 0)",
+                        (*cs.borrow() as f64 * -100.0 / *s as f64) + wrapper_percent
+                    )
+                );
+            }) as Box<dyn FnMut(&web_sys::TouchEvent)>);
+    
+            wrapper.set_ontouchmove(Some(on_touchmove.as_ref().unchecked_ref()));
+    
+            on_touchmove.forget();
+    
+            let w = wrapper.clone();
+            let cs = current_step.clone();
+            let s = steps_len.clone();
+            let sp = step_percent.clone();
+            let c = container.clone();
+            let evt = events.clone();
+            let st = steps.clone();
+    
+            let on_touchend = Closure::wrap(Box::new(move |e: &web_sys::TouchEvent| {
+                (*w).style().set_property("transition-duration", &format!("{}ms", 300));
+                (*w).style().remove_property("will-change");
+    
+                let azza = *cs.borrow();
+                if *sp.borrow() > 50.0 && azza as i32 - 1 >= 0 {
+                    Self::change_step(w.clone(), cs.clone(), azza - 1, &st.clone());
+                    Self::update_nav(c.clone(), cs.clone());
+    
+                    let func = Function::from(evt.borrow().get(&Event::StepChange.into()));
+                    func.call1(&wasm_bindgen::JsValue::UNDEFINED, &JsValue::from_f64((azza - 1) as f64));
+                } else if *sp.borrow() < -50.0 && azza + 1 < st.length() {
+                    Self::change_step(w.clone(), cs.clone(), azza + 1, &st.clone());
+                    Self::update_nav(c.clone(), cs.clone());
+    
+                    let func = Function::from(evt.borrow().get(&Event::StepChange.into()));
+                    func.call1(&wasm_bindgen::JsValue::UNDEFINED, &JsValue::from_f64((azza + 1) as f64));
+                }
+    
+                (*w).style().set_property(
+                    "transform",
+                    &format!(
+                        "translate3d({}%, 0, 0)",
+                        (*cs.borrow() as f64 * -100.0 / *s as f64)
+                    )
+                );
+    
+                // Reset move percentage of the step
+                *sp.borrow_mut() = 0.0;
+            }) as Box<dyn FnMut(&web_sys::TouchEvent)>);
+    
+            wrapper.set_ontouchend(Some(on_touchend.as_ref().unchecked_ref()));
+    
+            on_touchend.forget();
+        }
 
-        let x = start_x.clone();
-        let y = start_y.clone();
-        let w = wrapper.clone();
-        
-        let on_touchstart = Closure::wrap(Box::new(move |e: &web_sys::TouchEvent| {
-            (*w).style().set_property("transition-duration", &format!("{}ms", 0));
-            (*w).style().set_property("will-change", "transform");
-            let touch = e.touches().get(0).unwrap();
-            *x.clone().borrow_mut() = touch.page_x();
-            *y.clone().borrow_mut() = touch.page_y();
-        }) as Box<dyn FnMut(&web_sys::TouchEvent)>);
 
-        wrapper.set_ontouchstart(Some(on_touchstart.as_ref().unchecked_ref()));
-
-        on_touchstart.forget();
-
-        let x = start_x.clone();
-        let y = start_y.clone();
-        let w = wrapper.clone();
         let cs = current_step.clone();
-        let s = steps_len.clone();
-
-        let step_percent = Rc::new(RefCell::new(0.0));
-        let sp = step_percent.clone();
-
-        let on_touchmove = Closure::wrap(Box::new(move |e: &web_sys::TouchEvent| {
-            e.prevent_default();
-
-            let touch = e.touches().get(0).unwrap();
-            let step_width = e.target().unwrap().dyn_ref::<HtmlElement>().unwrap().get_bounding_client_rect().width();
-            *sp.borrow_mut() = 1.0 - (((*x.clone().borrow() - touch.page_x()) * 100) as f64 / step_width);
-            let wrapper_percent = 1.0 - (((*x.clone().borrow() - touch.page_x()) * 100) as f64 / (*w).get_bounding_client_rect().width());
-
-            (*w).style().set_property(
-                "transform",
-                &format!(
-                    "translate3d({}%, 0, 0)",
-                    (*cs.borrow() as i32 * -100 / *s as i32) + wrapper_percent as i32
-                )
-            );
-        }) as Box<dyn FnMut(&web_sys::TouchEvent)>);
-
-        wrapper.set_ontouchmove(Some(on_touchmove.as_ref().unchecked_ref()));
-
-        on_touchmove.forget();
-
-        let w = wrapper.clone();
-        let cs = current_step.clone();
-        let s = steps_len.clone();
-        let sp = step_percent.clone();
-        let c = container.clone();
-        let evt = events.clone();
         let st = steps.clone();
+        let w = wrapper.clone();
 
-        let on_touchend = Closure::wrap(Box::new(move |e: &web_sys::TouchEvent| {
-            (*w).style().set_property("transition-duration", &format!("{}ms", 300));
-            (*w).style().remove_property("will-change");
+        // Recalculate step height when window is resized
+        // TODO : don't recalculate each frame, add timeout
+        let window = web_sys::window().unwrap();
+        let on_resize = Closure::wrap(Box::new(move |e: &web_sys::Event| {
+            let win = e.target().unwrap();
+            let win = win.dyn_ref::<web_sys::Window>().unwrap();
+            log(&format!("Resize: (x: {:?}; y: {:?})", win.inner_width(), win.inner_height()));
 
-            let azza = *cs.borrow();
-            if *sp.borrow() > 50.0 && azza as i32 - 1 >= 0 {
-                Self::change_step(w.clone(), cs.clone(), azza - 1, &st.clone());
-                Self::update_nav(c.clone(), cs.clone());
+            if let Some(step) = st.get(*cs.borrow()) {
+                let step = step.dyn_ref::<HtmlElement>().unwrap();
 
-                let func = Function::from(evt.borrow().get(&Event::StepChange.into()));
-                func.call1(&wasm_bindgen::JsValue::UNDEFINED, &JsValue::from_f64((azza - 1) as f64));
-            } else if *sp.borrow() < -50.0 && azza + 1 < st.length() {
-                Self::change_step(w.clone(), cs.clone(), azza + 1, &st.clone());
-                Self::update_nav(c.clone(), cs.clone());
-
-                let func = Function::from(evt.borrow().get(&Event::StepChange.into()));
-                func.call1(&wasm_bindgen::JsValue::UNDEFINED, &JsValue::from_f64((azza + 1) as f64));
+                w.style().set_property(
+                    "height",
+                    &format!("{}px", step.get_bounding_client_rect().height())
+                );
             }
+        }) as Box<dyn FnMut(&web_sys::Event)>);
 
-            (*w).style().set_property(
-                "transform",
-                &format!(
-                    "translate3d({}%, 0, 0)",
-                    (*cs.borrow() as i32 * -100 / *s as i32)
-                )
-            );
-
-            // Reset move percentage of the step
-            *sp.borrow_mut() = 0.0;
-        }) as Box<dyn FnMut(&web_sys::TouchEvent)>);
-
-        wrapper.set_ontouchend(Some(on_touchend.as_ref().unchecked_ref()));
-
-        on_touchend.forget();
+        window.set_onresize(Some(on_resize.as_ref().unchecked_ref()));
+        on_resize.forget();
 
         if let Some(step_one) = steps.get(0) {
             let step_one = step_one.dyn_ref::<HtmlElement>().unwrap();
@@ -242,7 +289,7 @@ impl Stepper {
         let old_step = old_step.dyn_ref::<HtmlElement>().expect("2");
         old_step.class_list().remove_1("active");
 
-        let translate_x = new_step as i32 * -100 / steps.length() as i32;
+        let translate_x = new_step as f64 * -100.0 / steps.length() as f64;
         wrapper.style().set_property(
             "transform",
             &format!("translate3d({}%, 0, 0)", translate_x)

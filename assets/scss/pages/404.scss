@@ -1,0 +1,36 @@
+@import '../abstracts/_variables.scss';
+@import '../base/_margins.scss';
+@import '../base/_display.scss';
+@import '../base/_space.scss';
+@import '../base/_typography.scss';
+
+section {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+
+    a {
+        span {
+            @extend .ml_1;
+            text-decoration: underline
+        }
+
+        img {
+            vertical-align: middle;
+        }
+    }
+
+    h1 {
+        @extend .title;
+        margin: 0 auto !important;
+        word-break: break-word;
+    }
+}
+
+@media (min-width: map-get($break-points, sm)) {
+    section h1 {
+        width: 80%
+    }
+}

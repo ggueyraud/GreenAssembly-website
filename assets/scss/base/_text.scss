@@ -1,36 +1,28 @@
 @import '../abstracts/_variables.scss';
 
-.text_sm {
-    font-size: .85rem;
-}
-
-.text_base {
-    font-size: inherit;
-}
-
-.text_lg {
-    font-size: 1.125rem;
-}
-
-@mixin textxl($index) {
-    line-height: ($index * 0.888888889) + rem !important;
-    font-size: ($index * 0.888888889) + rem !important
-}
-
-.text_xl {
-    @include textxl(1.4);
-}
-
-@for $i from 2 through 9 {
-    .text_#{$i}xl {
-        @include textxl($i)
+@each $name, $value in $font_sizes {
+    .text_#{$name} {
+        font-size: $value;
+        line-height: map-get($line_heights, $name)
     }
+}
+
+@function is-important($important){
+    @return #{if($important, '!important', '')};
+  }
+
+@mixin textxl($index, $important: false) {
+    line-height: ($index * 0.888888889) + rem is-important($important);
+    font-size: ($index * 0.888888889) + rem is-important($important)
 }
 
 @each $name, $width in $break-points {
     @media (min-width: #{$width}) {
-        .#{$name}_text_xl {
-            font-size: 1.25rem
+        @each $fname, $value in $font_sizes {
+            .#{$name}_text_#{$fname} {
+                font-size: $value;
+                line-height: map-get($line_heights, $fname)
+            }
         }
 
         .#{$name}_text_right {
@@ -44,12 +36,6 @@
         }
         .#{$name}_text_center {
             text-align: center
-        }
-
-        @for $i from 2 through 9 {
-            .#{$name}_text_#{$i}xl {
-                @include textxl($i)
-            }
         }
     }
 }
@@ -99,8 +85,33 @@
 }
 
 .text_outline_gradient {
+    color: map-get($colors, 'black');
     background: -webkit-linear-gradient(right, rgba(239, 255, 25, 1), rgba(0, 255, 181, 1));
     background-clip: text;
     -webkit-text-stroke: 3px transparent;
     user-select: none;
+}
+
+.text_impactful {
+    line-height: 1.5 !important;
+
+    &--lg {
+        @extend .text_xl, .md_text_2xl;
+
+        text-transform: uppercase;
+        font-weight: bold;
+        color: map-get($colors, 'gray');
+
+        span, b {
+            @extend .text_xl, .md_text_4xl
+        }
+    }
+
+    span, b {
+        @extend .text_lg, .md_text_xl;
+        text-transform: uppercase;
+        font-weight: bold;
+        word-wrap: break-word;
+        line-height: 1.25 !important
+    }
 }

@@ -39,8 +39,9 @@ const on_mount = () => {
     
     import('../wasm/pkg/wasm_bg.js')
         .then(wasm => {
+            console.log(wasm.Options.new(true))
             console.log(document.querySelectorAll('.stepper .stepper__wrapper__step')[0].getBoundingClientRect().height)
-            const stepper = wasm.Stepper.new(document.querySelector('.stepper'));
+            const stepper = wasm.Stepper.new(document.querySelector('.stepper'), wasm.Options.new(true));
 
             stepper.on(wasm.Event.StepChange, (index) => {
                 console.log('Change', index);
@@ -53,4 +54,7 @@ const on_mount = () => {
 
 window.addEventListener('onMount', on_mount)
 window.addEventListener('router:change', on_mount)
-window.addEventListener('onDestroy', () => window.removeEventListener('onMount', on_mount))
+window.addEventListener('onDestroy', () => {
+    window.removeEventListener('onMount', on_mount);
+    window.removeEventListener('router:change', on_mount)
+})

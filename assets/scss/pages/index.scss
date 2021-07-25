@@ -4,14 +4,14 @@
 @import '../base/_typography.scss';
 @import '../base/_placement.scss';
 @import '../base/_background.scss';
+@import '../base/_display.scss';
 @import '../base/_space.scss';
 
 #engagements {
-    @extend .md_my_12, .mt_32;
-
     .swiper-card {
-        @extend .py_4, .px_3, .bg_black;
+        @extend .py_4, .px_3;
 
+        background-color: map-get($colors, 'black');
         border-radius: 3rem;
         text-align: center;
 
@@ -31,8 +31,9 @@
         }
 
         h3 {
-            @extend .text_lg, .my_6, .text_white;
+            @extend .text_lg, .my_6;
 
+            color: map-get($colors, 'white');
             text-transform: uppercase;
             font-weight: bold;
             text-align: center
@@ -45,11 +46,17 @@
 
     text-align: right;
     width: 100%;
+    display: block;
 
     a {
-        @extend .text_lg, .text_white;
+        @extend .text_lg;
 
+        color: map-get($colors, 'white');
         display: inline-block;
+
+        span {
+            text-decoration: underline;
+        }
 
         img {
             vertical-align: middle;
@@ -57,7 +64,16 @@
     }
 }
 
+.webp_support header#home_banner {
+    background-image: var(--sm_webp_bg_img);
+}
+
 header#home_banner {
+    --sm_webp_bg_img: url(/img/bg/sm_home.webp);
+    --sm_bg_img: url(/img/bg/sm_home.jpg);
+    --webp_bg_img: url(/img/bg/home.webp);
+    --bg_img: url(/img/bg/home.jpg);
+
     position: relative;
     width: 100%;
     display: flex;
@@ -66,11 +82,11 @@ header#home_banner {
     background-repeat: no-repeat;
     background-position: top;
     background-size: contain;
-    background-image: url(/static/img/bg_home_mobile.webp);
 
     #shape {
-        @extend .bottom_4, .text_black;
+        @extend .bottom_4;
 
+        color: map-get($colors, 'black');
         width: 270px;
         height: 250px;
         align-items: center;
@@ -91,7 +107,7 @@ header#home_banner {
             content: '';
             background-size: 100%;
             background-repeat: no-repeat;
-            background-image: url(/static/img/bg_shape.svg);
+            background-image: url(/img/bg/shape.svg);
         }
 
         h1, a {
@@ -109,7 +125,6 @@ header#home_banner {
 
             img {
                 filter: brightness(0);
-                // display: inline-block;
                 vertical-align: middle;
             }
         }
@@ -124,15 +139,30 @@ header#home_banner {
     }
 }
 
-.prestation {
-    position: relative;
-    display: grid;
-    grid-template-columns: repeat(1, minmax(0, 1fr));
+@media (min-width: map-get($break-points, sm)) {
+    .webp_support header#home_banner {
+        background-image: var(--webp_bg_img);
+    }
+
+    header#home_banner {
+        --bg-img: url(/img/bg/home.webp);
+        background-image: var(--bg-img);
+    }
+}
+
+.prestation {    
+    .content {
+        @extend .gap_4, .lg_gap_8;
+
+        display: grid;
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+        align-items: center
+    }
 
     h2 {
-        @extend .title; // , .-top_8
-
-        position: absolute;
+        @extend .title, .md_pb_5;
+    
+        text-align: center;
     }
 
     .preview {
@@ -149,12 +179,7 @@ header#home_banner {
     }
 
     .description {
-        @extend .mt_4;
-
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center
+        @extend .mt_4
     }
 }
 
@@ -188,10 +213,6 @@ header#home_banner {
     .prestation {
         .preview {
             margin-top: 1.5rem;
-
-            // img {
-            //     width: 80%
-            // }
         }
 
         .description p {
@@ -203,7 +224,6 @@ header#home_banner {
         background-size: cover !important;
         align-items: center !important;
         background-position: 25% bottom !important;
-        background-image: url(/static/img/bg_home.webp) !important;
 
         #shape {
             right: 1rem;
@@ -224,7 +244,9 @@ header#home_banner {
     }
 
     .prestation {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        .content {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
 
         .preview {
             display: flex;
@@ -290,7 +312,6 @@ header#home_banner {
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
-                // flex-shrink: 1;
                 margin: 33px;
     
                 p {
@@ -326,7 +347,7 @@ header#home_banner {
                     width: 120px;
                     height: 120px;
                     z-index: -1;
-                    background-image: url(/static/img/engagement_form.svg);
+                    background-image: url(/img/engagement_form.svg);
                     background-repeat: no-repeat;
                     background-size: 100%;
                     content: '';
@@ -368,7 +389,7 @@ header#home_banner {
     header#home_banner {
         display: flex;
         align-items: center;
-        background-image: url(/static/img/bg_home.webp) !important;
+        background-image: url(/img/bg/home.webp) !important;
         background-position: center bottom !important;
         background-size: cover !important;
 

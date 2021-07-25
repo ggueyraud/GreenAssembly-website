@@ -1,7 +1,17 @@
 import LazyLoader from './utils/lazy_loader';
 import Router from './utils/router';
 
-const loader = document.querySelector('#loading')
+const loader = document.querySelector('#loading');
+
+// Check webp support
+(() => {
+    const img = new Image();
+    img.onload = () => {
+        document.documentElement.classList.add('webp_support')
+    }
+
+    img.src = 'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
+})()
 
 window.addEventListener('router:change', () => {
     LazyLoader();
@@ -12,7 +22,7 @@ window.addEventListener('router:change', () => {
         loader.style.transition = null;
     }, 100)
 
-    const scroll_down = document.querySelector('#scroll-down');
+    const scroll_down = document.querySelector('#scroll_down');
         
     if (scroll_down) {
         scroll_down.addEventListener('click', () => {
@@ -40,7 +50,7 @@ document.addEventListener('readystatechange', e => {
 
         window.router = new Router();
         
-        const scroll_down = document.querySelector('#scroll-down');
+        const scroll_down = document.querySelector('#scroll_down');
         
         if (scroll_down) {
             scroll_down.addEventListener('click', () => {

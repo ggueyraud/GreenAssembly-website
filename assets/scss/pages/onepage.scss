@@ -1,0 +1,78 @@
+@import '../base/_typography.scss';
+@import '../base/_text.scss';
+@import '../base/_space.scss';
+@import '../components/_card.scss';
+@import '../layout/_banner.scss';
+
+header#banner {
+    align-items: end;
+    padding-bottom: 5rem;
+}
+
+@media (max-width: map-get($break-points, sm)) and (min-height: 600px) {
+    header#banner {
+        padding-bottom: 8rem;
+    }
+}
+
+.card {
+    justify-content: start;
+
+    .read_more {
+        justify-content: center
+    }
+}
+
+.read_more {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+
+    a {
+        @extend .text_xl;
+
+        color: map-get($colors, 'white');
+        display: inline-block;
+
+        span {
+            text-decoration: underline;
+        }
+
+        img {
+            vertical-align: middle;
+        }
+    }
+}
+
+h1 {
+    word-break: break-word;
+}
+
+h2 {
+    @extend .title, .pb_12, .sm_pb_20;
+
+    line-height: 1.25 !important;
+    width: 100%;
+    text-align: center;
+    text-transform: uppercase;
+    word-wrap: break-word;    
+    
+    span {
+        @extend .text_gradient
+    }
+}
+
+ul {
+    &.list_check {
+        li {
+            & + li {
+                @extend .pt_3
+            }
+    
+            &:before {
+                @extend .pr_3;
+                content: '✅';
+            }
+        }
+    }
+}

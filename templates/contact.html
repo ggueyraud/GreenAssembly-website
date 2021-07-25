@@ -2,20 +2,26 @@
 
 {% block title %}Contact{% endblock %}
 
-{% block meta %}
-    <meta name="description" content="Notre agence web à Annecy est spécialisée dans la conception de sites internet sur-mesure, la création d’identité visuelle et le montage de vidéos Motion Design." />
+{% block head %}
+    <meta
+        name="description"
+        content="Notre agence web à Annecy est spécialisée dans la conception de sites internet sur-mesure, la création d’identité visuelle et le montage de vidéos Motion Design."
+    />
 
-    <link rel="stylesheet" href="/pages/contact.css" />
-    <link rel="stylesheet" href="/components/stepper.css" />
+    <link rel="stylesheet" href="/css/pages/contact.css" />
+    <link rel="stylesheet" href="/css/components/stepper.css" />
 
-    <script src="/contact.js" async></script>
+    <script src="/js/contact.js" async></script>
 {% endblock %}
 
 {% block banner %}
-    <header id="banner" style="--bg-img: url(/static/img/bg.webp)">
+    <header
+        id="banner"
+        style="--sm_webp_bg_img: url(/img/bg/sm_global.webp); --sm_bg_img: url(/img/bg/sm_global.jpg); --webp_bg_img: url(/img/bg/global.webp); --bg_img: url(/img/bg/global.jpg)"
+    >
         <h1>Contact</h1>
 
-        <button id="scroll-down" class="icon">
+        <button id="scroll_down">
             <svg xmlns="http://www.w3.org/2000/svg" class="animate-bounce h-6 w_6" fill="none" viewBox="0 0 24 24" stroke="#fff">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
@@ -24,7 +30,7 @@
 {% endblock %}
 
 {% block content %}
-    <section class="mt_16 md_mt_24">
+    <section class="mt_12 md_mt_8">
         <p class="text_center">
             Vous avez une envie folle de <b>marquer les esprits</b> et <b>gagner en visibilité</b> sur le net ? Ou souhaitez simplement en savoir plus sur l’<b>éco-conception web</b> ?<br />
             <span class="text_xxl mt_2">Contactez-nous !</span>
@@ -32,6 +38,7 @@
 
         <div id="success" class="hidden pt_16 sm_pt_32 text_center">
             <h2 class="mb_4">Félicitation !! 🎉</h2>
+
             <p>Votre message nous a bien été parvenu, nous répondrons à ce dernier dans <u>les plus brefs délais</u> ! 😊</p>
         </div>
 
@@ -57,121 +64,136 @@
                                 <input type="radio" name="why_for" value="simple_discussion" />
                                 discuter / prendre des nouvelles
                             </label>
+
+                            <label class="checkbox checkbox--disabled">
+                                <input type="radio" name="why_for" value="internship" disabled />
+                                <del>un stage / une alternance</del>
+                            </label>
                         </div>
                     </div>
                 </form>
     
                 <form name="informations" class="stepper__wrapper__step" autocomplete="off">
-                    <div>
-                        <p class="step_title">Vos informations :</p>
+                    <p class="step_title">Vos informations :</p>
+    
+                    <label for="lastname" class="mb_1">Nom *</label>
+                    <input
+                        type="text"
+                        id="lastname"
+                        name="lastname"
+                        required
+                        minlength="2"
+                        maxlength="120"
+                        data-fv-string_length-message="La valeur doit faire entre 2 et 120 caractères"
+                        data-fv-not_empty-message="Ce champ est obligatoire"
+                    />
         
-                        <label for="lastname" class="mb_1">Nom *</label>
-                        <input
-                            type="text"
-                            id="lastname"
-                            name="lastname"
-                            required
-                            minlength="2"
-                            maxlength="120"
-                            data-fv-string_length-message="La valeur doit faire entre 2 et 120 caractères"
-                            data-fv-not_empty-message="Ce champ est obligatoire"
-                        />
-            
-                        <label for="firstname" class="mt_3 mb_1">Prénom *</label>
-                        <input
-                            type="text"
-                            id="firstname"
-                            name="firstname"
-                            required
-                            minlength="2"
-                            maxlength="120"
-                            data-fv-string_length-message="La valeur doit faire entre 2 et 120 caractères"
-                            data-fv-not_empty-message="Ce champ est obligatoire"
-                        />
-            
-                        <label for="company" class="mt_3 mb_1">Société *</label>
-                        <input
-                            type="text"
-                            id="company"
-                            name="company"
-                            required
-                            minlength="2"
-                            maxlength="120"
-                            data-fv-string_length-message="La valeur doit faire entre 2 et 120 caractères"
-                            data-fv-not_empty-message="Ce champ est obligatoire"
-                        />
-            
-                        <label for="email" class="mt_3 mb_1">Email *</label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            required
-                            data-fv-string_length-message="La valeur doit faire entre 3 et 120 caractères"
-                            data-fv-not_empty-message="Ce champ est obligatoire"
-                        />
-            
-                        <label for="phone" class="mt_3 mb_1">Téléphone</label>
-                        <input type="tel" id="phone" name="phone" />
+                    <label for="firstname" class="mt_3 mb_1">Prénom *</label>
+                    <input
+                        type="text"
+                        id="firstname"
+                        name="firstname"
+                        required
+                        minlength="2"
+                        maxlength="120"
+                        data-fv-string_length-message="La valeur doit faire entre 2 et 120 caractères"
+                        data-fv-not_empty-message="Ce champ est obligatoire"
+                    />
         
-                        <div class="flex justify_end">
-                            <button type="submit" class="btn next_btn">
-                                Suivant 
-                                <svg class="icon icon--sm" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                                    <path fill="#fff" d="M218.101 38.101L198.302 57.9c-4.686 4.686-4.686 12.284 0 16.971L353.432 230H12c-6.627 0-12 5.373-12 12v28c0 6.627 5.373 12 12 12h341.432l-155.13 155.13c-4.686 4.686-4.686 12.284 0 16.971l19.799 19.799c4.686 4.686 12.284 4.686 16.971 0l209.414-209.414c4.686-4.686 4.686-12.284 0-16.971L235.071 38.101c-4.686-4.687-12.284-4.687-16.97 0z"></path>
-                                </svg>
-                            </button>
-                        </div>
+                    <label for="company" class="mt_3 mb_1">Société *</label>
+                    <input
+                        type="text"
+                        id="company"
+                        name="company"
+                        required
+                        minlength="2"
+                        maxlength="120"
+                        data-fv-string_length-message="La valeur doit faire entre 2 et 120 caractères"
+                        data-fv-not_empty-message="Ce champ est obligatoire"
+                    />
+        
+                    <label for="email" class="mt_3 mb_1">Email *</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        required
+                        data-fv-string_length-message="La valeur doit faire entre 3 et 120 caractères"
+                        data-fv-not_empty-message="Ce champ est obligatoire"
+                    />
+        
+                    <label for="phone" class="mt_3 mb_1">Téléphone</label>
+                    <input type="tel" id="phone" name="phone" />
+    
+                    <div class="flex justify_end">
+                        <button type="submit" class="btn next_btn">
+                            Suivant 
+                            <svg class="icon icon--sm" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                <path fill="#fff" d="M218.101 38.101L198.302 57.9c-4.686 4.686-4.686 12.284 0 16.971L353.432 230H12c-6.627 0-12 5.373-12 12v28c0 6.627 5.373 12 12 12h341.432l-155.13 155.13c-4.686 4.686-4.686 12.284 0 16.971l19.799 19.799c4.686 4.686 12.284 4.686 16.971 0l209.414-209.414c4.686-4.686 4.686-12.284 0-16.971L235.071 38.101c-4.686-4.687-12.284-4.687-16.97 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                 </form>
     
-                <form name="project" class="stepper__wrapper__step">
-                    <div>
-                        <label class="mb_1" for="services">J'ai besoin</label>
-            
-                        <div class="flex gap_4 justify_around" id="services">
-                            <label class="checkbox">
-                                <input type="checkbox" name="services" value="website" />
-                                d'un site-web
-                            </label>
-                            <label class="checkbox">
-                                <input type="checkbox" name="services" value="visual_identity" />
-                                d'une identité visuelle
-                            </label>
-                            <label class="checkbox">
-                                <input type="checkbox" name="services" value="motion_design" />
-                                d'un motion design
-                            </label>
-                        </div>
-            
-                        <label for="message" class="mt_2 mb_1">Description | Message</label>
-                        <textarea
-                            id="message"
-                            name="message"
-                            minlength="30"
-                            maxlength="500"
-                            rows="5"
-                            required
-                        ></textarea>
-                        <div class="float-right"><span id="message_caracters_counter">0</span> / 500</div>
-                        <div class="clear-both"></div>
-            
-                        <label for="budget" class="mt_2 mb_1">Budget</label>
-                        <select id="budget" name="budget">
-                            <option selected>Indéterminé</option>
-                            <option value="5000">- de 5000€</option>
-                            <option value="10000">- de 10 000€</option>
-                            <option value="15000">- de 15 000€</option>
-                        </select>
+                <form name="project" class="stepper__wrapper__step mt_4">
+                    <label class="mb_1" for="services">J'ai besoin</label>
         
-                        <div class="block w_full mt_4 text_center">
-                            <button
-                                type="submit"
-                                class="next_btn btn btn--lg border border-white rounded-lg hover:bg-white hover_text_black opacity_0"
-                            >
-                                Envoyer
-                            </button>
-                        </div>
+                    <div id="services" class="flex justify_around gap_4">
+                        <label class="checkbox">
+                            <input type="checkbox" name="services" value="website" />
+                            d'un site-web
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="services" value="visual_identity" />
+                            d'une identité visuelle
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="services" value="motion_design" />
+                            d'un motion design
+                        </label>
+                    </div>
+        
+                    <label for="message" class="mt_2 mb_1">Description | Message</label>
+                    <textarea
+                        id="message"
+                        name="message"
+                        minlength="30"
+                        maxlength="500"
+                        rows="5"
+                        required
+                    ></textarea>
+                    <div class="float_right"><span id="message_caracters_counter">0</span> / 500</div>
+                    <div class="clear_both"></div>
+
+                    <!-- <label for="resume" class="mt_2 mb_1">Curriculum *</label>
+                    <input type="file" name="resume" /> -->
+        
+                    <label for="budget" class="mt_2 mb_1">Budget</label>
+                    <select id="budget" name="budget">
+                        <option selected>Indéterminé</option>
+                        <option value="5000">- de 5000€</option>
+                        <option value="10000">- de 10 000€</option>
+                        <option value="15000">- de 15 000€</option>
+                    </select>
+                    
+                    <label for="found_by" class="mt_2 mb_1">Vous nous avez trouvé par</label>
+                    <select id="found_by" name="found_by">
+                        <option selected>Indéterminé</option>
+                        <option value="">une publicité</option>
+                        <option value="">le biais d'un.e ami.e/collègue/proche</option>
+                        <option value="">une recherche sur le Web</option>
+                        <option value="">un réseau social</option>
+                        <option value="">un site-web</option>
+                    </select>
+    
+                    <!-- TODO : fix send btn -->
+                    <div class="block w_full mt_4 text_center">
+                        <button
+                            type="submit"
+                            class="next_btn btn btn--lg border border-white rounded-lg hover:bg-white hover_text_black opacity_0"
+                        >
+                            Envoyer
+                        </button>
                     </div>
                 </form>
             </div>

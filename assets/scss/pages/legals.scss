@@ -1,0 +1,13 @@
+@import '../base/_margins.scss';
+
+h2, h5 {
+    font-weight: bold
+}
+
+h2 {
+    @extend .py_8, .sm_pb_12;
+}
+
+h5 {
+    @extend .mt_2, .mb_1;
+}

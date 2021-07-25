@@ -2,6 +2,10 @@
 @import '../base/_animations.scss';
 @import '../base/_text.scss';
 
+.webp_support header#banner {
+    background-image: var(--sm_webp_bg_img);
+}
+
 header#banner {
     position: relative;
     width: 100%;
@@ -11,18 +15,19 @@ header#banner {
     height: 100vh;
     background-repeat: no-repeat;
     background-position: bottom;
-    --bg-img: url(/static/img/bg_home_mobile.webp);
+    --sm_bg_img: url(/img/bg/home_mobile.webp);
     background-size: cover;
-    background-image: var(--bg-img);
+    background-image: var(--sm_bg_img);
 
     h1 {
-        @extend .text_4xl, .sm_text_5xl, .lg_text_9xl;
+        @extend .text_5xl, .md_text_7xl, .lg_text_8xl, .xxl_text_9xl;
 
+        text-align: center;
         font-weight: bold;
         text-transform: uppercase
     }
 
-    #scroll-down {
+    #scroll_down {
         @extend .animation_bounce, .bottom_2;
 
         position: absolute
@@ -30,7 +35,12 @@ header#banner {
 }
 
 @media (min-width: map-get($break-points, sm)) {
+    .webp_support header#banner {
+        background-image: var(--webp_bg_img);
+    }
+
     header#banner {
-        --bg-img: url(/static/img/bg_home.webp);
+        --bg-img: url(/img/bg/home.webp);
+        background-image: var(--bg-img);
     }
 }

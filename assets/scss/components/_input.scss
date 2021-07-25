@@ -8,8 +8,8 @@ label {
 }
 
 input, textarea, select {
-    @extend .border_1, .border_white, .border_solid, .text_white;
-
+    border: 1px solid map-get($colors, 'white');
+    color: map-get($colors, 'white');
     font-size: 100%;
     background-color: transparent;
     display: block;
@@ -34,9 +34,8 @@ select {
     outline: none;
 }
 
-.fv-error {
-    @extend .text_warning;
-
+.fv_error {
+    color: map-get($colors, warning);
     line-height: 1;
     transition: opacity 200ms ease-out;
     font-size: 0;
@@ -52,13 +51,17 @@ select {
 }
 
 label.checkbox {
-    @extend .px_6, .py_2, .text_black;
-
+    @extend .px_6, .py_2;
+    color: map-get($colors, 'black');
     position: relative;
     cursor: pointer;
     text-align: center;
     outline: none;
     border-radius: 0.5rem;
+
+    &--disabled {
+        cursor: not-allowed;
+    }
 
     input[type=checkbox], input[type=radio] {
         position: absolute;
@@ -71,8 +74,8 @@ label.checkbox {
         background-color: #C4C4C4 !important;
         z-index: -1;
 
-        &:checked{
-            @extend .text_success;
+        &:checked {
+            background-color: map-get($colors, success) !important;
         }
     }
 }

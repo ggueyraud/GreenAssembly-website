@@ -89,9 +89,9 @@ class Field {
             : last.nextElementSibling;
 
         if (error) {
-            if (!next_el || (next_el && !next_el.classList.contains('fv-error'))) {
+            if (!next_el || (next_el && !next_el.classList.contains('fv_error'))) {
                 next_el = document.createElement('div');
-                next_el.classList.add('fv-error');
+                next_el.classList.add('fv_error');
 
                 if (this.validators.container) {
                     this.validators.container.insertAdjacentElement('afterend', next_el);
@@ -104,7 +104,7 @@ class Field {
             next_el.classList.add('active');
             last.classList.add('border-yellow-500');
         } else {
-            if (next_el && next_el.classList && next_el.classList.contains('fv-error')) {
+            if (next_el && next_el.classList && next_el.classList.contains('fv_error')) {
                 // next_el.remove();
                 next_el.classList.remove('active');
                 last.classList.remove('border-yellow-500');
@@ -324,7 +324,7 @@ export default class {
 
     //             let error = field.nextElementSibling;
 
-    //             if (error && error.classList.contains('fv-error')) {
+    //             if (error && error.classList.contains('fv_error')) {
     //                 error.remove();
     //                 field.classList.remove('border-yellow-500');
     //             }

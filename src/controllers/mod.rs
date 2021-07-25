@@ -5,6 +5,7 @@ use askama::Template;
 pub mod contact;
 pub mod employees;
 pub mod users;
+pub mod website;
 
 #[get("/")]
 pub async fn index() -> HttpResponse {
@@ -51,16 +52,16 @@ async fn agency() -> HttpResponse {
         }.render().unwrap())
 }
 
-#[get("/creation-site-web")]
-async fn creation_site_web() -> HttpResponse {
-    #[derive(Template)]
-    #[template(path = "website_creation.html")]
-    struct CreationSiteWeb;
+// #[get("/creation-site-web")]
+// async fn creation_site_web() -> HttpResponse {
+//     #[derive(Template)]
+//     #[template(path = "website_creation.html")]
+//     struct CreationSiteWeb;
 
-    HttpResponse::Ok()
-        .content_type("text/html")
-        .body(CreationSiteWeb.render().unwrap())
-}
+//     HttpResponse::Ok()
+//         .content_type("text/html")
+//         .body(CreationSiteWeb.render().unwrap())
+// }
 
 #[get("/portfolio")]
 async fn portfolio() -> HttpResponse {

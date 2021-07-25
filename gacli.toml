@@ -19,17 +19,13 @@ css = "pages/contact.css"
 content = ["templates/contact.html"]
 
 [[purgecss]]
-css = "pages/swiper.css"
+css = "components/swiper.css"
 content = ["templates/agency.html", "templates/index.html", ".build/production/swiper.js"]
 
+[[purgecss]]
+css = "pages/onepage.css"
+content = ["templates/showcase_website.html"]
 
-[sass]
-entries = [
-    "pages/agency.scss",
-    "pages/global.scss",
-    "pages/index.scss",
-    "pages/contact.scss",
-    "pages/swiper.scss",
-    "pages/portfolio.scss",
-    "components/stepper.scss"
-]
+[[purgecss]]
+css = "pages/legals.css"
+content = ["templates/legals.html"]

@@ -1,27 +1,73 @@
 use actix_files::NamedFile;
-use actix_web::{middleware::Compress, web, App, HttpRequest, HttpServer, HttpResponse, Result, http::{HeaderValue, header::{EXPIRES, CACHE_CONTROL}}};
+use actix_web::{
+    get,
+    Error,
+    http::{
+        header::{CACHE_CONTROL, EXPIRES},
+        HeaderValue,
+    },
+    middleware::Compress,
+    web, App, HttpRequest, HttpResponse, HttpServer, Result,
+};
 use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
-use std::path::PathBuf;
+use std::path::Path;
 
 mod controllers;
 mod services;
 mod templates;
 mod utils;
 
-async fn files(req: &HttpRequest, folder: &str) -> Result<HttpResponse, actix_web::Error> {
-    use chrono::{Local, Duration};
+fn serve_file(req: &HttpRequest, path: &Path, cache_duration: i64) -> Result<HttpResponse, Error> {
+    match NamedFile::open(path) {
+        Ok(file) => {
+            use chrono::{Duration, Local};
 
-    let path: PathBuf = format!("{}{}", folder, req.path())
-        .parse()
-        .unwrap();
-    let file = NamedFile::open(path)?;
-    let mut response = file.use_last_modified(true).into_response(&req).unwrap();
-    let now = Local::now() + Duration::days(30);
-    let headers = response.headers_mut();
-    headers.append(EXPIRES, HeaderValue::from_str(&now.to_rfc2822()).unwrap());
-    headers.append(CACHE_CONTROL, HeaderValue::from_static("public"));
+            let mut response = file.into_response(&req)?;
+            let now = Local::now() + Duration::days(cache_duration);
+            let headers = response.headers_mut();
+            headers.append(EXPIRES, HeaderValue::from_str(&now.to_rfc2822()).unwrap());
+            headers.append(CACHE_CONTROL, HeaderValue::from_static("public"));
 
-    Ok(response)
+            Ok(response)
+        }
+        Err(_) => {
+            use askama::Template;
+
+            #[derive(Template)]
+            #[template(path = "404.html")]
+            struct NotFound;
+
+            Ok(HttpResponse::NotFound()
+                .content_type("text/html")
+                .body(NotFound.render().unwrap()))
+        }
+    }
+}
+
+#[get("/{filename:.*}")]
+async fn serve_public_file(req: HttpRequest) -> Result<HttpResponse, Error> {
+    let mut file_path = format!("./public/{}", req.path());
+    let path = if cfg!(debug_assertions) {
+        let mut path = Path::new(&file_path);
+
+        if !path.exists() {
+            file_path = format!("./.build/development{}", req.path());
+            path = Path::new(&file_path);
+        }
+
+        path
+    } else {
+        Path::new(".")
+    };
+
+    serve_file(&req, &path, 30)
+}
+
+#[get("/uploads/{filename:.*}")]
+async fn serve_upload_file(req: HttpRequest) -> Result<HttpResponse, Error> {
+    let file_path = format!(".{}", req.path());
+    let path = Path::new(&file_path);
+    serve_file(&req, &path, 30)
 }
 
 #[actix_web::main]
@@ -42,13 +88,19 @@ async fn main() -> std::io::Result<()> {
         .await
         .expect("Connection to database failed");
 
-    // TODO : set ssl key path in .env
     let mut builder = SslAcceptor::mozilla_intermediate(SslMethod::tls()).expect("SSL build");
     builder
-        .set_private_key_file(&std::env::var("PRIVATE_KEY_FILE").expect("PRIVATE_KEY_FILE not found in variables environment"), SslFiletype::PEM)
+        .set_private_key_file(
+            &std::env::var("PRIVATE_KEY_FILE")
+                .expect("PRIVATE_KEY_FILE not found in variables environment"),
+            SslFiletype::PEM,
+        )
         .expect("private key file not found");
     builder
-        .set_certificate_chain_file(&std::env::var("CERTIFICATE_CHAIN_FILE").expect("CERTIFICATE_CHAIN_FILE not found in variables environment"))
+        .set_certificate_chain_file(
+            &std::env::var("CERTIFICATE_CHAIN_FILE")
+                .expect("CERTIFICATE_CHAIN_FILE not found in variables environment"),
+        )
         .expect("certificate chain file not found");
 
     // Redirect HTTP to HTTPS
@@ -67,7 +119,13 @@ async fn main() -> std::io::Result<()> {
             .wrap(Compress::default())
             .service(controllers::index)
             .service(controllers::agency)
-            .service(controllers::creation_site_web)
+            .service(
+                web::scope("/creation-site-web")
+                    .service(controllers::website::website_creation)
+                    .service(controllers::website::onepage_website_creation)
+                    .service(controllers::website::showcase_website_creation)
+                    .service(controllers::website::e_commerce_website_creation)
+            )
             .service(controllers::portfolio)
             .service(
                 web::scope("/contact")
@@ -77,33 +135,11 @@ async fn main() -> std::io::Result<()> {
             .service(controllers::legals)
             .service(controllers::sitemap)
             .service(controllers::robots)
-            .route(
-                "/static/{filename:.*}",
-                web::get().to(|req: HttpRequest| async move {
-                    files(&req, ".").await
-                }),
-            )
-            .route(
-                "/uploads/{filename:.*}",
-                web::get().to(|req: HttpRequest| async move {
-                    files(&req, ".").await
-                }),
-            )
-            .route(
-                "/{filename:.*}",
-                web::get().to(|req: HttpRequest| async move {
-                    const FOLDER: &str = if cfg!(debug_assertions) {
-                        ".build/development/"
-                    } else {
-                        "."
-                    };
-                    files(&req, FOLDER).await
-                })
-            )
-            // .service(files)
+            .service(serve_upload_file)
+            .service(serve_public_file)
     })
     .bind_openssl(
-        // &std::env::var("SERVER_ADDR").expect("Cannot found server_addr"),
+        // &std::env::var("SERVER_ADDR").expect("Cannot found server_adr"),
         &format!("{}:{}", server_addr, HTTPS_PORT),
         builder,
     )

@@ -1,0 +1,18 @@
+@import '../base/_margins.scss';
+
+.card {
+    @extend .py_6, .sm_py_10, .px_4, .sm_px_6;
+    box-shadow: 1px 1px 12px 4px map-get($colors, success);
+    border-radius: 4rem;
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    flex-direction: column;
+
+    h3 {
+        @extend .text_2xl, .mb_4, .sm_mb_8;
+
+        text-transform: uppercase;
+        line-height: 1.5;
+    }
+}

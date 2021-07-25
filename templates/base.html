@@ -6,30 +6,30 @@
 
     <title>{% block title %}{{ title }}{% endblock %} | GreenAssembly - Agence Digitale Verte</title>
 
-    <link rel="icon" type="image/png" href="/static/img/favicon.png" />
-    <link rel="stylesheet" href="/pages/global.css" o-no-load />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="stylesheet" href="/css/pages/global.css" o-no-load />
 
-    <script src="global.js" o-no-load async></script>
+    <script src="/js/global.js" o-no-load async></script>
     <script src="https://unpkg.com/website-carbon-badges@1.1.3/b.min.js" defer></script>
 
-    {% block meta %}{% endblock %}
+    {% block head %}{% endblock %}
 </head>
 <body>
-        <picture
-            id="loading"
-            style="position: fixed; top: 0; right: 0; bottom: 0; left: 0; visibility: visible; background-color: #000F16; z-index: 9999; display: flex; justify-content: center; align-items: center"
-        >
-            <source srcset="/static/img/logo.webp" />
+    <picture
+        id="loading"
+        style="position: fixed; top: 0; right: 0; bottom: 0; left: 0; visibility: visible; background-color: #000F16; z-index: 9999; display: flex; justify-content: center; align-items: center"
+    >
+        <source srcset="/img/logo.webp" />
 
-            <img
-                src="/static/img/logo.png"
-                alt="GreenAssembly Logo"
-                style="max-width: 80%"
-                width="400"
-                height="120"
-            />
-        </picture>
-    </div>
+        <img
+            src="/img/logo.png"
+            alt="GreenAssembly Logo"
+            class="animation_bounce"
+            style="max-width: 80%"
+            width="400"
+            height="120"
+        />
+    </picture>
 
     <ga-frame id="banner">
         {% block banner %}{% endblock %}
@@ -39,7 +39,7 @@
         <nav id="navbar">            
             <a href="#menu-opened" id="open-mobile-menu">
                 <svg width="24px" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                    <path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path>
+                    <path stroke="#000" stroke-width="6" fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path>
                 </svg>
             </a>
 
@@ -55,8 +55,16 @@
                 <a
                     o-follow
                     o-preload-once
-                    href="/agence"
+                    href="/creation-site-web"
                     class="order_2"
+                >
+                    <div>Créa. Site-Web</div>
+                </a>
+                <a
+                    o-follow
+                    o-preload-once
+                    href="/agence"
+                    class="order_3"
                 >
                     <div>Agence</div>
                 </a>
@@ -64,7 +72,7 @@
                     o-follow
                     o-preload-once
                     href="/portfolio"
-                    class="order_3"
+                    class="order_4"
                 >
                     <div>Portfolio</div>
                 </a>
@@ -72,12 +80,12 @@
                     o-follow
                     o-preload-once
                     href="/contact"
-                    class="order_4"
+                    class="order_5"
                 >
                     <div>Contact</div>
                 </a>
 
-                <div id="socials" class="order_5">
+                <div id="socials" class="order_6">
                     <a
                         href="https://www.linkedin.com/company/greenassembly/"
                         target="_blank"
@@ -85,7 +93,7 @@
                         rel="noopener"
                     >
                         <img
-                            src="/static/icons/linkedin.svg"
+                            src="/icons/linkedin.svg"
                             class="icon icon--lg"
                             alt="GreenAssembly Linkedin"
                             width="28"
@@ -99,7 +107,7 @@
                         rel="noopener"
                     >
                         <img
-                            src="/static/icons/instagram.svg"
+                            src="/icons/instagram.svg"
                             class="icon icon--lg"
                             alt="GreenAssembly Instagram"
                             width="28"
@@ -124,7 +132,7 @@
     
         <footer>
             <div class="order_3 md_order_1 text_center md_text_left md_col_span_2 xl_col_span_1">
-                <b class="uppercase">GreenAssembly</b>
+                <b class="uppercase pb_2">GreenAssembly</b>
                 <address>
                     78 allée primavera<br />
                     Centre UBIDOCA, 18764<br />
@@ -132,17 +140,22 @@
                     FRANCE
                 </address>
             </div>
-    
-            <address class="font_bold order_2 md_order_3 text_center xl_text_left md_col_span_2 xl_col_span_1">
+
+            <address class="md_order_3 xl_text_left md_col_span_2 xl_col_span_1">
                 TEL : <a href="tel:+33650308591">06•50•30•85•91</a>
             </address>
-    
-            <a href="/" class="order_1 md_order_2 xl_order_3 md_col_span_2 xl_col_span_1">
+
+            <a
+                o-follow
+                o-preload-once
+                href="/"
+                class="order_1 md_order_2 xl_order_3 md_col_span_2 xl_col_span_1"
+            >
                 <picture>
-                    <source srcset="/static/img/logo.webp" />
+                    <source srcset="/img/logo.webp" />
 
                     <img
-                        data-src="/static/img/logo.png"
+                        data-src="/img/logo.png"
                         alt="GreenAssembly Logo"
                         class="lazy"
                         width="400"
@@ -152,12 +165,12 @@
             </a>
     
             <div class="text_center order_4 md_col_span_3 xl_col_span_1">
-                <div class="uppercase pb-2 font_bold">Suivez-nous</div>
+                <div class="uppercase pb_2 font_bold">Suivez-nous</div>
     
                 <a href="https://www.linkedin.com/company/greenassembly/" target="_blank" class="social" rel="noopener">
                     <img
-                        src="/static/icons/linkedin.svg"
-                        class="icon icon--lg"
+                        src="/icons/linkedin.svg"
+                        class="icon"
                         alt="GreenAssembly Linkedin"
                         width="28"
                         height="32"
@@ -165,8 +178,8 @@
                 </a>
                 <a href="https://www.instagram.com/greenassembly.fr/" target="_blank" class="social ml_1" rel="noopener">
                     <img
-                        src="/static/icons/instagram.svg"
-                        class="icon icon--lg"
+                        src="/icons/instagram.svg"
+                        class="icon"
                         alt="GreenAssembly Instagram" 
                         width="28"
                         height="32"
@@ -180,10 +193,12 @@
                 href="/mentions-legales"
                 class="uppercase font_bold order_5 text_center xl_text_left md_col_span_3 xl_col_span_1"
             >
-            Mentions légales
+                Mentions légales
             </a>
 
-            <div id="wcb" class="carbonbadge wcb-d order_6"></div>
+            <div class="md_col_span_6 order_6 xl_pt_12">
+                <div id="wcb" class="carbonbadge wcb-d"></div>
+            </div>
         </footer>
     </div>
 </body>

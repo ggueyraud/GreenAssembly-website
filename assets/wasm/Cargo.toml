@@ -45,7 +45,8 @@ features = [
   'TouchEvent',
   'TouchList',
   'Touch',
-  'DomMatrixReadOnly'
+  'DomMatrixReadOnly',
+  'DomWindowResizeEventDetail'
 ]
 
 [dev-dependencies]

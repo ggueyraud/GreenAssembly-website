@@ -13,6 +13,9 @@
 .inline_block {
     display: inline-block
 }
+.inline {
+    display: inline
+}
 .block {
     display: block
 }
@@ -94,8 +97,11 @@
         .#{$name}_inline_block {
             display: inline-block
         }
+        .#{$name}_inline {
+            display: inline
+        }
         .#{$name}_block {
-            display: block
+            display: block !important
         }
         .#{$name}_grid {
             display: grid
@@ -118,7 +124,7 @@
             justify-content: flex-start
         }
         .#{$name}_justify_end {
-            justify-content: flex-end;
+            justify-content: flex-end
         }
         .#{$name}_justify_center {
             justify-content: center

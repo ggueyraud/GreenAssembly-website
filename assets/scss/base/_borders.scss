@@ -1,9 +1,5 @@
 @import '../abstracts/_variables.scss';
 
-// .border {
-//     border: 1px solid
-// }
-
 @each $name, $color in $colors {
     .border_#{$name} {
         border-color: $color

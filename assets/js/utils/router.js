@@ -11,12 +11,13 @@ export default class Router {
         }
 
         // Cache page on which the router has been initialized
+        // TODO : handle case when script has no src attribute
         this.caching(
             location.href,
             document.title,
             frames,
             [...document.querySelectorAll('script')]
-                .filter(script => script.getAttribute('o-no-load') === null)
+                .filter(script => script.getAttribute('o-no-load') === null && script.getAttribute('src') !== null)
                 .map(script => script.attributes.src.nodeValue),
             [...document.querySelectorAll('head > link[rel=stylesheet]')]
                 .filter(link => link.getAttribute('o-no-load') === null)
@@ -38,7 +39,9 @@ export default class Router {
                 ? e.target
                 : e.target.parentElement instanceof HTMLAnchorElement
                     ? e.target.parentElement
-                    : null
+                    : e.target.parentElement instanceof HTMLPictureElement
+                        ? e.target.parentElement.parentElement
+                        : null
 
             if (link && link.matches('[o-follow]')) {
                 e.preventDefault()
@@ -46,9 +49,20 @@ export default class Router {
                 window.dispatchEvent(new Event('router:loading', { bubbles: true, cancelable: false }))
                 window.dispatchEvent(this.onDestroyEvent)
 
-                console.info('Remove old hooks', this.cache[location.href])
-                window.removeEventListener('onMount', this.cache[location.href].onMount)
-                window.removeEventListener('onDestroy', this.cache[location.href].onDestroy)
+                // console.info('Remove old hooks', this.cache[location.href])
+                // window.removeEventListener('onMount', this.cache[location.href].onMount)
+                // window.removeEventListener('onDestroy', this.cache[location.href].onDestroy)
+
+                // const cached = this.cache[location.href]
+
+                // if (cached) {
+                //     // console.info('Remove old hooks', this.cache[location.href])
+                //     const onMount = this.cache[location.href].onMount;
+                //     if (onMount) window.removeEventListener('onMount', onMount);
+                //     const onDestroy = this.cache[location.href].onDestroy;
+                //     if (onDestroy) window.removeEventListener('onDestroy', onDestroy);
+
+                // }
 
                 history.pushState({ prevUrl: location.href }, null, link.href)
                 
@@ -115,6 +129,8 @@ export default class Router {
         if (!page) {
             let res = await fetch(url)
 
+            console.log(res)
+
             if (res.ok) {
                 res = await res.text()
                 let parsed_fragment = this.parse(res)
@@ -130,13 +146,24 @@ export default class Router {
                 }
         
                 page = parsed_fragment
+
+                page.last_loaded_time = Date.now()
+    
+                if (do_rendering === true)
+                    this.render(page)
+            } else if(res.status === 404) {
+                let parsed_fragment = this.parse(await res.text());
+                this.render(parsed_fragment)
+                // console.log('404', await res.text())
             }
+        } else {
+
+            page.last_loaded_time = Date.now()
+    
+            if (do_rendering === true)
+                this.render(page)
         }
 
-        page.last_loaded_time = Date.now()
-
-        if (do_rendering === true)
-            this.render(page)
     }
 
     parse(content) {
@@ -151,7 +178,7 @@ export default class Router {
             title: doc.title,
             frames,
             scripts: [...doc.querySelectorAll('script')]
-                .filter(script => script.getAttribute('o-no-load') === null)
+                .filter(script => script.getAttribute('o-no-load') === null && script.getAttribute('src') !== null)
                 .map(script => script.attributes.src.nodeValue),
             links: [...doc.querySelectorAll('head > link[rel=stylesheet]')]
                 .filter(link => link.getAttribute('o-no-load') === null)
@@ -223,23 +250,26 @@ export default class Router {
         const page_to_clear = this.cache[url]
 
         if (page_to_clear) {
-            // Remove old css files
+            // Remove old CSS files
             page_to_clear.links.forEach(link => {
-                console.log(link)
                 const link_el = document.head.querySelector(`link[href="${link}"]`);
-                console.log(link_el);
                 link_el.remove()
-                // document.head.removeChild(document.querySelector(`link[href="${link}"]`)
             })
     
-            console.log(`Clean: ${url}`, page_to_clear)
-        
+            // Remove old JS files
             page_to_clear.scripts.forEach(script => {
-                console.log(`remove ${script.src} js file`, script)
                 const script_el = document.head.querySelector(`script[src="${script}"]`)
-                console.log(script_el)
                 script_el.remove()
             })
+        } else { // Page not in cache, maybe 404 page?
+            // Remove old CSS files
+            [...document.querySelectorAll('script')]
+                .filter(script => script.getAttribute('o-no-load') === null)
+                .forEach(script => script.remove());
+
+            [...document.querySelectorAll('head > link[rel=stylesheet]')]
+                .filter(link => link.getAttribute('o-no-load') === null)
+                .forEach(link => link.remove());
         }
 
     }

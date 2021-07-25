@@ -1,7 +1,9 @@
+@import '../base/_display.scss';
+@import '../base/_float.scss';
 @import '../base/_width.scss';
+@import '../base/_opacity.scss';
 @import '../components/_input.scss';
 @import '../layout/_banner.scss';
-@import '../base/_display.scss';
 
 .stepper__wrapper__step {
     .step_title {

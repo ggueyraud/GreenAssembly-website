@@ -1,12 +1,12 @@
 export default () => {
     const lazy_images = [].slice.call(document.querySelectorAll(".lazy"));
 
-    console.log(lazy_images)
+    // console.log(lazy_images)
 
     if ("IntersectionObserver" in window) {
         let lazy_image_observe = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
-                console.log(typeof entry, entry.target instanceof HTMLImageElement, entry.target instanceof HTMLPictureElement)
+                // console.log(typeof entry, entry.target instanceof HTMLImageElement, entry.target instanceof HTMLPictureElement)
                 if (entry.isIntersecting) {
                     const lazy_image = entry.target;
 

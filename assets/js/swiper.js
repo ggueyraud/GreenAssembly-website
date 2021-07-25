@@ -32,9 +32,16 @@ const on_mount = () => {
     });
 }
 
+const on_destroy = () => {
+    console.log('onDestroy')
+    window.removeEventListener('onMount', on_mount)
+    window.removeEventListener('router:change', on_mount)
+    window.removeEventListener('onDestroy', on_destroy)
+}
+
 window.addEventListener('onMount', on_mount)
-window.addEventListener('router:change', on_mount)
-window.addEventListener('onDestroy', () => window.removeEventListener('onMount', on_mount))
+// window.addEventListener('router:change', on_mount)
+window.addEventListener('onDestroy', on_destroy)
 
 // document.addEventListener('readystatechange', e => {
 //     const ready_state = e.target.readyState;

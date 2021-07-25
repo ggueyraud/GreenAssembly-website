@@ -2,13 +2,16 @@
 
 {% block title %}Accueil{% endblock %}
 
-{% block meta %}
-    <meta name="description" content="Agence Digitale Verte | Développement sur mesure de site-web éco-conçu | Création d'Identité Visuelle | Motion Design" />
+{% block head %}
+    <meta
+        name="description"
+        content="Agence Digitale Verte | Développement sur mesure de site-web éco-conçu | Création d'Identité Visuelle | Motion Design"
+    />
 
-    <link rel="stylesheet" href="/pages/swiper.css" />
-    <link rel="stylesheet" href="/pages/index.css" />
+    <link rel="stylesheet" href="/css/components/swiper.css" />
+    <link rel="stylesheet" href="/css/pages/index.css" />
 
-    <script src="/swiper.js" async></script>
+    <script src="/js/swiper.js" async></script>
 {% endblock %}
 
 {% block banner %}
@@ -20,10 +23,10 @@
                 <span>voir nos projets</span>
 
                 <picture>
-                    <source srcset="/static/img/leaf_icon.webp" />
+                    <source srcset="/icons/leaf.webp" />
 
                     <img
-                        src="/static/img/leaf_icon.png"
+                        src="/icons/leaf.png"
                         alt="GreenAssembly Leaf"
                         width="48"
                         height="30"
@@ -35,14 +38,14 @@
 {% endblock %}
 
 {% block content %}
-    <div class="space_y_32 sm_space_y_48 lg_space_y_60">
-        <section id="engagements">
+    <div class="space_y_12 md_space_y_24">
+        <section id="engagements" class="md_my_12 mt_32">
             <div class="swiper-container">
                 <div class="swiper-wrapper">
                     <div class="swiper-slide">
                         <div class="swiper-card">
                             <img
-                                data-src="/static/img/eco_conception.svg"
+                                data-src="/icons/eco_conception.svg"
                                 alt="Éco-conception"
                                 class="lazy"
                                 width="202"
@@ -58,7 +61,7 @@
                     <div class="swiper-slide">
                         <div class="swiper-card">
                             <img
-                                data-src="/static/img/qualite.svg"
+                                data-src="/icons/qualite.svg"
                                 alt="Qualité"
                                 class="lazy"
                                 width="291"
@@ -74,7 +77,7 @@
                     <div class="swiper-slide">
                         <div class="swiper-card">
                             <img
-                                data-src="/static/img/ethique.svg"
+                                data-src="/icons/ethique.svg"
                                 alt="Éthique"
                                 class="lazy"
                                 width="192"
@@ -92,14 +95,14 @@
             </div>
 
             <div class="read_more">
-                <a href="/agence">
-                    <span class="underline">en savoir plus</span>
+                <a o-follow href="/agence">
+                    <span>en savoir plus</span>
     
                     <picture>
-                        <source srcset="/static/img/leaf_icon.webp" />
+                        <source srcset="/icons/leaf.webp" />
     
                         <img
-                            src="/static/img/leaf_icon.png"
+                            src="/icons/leaf.png"
                             alt="GreenAssembly Leaf"
                             width="48"
                             height="30"
@@ -110,81 +113,87 @@
         </section>
 
         <section class="prestation">
-            <h2 class="right_0 text_right sm_text_left md_-top_21 lg_-top_43 xl_-top_5">Identité Visuelle</h2>
+            <h2>Identité Visuelle</h2>
 
-            <picture class="preview lazy">
-                <source data-srcset="/static/img/identite_visuelle.webp" />
-
-                <!-- TODO : mettre largeur en 512 -->
-                <img
-                    data-src="/static/img/identite_visuelle.png"
-                    alt="Identité Visuelle"
-                    width="700"
-                    height="666"
-                />
-            </picture>
-
-            <div class="description">
-                <p>
-                    Marquez les esprits et pimentez votre image de marque avec une <b>identité visuelle unique et singulière</b>.<br /><br />
+            <div class="content">
+                <picture class="preview lazy">
+                    <source data-srcset="/img/identite_visuelle.webp" />
+    
+                    <!-- TODO : mettre largeur en 512 -->
+                    <img
+                        data-src="/img/identite_visuelle.png"
+                        alt="Identité Visuelle"
+                        width="700"
+                        height="666"
+                    />
+                </picture>
+    
+                <p class="description">
+                    <span class="text_impactful text_impactful--lg">
+                        Marquez les esprits et pimentez votre image de marque avec une <b class="text_success"><span class="text_white">identité visuelle</span> unique et singulière</b>.<br /><br />
+                    </span>
                     De votre <span class="font_bold">logo</span> à votre  <span class="font_bold">charte graphique</span>, en passant par vos <span class="font_bold">supports de communication</span> et <span class="font_bold">flyers</span>, trouvons ensemble ce petit plus qui fera qu’on se souviendra de vous !
                 </p>
             </div>
         </section>
 
         <section class="prestation">
-            <h2 class="-top_12 md_-top_40 lg_-top_60 xl_-top_48 xxl_-top_16 left_0">Création de site-web</h2>
+            <h2>Création de site-web</h2>
 
-            <div class="description order_2 md_order_1">
-                <p>
-                    Prendre le temps de <b>sélectionner les meilleures fonctionnalités</b> et chouchouter l’image ainsi que le message de votre site-web, telle est notre vision de l’<b>éco conception</b> web chez GreenAssembly.<br /><br />
+            <div class="content">
+                <p class="description order_2 md_order_1">
+                    <span class="text_impactful text_impactful--lg">
+                        Prendre le temps de <b class="text_white">sélectionner les meilleures fonctionnalités</b> et chouchouter l’image ainsi que le message de votre <b class="text_white">site-web</b>, telle est notre vision de l’<b class="text_success">éco conception</b> web chez GreenAssembly.<br /><br />
+                    </span>
                     Design, expérience utilisateur, développement web, référencement naturel SEO, hébergement… Prenez place sur le web avec un site éco-conçu <b>100% sur mesure</b> 100% performant 100% vous.
 
-                    <div class="read_more">
+                    <span class="read_more">
                         <a href="/creation-site-web">
-                            <span class="underline">en savoir plus</span>
+                            <span>en savoir plus</span>
             
                             <picture>
-                                <source srcset="/static/img/leaf_icon.webp" />
+                                <source srcset="/icons/leaf.webp" />
             
                                 <img
-                                    src="/static/img/leaf_icon.png"
+                                    src="/icons/leaf.png"
                                     alt="GreenAssembly Leaf"
                                     width="48"
                                     height="30"
                                 />
                             </picture>
                         </a>
-                    </div>
+                    </span>
                 </p>
+    
+                <picture class="preview lazy order_1 md_order_2">
+                    <source data-srcset="/img/site_web.webp" />
+    
+                    <img
+                        data-src="/img/site_web.png"
+                        alt="Site-Web"
+                        width="700"
+                        height="666"
+                    />
+                </picture>
             </div>
-
-            <picture class="preview lazy order_1 md_order_2">
-                <source data-srcset="/static/img/site_web.webp" />
-
-                <img
-                    data-src="/static/img/site_web.png"
-                    alt="Site-Web"
-                    width="700"
-                    height="666"
-                />
-            </picture>
         </section>
         
         <section class="prestation">
-            <h2 class="right_0 text_right sm_text_left z_10 -top_12 md_-top_21 lg_-top_30">Motion Design</h2>
+            <h2>Motion Design</h2>
 
-            <div class="preview">
-                <video preload="none" controls controlsList="nofullscreen">
-                    <source src="/static/video/motion_home.mp4" type="video/mp4">
-
-                    Your browser does not support the video tag.
-                </video>
-            </div>
-
-            <div class="description">
-                <p>
-                    Cultivez et nourrissez votre comm’ avec des vidéos <b>motion design</b>, <b>créatives et originales</b> qui font toute la différence.<br /><br />
+            <div class="content">
+                <div class="preview">
+                    <video preload="none" controls controlsList="nofullscreen">
+                        <source src="/video/motion_home.mp4" type="video/mp4">
+    
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+    
+                <p class="description">
+                    <span class="text_impactful text_impactful--lg">
+                        Cultivez et nourrissez votre comm’ avec des <b class="text_white">vidéos motion design</b>, <b class="text_success">créatives et originales</b> qui font toute la différence.<br /><br />
+                    </span>
                     Démarquez-vous avec un logo animé, des vidéos dynamiques à l’image de votre marque et un rythme captivant qui font <b>passer votre message en 2 minutes</b>. Les internautes n’auront d’yeux que pour vous !
                 </p>
             </div>

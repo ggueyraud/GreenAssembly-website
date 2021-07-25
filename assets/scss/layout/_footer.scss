@@ -7,7 +7,7 @@
 @import '../base/_grid.scss';
 
 footer {
-    @extend .grid_cols_1, .gap_8, .py_8, .container, .text_white;
+    @extend .grid_cols_1, .gap_8, .pt_10, .pb_8, .container;
     @extend .sm_py_12;
     @extend .md_py_32, .md_grid_rows_2, .md_grid_cols_6;
     @extend .xl_justify_start, .xl_grid_rows_1, .xl_grid_cols_5;
@@ -15,11 +15,18 @@ footer {
     display: grid;
     margin: 0 auto;
     align-items: center;
+    color: map-get($colors, 'white');
 
     img {
         @extend .md_w_full, .w_7\/12;
 
         margin: 0 auto;
         display: block
+    }
+
+    address {
+        font-weight: bold;
+        order: 2;
+        text-align: center
     }
 }

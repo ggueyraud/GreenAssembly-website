@@ -24,6 +24,26 @@ impl fmt::Display for ContactService {
 }
 
 #[derive(Deserialize)]
+#[serde(rename_all = "snake_case")]
+enum FoundBy {
+    Ads,
+    Friend,
+    SocialNetwork,
+    Website
+}
+
+impl fmt::Display for FoundBy {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Ads => write!(f, "Publicité"),
+            Self::Friend => write!(f, "Proche/Amie.e/Collègue"),
+            Self::SocialNetwork => write!(f, "Réseau social"),
+            Self::Website => write!(f, "Site-web")
+        }
+    }
+}
+
+#[derive(Deserialize)]
 pub struct Mail {
     new_project: bool,
     firstname: String,
@@ -34,6 +54,7 @@ pub struct Mail {
     services: Option<Vec<ContactService>>,
     message: String,
     budget: Option<f64>,
+    found_by: Option<FoundBy>
 }
 impl Mail {
     fn trim_strings(&mut self) {
@@ -109,6 +130,10 @@ pub async fn send(mut mail: web::Json<Mail>) -> Result<HttpResponse, Error> {
     if mail.message.len() < 30 || mail.message.len() > 500 {
         return Ok(HttpResponse::BadRequest()
             .json("The message must contain between 30 and 500 characters"));
+    }
+
+    if let Some(found_by) = &mail.found_by {
+        content.push_str(&format!("<u>Trouvé par</u> : {}<br />", found_by));
     }
 
     content.push_str(&format!("<u>Message</u> :<br />{}", mail.message));
