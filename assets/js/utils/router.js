@@ -41,10 +41,15 @@ export default class Router {
                     ? e.target.parentElement
                     : e.target.parentElement instanceof HTMLPictureElement
                         ? e.target.parentElement.parentElement
-                        : null
+                        : null;
+
+            if (link.href === window.location.href) {
+                e.preventDefault();
+                return;
+            }
 
             if (link && link.matches('[o-follow]')) {
-                e.preventDefault()
+                e.preventDefault();
 
                 window.dispatchEvent(new Event('router:loading', { bubbles: true, cancelable: false }))
                 window.dispatchEvent(this.onDestroyEvent)
