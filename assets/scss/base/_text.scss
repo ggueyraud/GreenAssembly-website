@@ -26,16 +26,16 @@
         }
 
         .#{$name}_text_right {
-            text-align: right
+            text-align: right !important
         }
         .#{$name}_text_left {
-            text-align: left
+            text-align: left !important
         }
         .#{$name}_text_justify {
-            text-align: justify
+            text-align: justify !important
         }
         .#{$name}_text_center {
-            text-align: center
+            text-align: center !important
         }
     }
 }

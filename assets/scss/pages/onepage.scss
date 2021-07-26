@@ -1,6 +1,8 @@
 @import '../base/_typography.scss';
 @import '../base/_text.scss';
 @import '../base/_space.scss';
+@import '../base/_display.scss';
+@import '../base/_grid.scss';
 @import '../components/_card.scss';
 @import '../layout/_banner.scss';
 
@@ -64,6 +66,9 @@ h2 {
 
 ul {
     &.list_check {
+        list-style: none;
+        padding-left: 0;
+
         li {
             & + li {
                 @extend .pt_3

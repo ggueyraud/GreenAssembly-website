@@ -38,11 +38,9 @@ header#banner {
             position: relative;
             --spacing: 2.5rem;
 
-            &--current {
-                .index {
-                    @extend .text_gradient;
-                    font-size: 2.5rem;
-                }
+            &--current .index {
+                @extend .text_gradient;
+                font-size: 2.5rem;
             }
 
             .index {
@@ -81,6 +79,8 @@ h2 {
 }
 
 ul {
+    list-style: none;
+    padding-left: 0;
     li {
         &+li {
             @extend .pt_3

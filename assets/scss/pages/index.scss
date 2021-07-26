@@ -145,8 +145,8 @@ header#home_banner {
     }
 
     header#home_banner {
-        --bg-img: url(/img/bg/home.webp);
-        background-image: var(--bg-img);
+        --bg_img: url(/img/bg/home.webp);
+        background-image: var(--bg_img);
     }
 }
 
