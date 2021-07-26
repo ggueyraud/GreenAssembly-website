@@ -57,7 +57,8 @@ async fn serve_public_file(req: HttpRequest) -> Result<HttpResponse, Error> {
 
         path
     } else {
-        Path::new(".")
+        file_path = format!(".{}", req.path());
+        Path::new(&file_path)
     };
 
     serve_file(&req, &path, 30)
