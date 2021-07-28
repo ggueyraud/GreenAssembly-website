@@ -32,12 +32,6 @@ pub struct Options {
 
 #[wasm_bindgen]
 impl Options {
-//     pub fn default() -> Self {
-//         Self {
-//             allow_touch_move: true
-//         }
-//     }
-
     pub fn new(allow_touch_move: bool) -> Self {
         Self { allow_touch_move }
     }
@@ -130,6 +124,9 @@ impl Stepper {
                 let step_width = e.target().unwrap().dyn_ref::<HtmlElement>().unwrap().get_bounding_client_rect().width();
                 *sp.borrow_mut() = 1.0 - (((*x.clone().borrow() - touch.page_x()) * 100) as f64 / step_width);
                 let wrapper_percent = 1.0 - (((*x.clone().borrow() - touch.page_x()) * 100) as f64 / (*w).get_bounding_client_rect().width());
+
+                // if wrapper_percent >
+                log(&format!("Wrapper_percent: {}", wrapper_percent));
     
                 (*w).style().set_property(
                     "transform",
@@ -157,13 +154,13 @@ impl Stepper {
                 (*w).style().remove_property("will-change");
     
                 let azza = *cs.borrow();
-                if *sp.borrow() > 50.0 && azza as i32 - 1 >= 0 {
+                if *sp.borrow() > 45.0 && azza as i32 - 1 >= 0 {
                     Self::change_step(w.clone(), cs.clone(), azza - 1, &st.clone());
                     Self::update_nav(c.clone(), cs.clone());
     
                     let func = Function::from(evt.borrow().get(&Event::StepChange.into()));
                     func.call1(&wasm_bindgen::JsValue::UNDEFINED, &JsValue::from_f64((azza - 1) as f64));
-                } else if *sp.borrow() < -50.0 && azza + 1 < st.length() {
+                } else if *sp.borrow() < -45.0 && azza + 1 < st.length() {
                     Self::change_step(w.clone(), cs.clone(), azza + 1, &st.clone());
                     Self::update_nav(c.clone(), cs.clone());
     
@@ -187,7 +184,6 @@ impl Stepper {
     
             on_touchend.forget();
         }
-
 
         let cs = current_step.clone();
         let st = steps.clone();

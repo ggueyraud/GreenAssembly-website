@@ -1,4 +1,3 @@
-
 const on_mount = () => {
     console.log('Lorem ipsum dolor sit amet')
 

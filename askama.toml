@@ -1,2 +1,2 @@
-# [general]
-# dirs = ["./.build/templates"]
+[general]
+dirs = ["./.build/production/templates"]

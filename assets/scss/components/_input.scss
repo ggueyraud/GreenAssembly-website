@@ -1,7 +1,5 @@
+@import '../abstracts/_variables.scss';
 @import '../base/_margins.scss';
-@import '../base/_text.scss';
-@import '../base/_background.scss';
-@import '../base/_borders.scss';
 
 label {
     display: inline-block
@@ -32,6 +30,11 @@ select {
     @extend .pr_10, .py_2, .pl_4;
 
     outline: none;
+
+    option, option:hover {
+        background-color: map-get($colors, 'black');
+        color: map-get($colors, 'white');
+    }
 }
 
 .fv_error {

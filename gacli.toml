@@ -1,6 +1,6 @@
 [[purgecss]]
 css = "pages/global.css"
-content = ["templates/base.html", ".build/production/global.js"]
+content = ["templates/base.html", ".build/production/js/global.js"]
 
 [[purgecss]]
 css = "pages/index.css"
@@ -8,7 +8,7 @@ content = ["templates/index.html"]
 
 [[purgecss]]
 css = "pages/agency.css"
-content = ["templates/agency.html"]
+content = ["templates/agency.html", "templates/components/employee.html"]
 
 [[purgecss]]
 css = "pages/portfolio.css"
@@ -20,12 +20,21 @@ content = ["templates/contact.html"]
 
 [[purgecss]]
 css = "components/swiper.css"
-content = ["templates/agency.html", "templates/index.html", ".build/production/swiper.js"]
+content = ["templates/agency.html", "templates/index.html", ".build/production/js/swiper.js"]
 
 [[purgecss]]
 css = "pages/onepage.css"
-content = ["templates/showcase_website.html"]
+content = ["templates/showcase_website.html", "templates/onepage.html", "templates/e_commerce.html", ".build/production/js/global.js"]
 
 [[purgecss]]
 css = "pages/legals.css"
 content = ["templates/legals.html"]
+
+[[purgecss]]
+css = "pages/404.css"
+content = ["templates/404.html"]
+
+[[purgecss]]
+css = "pages/website_creation.css"
+content = ["templates/website_creation.html", ".build/production/js/global.js", ".build/production/js/website_creation.js"]
+safelist = ["stepper__nav__item--current"]

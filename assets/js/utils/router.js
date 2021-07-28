@@ -43,7 +43,7 @@ export default class Router {
                         ? e.target.parentElement.parentElement
                         : null;
 
-            if (link.href === window.location.href) {
+            if (link && link.href === window.location.href) {
                 e.preventDefault();
                 return;
             }
