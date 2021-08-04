@@ -1,1 +1,5 @@
-﻿Sitemap: https://greenassembly.fr/sitemap.xml
+﻿User-agent: *
+Disallow: /admin
+Disallow: /backup
+
+Sitemap: https://greenassembly.fr/sitemap.xml
