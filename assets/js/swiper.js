@@ -2,7 +2,6 @@ import SwiperCore, { Pagination } from 'swiper/core';
 import Swiper from 'swiper';
 
 const on_mount = () => {
-    console.log('onmount')
     SwiperCore.use([Pagination]);
     new Swiper('.swiper-container', {
         grabCursor: true,

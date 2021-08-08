@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}Agence{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block head %}
-    <meta
-        name="description"
-        content="Démarquez-vous sur le web avec un site éco-conçu sur mesure – Une identité visuelle unique et singulière – Des vidéos Motion Design créatives et originales."
-    />
+    {% match description %}
+        {% when Some with (description) %}
+            <meta name="description" content="{{ description }}" />
+        {% when None %}
+    {% endmatch %}
 
     <link rel="stylesheet" href="/css/components/swiper.css" />
     <link rel="stylesheet" href="/css/pages/agency.css" />

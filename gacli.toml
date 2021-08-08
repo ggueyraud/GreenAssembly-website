@@ -16,7 +16,7 @@ content = ["templates/portfolio.html"]
 
 [[purgecss]]
 css = "pages/contact.css"
-content = ["templates/contact.html"]
+content = ["templates/contact.html", ".build/production/js/contact.js"]
 
 [[purgecss]]
 css = "components/swiper.css"

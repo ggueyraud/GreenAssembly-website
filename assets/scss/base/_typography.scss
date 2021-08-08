@@ -22,12 +22,11 @@ h5 {
 }
 
 .title {
-    @extend .text_4xl, .lg_text_5xl;
+    @extend .text_4xl, .md_text_5xl;
     color: map-get($colors, 'black');
     font-weight: bold;
     text-transform: uppercase;
     user-select: none;
-    // font-size: 3rem;
     line-height: 1.25;
     background: -webkit-linear-gradient(right, rgba(239, 255, 25, 1), rgba(0, 255, 181, 1));
     background-clip: text;

@@ -1,0 +1,16 @@
+.carousel {
+    overflow-x: hidden;
+
+    &::after {
+        content: '';
+        clear: both;
+        display: table
+    }
+
+    &__wrapper {
+        position: relative;
+        display: grid;
+        transition-duration: 300ms;
+        transition-property: transform;
+    }
+}

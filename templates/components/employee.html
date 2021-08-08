@@ -1,8 +1,8 @@
 <picture class="lazy">
-    <source data-srcset="{{ picture }}.webp" />
+    <source data-srcset="/uploads/{{ picture }}.webp" />
 
     <img
-        data-src="{{ picture }}.png"
+        data-src="/uploads/{{ picture }}.png"
         alt="{{ fullname }}"
         width="350"
         height="350"
@@ -16,7 +16,11 @@
         {{ position_held }}
     </div>
 
-    <blockquote>
-        <p>{{ description }}</p>
-    </blockquote>
+    {% match description %}
+        {% when Some with (description) %}
+            <blockquote>
+                <p>{{ description }}</p>
+            </blockquote>
+        {% when None %}
+    {% endmatch %}
 </figure>

@@ -1,21 +1,30 @@
 use actix_files::NamedFile;
 use actix_web::{
     get,
-    Error,
     http::{
         header::{CACHE_CONTROL, EXPIRES},
         HeaderValue,
     },
     middleware::Compress,
-    web, App, HttpRequest, HttpResponse, HttpServer, Result,
+    web, App, Error, HttpRequest, HttpResponse, HttpServer, Result,
 };
 use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
 use std::path::Path;
 
 mod controllers;
+mod middlewares;
 mod services;
 mod templates;
+mod tests;
 mod utils;
+
+async fn create_pool() -> Result<sqlx::PgPool, sqlx::Error> {
+    let pool: sqlx::PgPool = sqlx::pool::PoolOptions::new()
+        .connect(&std::env::var("DATABASE_URL").expect("DATABASE_URL not found"))
+        .await?;
+
+    Ok(pool)
+}
 
 fn serve_file(req: &HttpRequest, path: &Path, cache_duration: i64) -> Result<HttpResponse, Error> {
     match NamedFile::open(path) {
@@ -44,6 +53,25 @@ fn serve_file(req: &HttpRequest, path: &Path, cache_duration: i64) -> Result<Htt
     }
 }
 
+pub async fn ban_route(req: HttpRequest, pool: web::Data<sqlx::PgPool>) -> HttpResponse {
+    if let Some(ip) = req.connection_info().realip_remote_addr() {
+        if !services::ips_banned::is_banned(&pool, ip).await {
+            let (_, counter) = futures::join!(
+                services::ips_banned::add(&pool, ip),
+                services::ips_banned::count(&pool, ip)
+            );
+
+            println!("Ban x{} times", counter);
+
+            return HttpResponse::Ok()
+                .content_type("text/plain; charset=utf-8")
+                .body("Détection d'intrustion, par sécurité l'accès au site-web vous est bloqué pour votre IP pendant 5 minutes.");
+        }
+    }
+
+    HttpResponse::NotFound().finish()
+}
+
 #[get("/{filename:.*}")]
 async fn serve_public_file(req: HttpRequest) -> Result<HttpResponse, Error> {
     let mut file_path = format!("./public/{}", req.path());
@@ -60,8 +88,6 @@ async fn serve_public_file(req: HttpRequest) -> Result<HttpResponse, Error> {
         file_path = format!(".{}", req.path());
         Path::new(&file_path)
     };
-
-    println!("{:?}", path);
 
     serve_file(&req, &path, 30)
 }
@@ -86,10 +112,7 @@ async fn main() -> std::io::Result<()> {
     let server_addr =
         std::env::var("SERVER_ADDR").expect("SERVER_ADDR variable not specified in .env file");
 
-    let pool: sqlx::postgres::PgPool = sqlx::pool::PoolOptions::new()
-        .connect(&std::env::var("DATABASE_URL").expect("DATABASE_URL not found"))
-        .await
-        .expect("Connection to database failed");
+    let pool = create_pool().await.expect("Connection to database failed");
 
     let mut builder = SslAcceptor::mozilla_intermediate(SslMethod::tls()).expect("SSL build");
     builder
@@ -120,14 +143,15 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .data(pool.clone())
             .wrap(Compress::default())
+            .wrap(middlewares::ban::Ban { pool: pool.clone() })
             .service(controllers::index)
             .service(controllers::agency)
             .service(
                 web::scope("/creation-site-web")
                     .service(controllers::website::website_creation)
-                    .service(controllers::website::onepage_website_creation)
-                    .service(controllers::website::showcase_website_creation)
-                    .service(controllers::website::e_commerce_website_creation)
+                    .service(controllers::website::onepage)
+                    .service(controllers::website::showcase)
+                    .service(controllers::website::e_commerce),
             )
             .service(controllers::portfolio)
             .service(
@@ -135,17 +159,15 @@ async fn main() -> std::io::Result<()> {
                     .service(controllers::contact::page)
                     .service(controllers::contact::send),
             )
+            .route("/admin", web::get().to(ban_route))
+            .route("/backup", web::get().to(ban_route))
             .service(controllers::legals)
             .service(controllers::sitemap)
             .service(controllers::robots)
             .service(serve_upload_file)
             .service(serve_public_file)
     })
-    .bind_openssl(
-        // &std::env::var("SERVER_ADDR").expect("Cannot found server_adr"),
-        &format!("{}:{}", server_addr, HTTPS_PORT),
-        builder,
-    )
+    .bind_openssl(&format!("{}:{}", server_addr, HTTPS_PORT), builder)
     .expect("Cannot bind openssl")
     .run();
 

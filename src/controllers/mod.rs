@@ -1,88 +1,118 @@
+use crate::services;
 use crate::templates::Employee;
-use actix_web::{get, HttpResponse};
+use actix_web::{get, web, HttpRequest, HttpResponse};
 use askama::Template;
-
+use sqlx::PgPool;
 pub mod contact;
 pub mod employees;
+pub mod metrics;
 pub mod users;
 pub mod website;
 
 #[get("/")]
-pub async fn index() -> HttpResponse {
-    #[derive(Template)]
-    #[template(path = "index.html")]
-    struct Index;
+pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
+    if let Ok(page) = services::pages::get(&pool, "accueil").await {
+        crate::controllers::metrics::add(&req, &pool, page.id).await;
 
-    HttpResponse::Ok()
-        .content_type("text/html")
-        .body(Index.render().unwrap())
+        #[derive(Template)]
+        #[template(path = "index.html")]
+        struct Index {
+            title: String,
+            description: Option<String>,
+        }
+
+        let page = Index {
+            title: page.title,
+            description: page.description,
+        };
+
+        if let Ok(content) = page.render() {
+            return HttpResponse::Ok().content_type("text/html").body(content);
+        }
+    }
+
+    HttpResponse::InternalServerError().finish()
 }
 
 #[get("/agence")]
-async fn agency() -> HttpResponse {
-    #[derive(Template)]
-    #[template(path = "agency.html")]
-    struct Agency {
-        employees: Vec<Employee>,
-    }
+async fn agency(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
+    match futures::join!(
+        services::pages::get(&pool, "contact"),
+        services::employees::get_all(&pool)
+    ) {
+        (Ok(page), Ok(employees)) => {
+            crate::controllers::metrics::add(&req, &pool, page.id).await;
 
-    HttpResponse::Ok()
-        .content_type("text/html")
-        .body(Agency {
-            employees: vec![
-                Employee {
-                    fullname: String::from("Guillaume Gueyraud"),
-                    position_held: String::from("Dirigeant • Développeur"),
-                    description: String::from("Parce que la fiabilité d’un site-web fait toute la différence, je mets un point d’honneur à créer des sites web sécurisés et performants, répondant en tout point à vos attentes."),
-                    picture: String::from("/uploads/gg")
-                },
-                Employee {
-                    fullname: String::from("Vincent Bréhaut"),
-                    position_held: String::from("Dirigeant • Développeur"),
-                    description: String::from("C’est un fait, les internautes accordent peu de temps à leurs recherches sur le web. D’où l’importance d’avoir un site-web réactif, clair et intuitif, tout en réduisant au maximum l’impact écologique."),
-                    picture: String::from("/uploads/vb")
-                },
-                Employee {
-                    fullname: String::from("Ludivine Farat"),
-                    position_held: String::from("Designer graphique"),
-                    description: String::from("J’ai à cœur de trouver ce petit plus qui fait que vous êtes vous et pas un autre, et je le retranscris dans l’ensemble de votre communication visuelle."),
-                    picture: String::from("/uploads/lf")
-                },
-            ]
-        }.render().unwrap())
+            #[derive(Template)]
+            #[template(path = "agency.html")]
+            struct Agency {
+                title: String,
+                description: Option<String>,
+                employees: Vec<Employee>,
+            }
+
+            let page = Agency {
+                title: page.title,
+                description: page.description,
+                employees: employees
+                    .iter()
+                    .map(|employee| Employee::from((*employee).clone()))
+                    .collect::<Vec<Employee>>(),
+            };
+
+            match page.render() {
+                Ok(content) => HttpResponse::Ok().content_type("text/html").body(content),
+                _ => HttpResponse::InternalServerError().finish(),
+            }
+        }
+        _ => HttpResponse::InternalServerError().finish(),
+    }
 }
 
-// #[get("/creation-site-web")]
-// async fn creation_site_web() -> HttpResponse {
-//     #[derive(Template)]
-//     #[template(path = "website_creation.html")]
-//     struct CreationSiteWeb;
-
-//     HttpResponse::Ok()
-//         .content_type("text/html")
-//         .body(CreationSiteWeb.render().unwrap())
-// }
-
 #[get("/portfolio")]
-async fn portfolio() -> HttpResponse {
-    #[derive(Template)]
-    #[template(path = "portfolio.html")]
-    struct Porfolio;
+async fn portfolio(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
+    if let Ok(page) = services::pages::get(&pool, "portfolio").await {
+        crate::controllers::metrics::add(&req, &pool, page.id).await;
 
-    HttpResponse::Ok()
-        .content_type("text/html")
-        .body(Porfolio.render().unwrap())
+        #[derive(Template)]
+        #[template(path = "portfolio.html")]
+        struct Portfolio {
+            title: String,
+            description: Option<String>,
+        }
+
+        let page = Portfolio {
+            title: page.title,
+            description: page.description,
+        };
+
+        if let Ok(content) = page.render() {
+            return HttpResponse::Ok().content_type("text/html").body(content);
+        }
+    }
+
+    HttpResponse::InternalServerError().finish()
 }
 
 #[get("/mentions-legales")]
-async fn legals() -> HttpResponse {
-    #[derive(Template)]
-    #[template(path = "legals.html")]
-    struct Agency;
+async fn legals(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
+    if let Ok(page) = services::pages::get(&pool, "mentions_legales").await {
+        crate::controllers::metrics::add(&req, &pool, page.id).await;
 
-    HttpResponse::Ok()
-        .content_type("text/html")
-        .body(Agency.render().unwrap())
+        #[derive(Template)]
+        #[template(path = "legals.html")]
+        struct Legals {
+            title: String,
+        }
+
+        let page = Legals { title: page.title };
+
+        if let Ok(content) = page.render() {
+            return HttpResponse::Ok().content_type("text/html").body(content);
+        }
+    }
+
+    HttpResponse::InternalServerError().finish()
 }
 
 #[get("/sitemap.xml")]

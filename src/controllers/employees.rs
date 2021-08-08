@@ -1,82 +1,113 @@
-use actix_web::{delete, get, patch, post, web, Error, HttpResponse};
+use crate::services::employees;
+use crate::utils::error_logger::ErrorLogger;
+use actix_web::{delete, get, patch, post, web, HttpResponse};
+use serde::Deserialize;
 use sqlx::postgres::PgPool;
 
-use crate::services::employees;
-
-#[post("/add")]
-pub async fn add_employee(
-    pool: web::Data<PgPool>,
-    data: web::Json<employees::AddEmployee>,
-) -> Result<HttpResponse, Error> {
-    match employees::add_employee(&pool, &data).await {
-        Ok(id) => Ok(HttpResponse::Ok().json(format!("{{id: {}}}", id))),
-        Err(_) => Ok(HttpResponse::InternalServerError().json(
-            "Une erreur est survenue lors de la
-                    création de l'employé",
-        )),
-    }
-    // TODO //
-    /*
-        Penser à faire l'upload de l'image
-    */
+#[derive(Deserialize)]
+pub struct AddEmployee {
+    pub firstname: String,
+    pub lastname: String,
+    pub job: String,
+    pub description: Option<String>,
+    pub drawing_order: Option<i16>,
 }
 
-#[patch("/edit")]
+#[post("")]
+pub async fn add(pool: web::Data<PgPool>, data: web::Json<AddEmployee>) -> HttpResponse {
+    match employees::insert(
+        &pool,
+        &data.firstname,
+        &data.lastname,
+        &data.job,
+        data.description.as_deref(),
+        data.drawing_order,
+    )
+    .await
+    {
+        Ok(id) => {
+            // TODO //
+            /*
+                Penser à faire l'upload de l'image
+            */
+            HttpResponse::Ok().json(format!("{{id: {}}}", id))
+        }
+        Err(e) => {
+            ErrorLogger::write(
+                "employees_service",
+                format!("Error {}: ", line!()) + &e.to_string(),
+            );
+
+            HttpResponse::InternalServerError().json(
+                "Une erreur est survenue lors de la
+                        création de l'employé",
+            )
+        }
+    }
+}
+
+#[derive(Deserialize)]
+pub struct EditEmployee {
+    pub firstname: Option<String>,
+    pub lastname: Option<String>,
+    pub job: Option<String>,
+    pub description: Option<String>,
+    pub drawing_order: Option<i16>,
+}
+
+#[patch("/{id}")]
 pub async fn edit_employee(
     pool: web::Data<PgPool>,
-    data: web::Json<employees::EditEmployee>,
-) -> Result<HttpResponse, Error> {
-    match employees::is_employee_exist(&pool, data.id).await {
-        Ok(true) => (),
-        Ok(false) => return Ok(HttpResponse::NotFound().json("Employé non trouvé")),
-        Err(e) => return Ok(HttpResponse::InternalServerError().json(e.to_string())),
+    id: web::Path<i32>,
+    form: web::Json<EditEmployee>,
+) -> HttpResponse {
+    if employees::exist(&pool, *id).await {
+        match employees::update(
+            &pool,
+            *id,
+            form.firstname.as_deref(),
+            form.lastname.as_deref(),
+            form.job.as_deref(),
+            form.description.as_deref(),
+            form.drawing_order,
+        )
+        .await
+        {
+            Ok(_) => {
+                // TODO //
+                /*
+                    Penser à faire la mise à jour de l'image
+                */
+
+                return HttpResponse::Ok().json("Employé modifié avec succès");
+            }
+            Err(e) => {
+                ErrorLogger::write(
+                    "employees_service",
+                    format!("Error {}: ", line!()) + &e.to_string(),
+                );
+
+                return HttpResponse::InternalServerError().json(
+                    "Une erreur est survenue lors de la
+                        modification de l'employé",
+                );
+            }
+        }
     }
 
-    match employees::edit_employee(&pool, &data).await {
-        Ok(_) => Ok(HttpResponse::Ok().json("Employé modifié avec succès")),
-        Err(_) => Ok(HttpResponse::InternalServerError().json(
-            "Une erreur est survenue lors de la
-                    modification de l'employé",
-        )),
-    }
-    // TODO //
-    /*
-        Penser à faire la mise à jour de l'image
-    */
+    HttpResponse::NotFound().finish()
 }
 
-#[delete("/delete")]
-pub async fn delete_employee(
-    pool: web::Data<PgPool>,
-    path: web::Path<u32>,
-) -> Result<HttpResponse, Error> {
-    let id = path.0 as i32;
+#[delete("/{id}")]
+pub async fn delete(pool: web::Data<PgPool>, id: web::Path<i32>) -> HttpResponse {
+    if employees::exist(&pool, *id).await {
+        return HttpResponse::Ok().json(employees::delete(&pool, *id).await);
 
-    match employees::is_employee_exist(&pool, id).await {
-        Ok(true) => (),
-        Ok(false) => return Ok(HttpResponse::NotFound().json("Employé non trouvé")),
-        Err(e) => return Ok(HttpResponse::InternalServerError().json(e.to_string())),
+        // TODO //
+        /*
+            Penser à faire la suppression de l'image
+        */
     }
-    match employees::delete_employee(&pool, id).await {
-        Ok(_) => Ok(HttpResponse::Ok().json("Employé supprimé avec succès")),
-        Err(_) => Ok(HttpResponse::InternalServerError().json(
-            "Une erreur est survenue lors de la
-                    suppression de l'employé",
-        )),
-    }
-    // TODO //
-    /*
-        Penser à faire la suppression de l'image
-    */
-}
 
-#[get("")]
-pub async fn get_employees(pool: web::Data<PgPool>) -> Result<HttpResponse, Error> {
-    match employees::get_employees(&pool).await {
-        Ok(data) => Ok(HttpResponse::Ok().json(data)),
-        Err(_) => Ok(HttpResponse::InternalServerError().json(
-            "Une erreur est survenue lors de la
-                    récupération de la liste des employés",
-        )),
-    }
+    HttpResponse::NotFound().finish()
 }

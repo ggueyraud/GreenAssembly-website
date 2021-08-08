@@ -1,15 +1,17 @@
 {% extends "base.html" %}
 
-{% block title %}Contact{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block head %}
-    <meta
-        name="description"
-        content="Notre agence web à Annecy est spécialisée dans la conception de sites internet sur-mesure, la création d’identité visuelle et le montage de vidéos Motion Design."
-    />
+    {% match description %}
+        {% when Some with (description) %}
+            <meta name="description" content="{{ description }}" />
+        {% when None %}
+    {% endmatch %}
 
     <link rel="stylesheet" href="/css/pages/contact.css" />
     <link rel="stylesheet" href="/css/components/stepper.css" />
+    <link rel="stylesheet" href="/css/components/carousel.css" />
 
     <script src="/js/contact.js" async></script>
 {% endblock %}
@@ -40,6 +42,14 @@
             <h2 class="mb_4">Félicitation !! 🎉</h2>
 
             <p>Votre message nous a bien été parvenu, nous répondrons à ce dernier dans <u>les plus brefs délais</u> ! 😊</p>
+        </div>
+
+        <div class="carousel mt_24">
+            <div class="carousel__wrapper">
+                <div class="stepper__wrapper__item">1</div>
+                <div class="stepper__wrapper__item">2</div>
+                <div class="stepper__wrapper__item">3</div>
+            </div>
         </div>
 
         <div class="stepper mt_24">

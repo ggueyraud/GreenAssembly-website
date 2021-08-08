@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}Portfolio{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block head %}
-    <meta
-        name="description"
-        content="Site e-commerce, site vitrine, identité visuelle, motion design. Découvrez les projets originaux GreenAssembly – Agence digitale spécialisée éco-conception web."
-    />
+    {% match description %}
+        {% when Some with (description) %}
+            <meta name="description" content="{{ description }}" />
+        {% when None %}
+    {% endmatch %}
 
     <link rel="stylesheet" href="/css/pages/portfolio.css" />
 {% endblock %}

@@ -1,10 +1,11 @@
-use actix_web::{get, post, web, Error, HttpResponse};
+use crate::services;
+use actix_web::{get, post, web, Error, HttpRequest, HttpResponse};
 use askama::Template;
-use serde::Deserialize;
-use std::fmt;
-
 use lettre::{SmtpClient, Transport};
 use lettre_email::EmailBuilder;
+use serde::Deserialize;
+use sqlx::PgPool;
+use std::fmt;
 
 #[derive(Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -25,11 +26,11 @@ impl fmt::Display for ContactService {
 
 #[derive(Deserialize)]
 #[serde(rename_all = "snake_case")]
-enum FoundBy {
+pub enum FoundBy {
     Ads,
     Friend,
     SocialNetwork,
-    Website
+    Website,
 }
 
 impl fmt::Display for FoundBy {
@@ -38,13 +39,13 @@ impl fmt::Display for FoundBy {
             Self::Ads => write!(f, "Publicité"),
             Self::Friend => write!(f, "Proche/Amie.e/Collègue"),
             Self::SocialNetwork => write!(f, "Réseau social"),
-            Self::Website => write!(f, "Site-web")
+            Self::Website => write!(f, "Site-web"),
         }
     }
 }
 
 #[derive(Deserialize)]
-pub struct Mail {
+pub struct Email {
     new_project: bool,
     firstname: String,
     lastname: String,
@@ -54,9 +55,9 @@ pub struct Mail {
     services: Option<Vec<ContactService>>,
     message: String,
     budget: Option<f64>,
-    found_by: Option<FoundBy>
+    found_by: Option<FoundBy>,
 }
-impl Mail {
+impl Email {
     fn trim_strings(&mut self) {
         self.firstname = self.firstname.trim().to_owned();
         self.lastname = self.lastname.trim().to_owned();
@@ -72,29 +73,29 @@ impl Mail {
 }
 
 #[post("")]
-pub async fn send(mut mail: web::Json<Mail>) -> Result<HttpResponse, Error> {
-    mail.trim_strings();
+pub async fn send(mut form: web::Json<Email>) -> Result<HttpResponse, Error> {
+    form.trim_strings();
 
     let mut content = String::new();
 
-    if mail.firstname.len() < 2 || mail.firstname.len() > 120 {
+    if form.firstname.len() < 2 || form.firstname.len() > 120 {
         return Ok(HttpResponse::BadRequest().finish());
     }
 
-    content.push_str(&format!("<u>Nom</u> : {}<br />", mail.lastname));
+    content.push_str(&format!("<u>Nom</u> : {}<br />", form.lastname));
 
-    if mail.lastname.len() < 2 || mail.lastname.len() > 120 {
+    if form.lastname.len() < 2 || form.lastname.len() > 120 {
         return Ok(HttpResponse::BadRequest().finish());
     }
 
-    content.push_str(&format!("<u>Prénom</u> : {}<br />", mail.firstname));
+    content.push_str(&format!("<u>Prénom</u> : {}<br />", form.firstname));
 
-    if let Some(phone) = &mail.phone {
+    if let Some(phone) = &form.phone {
         content.push_str(&format!("<u>N° de téléphone</u> : {}<br />", phone));
     }
 
-    if mail.new_project {
-        if let Some(budget) = mail.budget {
+    if form.new_project {
+        if let Some(budget) = form.budget {
             if budget < 0.0 {
                 return Ok(HttpResponse::BadRequest().json("Budget cannot be negative"));
             }
@@ -102,7 +103,7 @@ pub async fn send(mut mail: web::Json<Mail>) -> Result<HttpResponse, Error> {
             content.push_str(&format!("<u>Budget</u> : {}€<br />", budget));
         }
 
-        if let Some(company) = &mail.company {
+        if let Some(company) = &form.company {
             let length = company.len();
 
             if length < 3 || length > 120 {
@@ -116,7 +117,7 @@ pub async fn send(mut mail: web::Json<Mail>) -> Result<HttpResponse, Error> {
     }
 
     // Prestations de service
-    if let Some(services) = &mail.services {
+    if let Some(services) = &form.services {
         content.push_str("<u>Intéressé par</u> : <ul>");
 
         for service in services {
@@ -127,28 +128,28 @@ pub async fn send(mut mail: web::Json<Mail>) -> Result<HttpResponse, Error> {
     }
 
     // On teste la longueur du message
-    if mail.message.len() < 30 || mail.message.len() > 500 {
+    if form.message.len() < 30 || form.message.len() > 500 {
         return Ok(HttpResponse::BadRequest()
             .json("The message must contain between 30 and 500 characters"));
     }
 
-    if let Some(found_by) = &mail.found_by {
+    if let Some(found_by) = &form.found_by {
         content.push_str(&format!("<u>Trouvé par</u> : {}<br />", found_by));
     }
 
-    content.push_str(&format!("<u>Message</u> :<br />{}", mail.message));
+    content.push_str(&format!("<u>Message</u> :<br />{}", form.message));
 
     let email = EmailBuilder::new()
         .to("contact@greenassembly.fr")
-        .from(mail.email.as_str())
+        .from(form.email.as_str())
         .subject(&format!(
             "{} : {} {}",
-            match mail.new_project {
+            match form.new_project {
                 true => "Nouveau projet",
                 _ => "Demande renseignements",
             },
-            mail.lastname.to_uppercase(),
-            mail.firstname
+            form.lastname.to_uppercase(),
+            form.firstname
         ))
         .html(content.as_str())
         .build();
@@ -167,12 +168,25 @@ pub async fn send(mut mail: web::Json<Mail>) -> Result<HttpResponse, Error> {
 }
 
 #[get("")]
-pub async fn page() -> HttpResponse {
-    #[derive(Template)]
-    #[template(path = "contact.html")]
-    struct Contact;
+pub async fn page(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
+    if let Ok(page) = services::pages::get(&pool, "contact").await {
+        crate::controllers::metrics::add(&req, &pool, page.id).await;
+        #[derive(Template)]
+        #[template(path = "contact.html")]
+        struct Contact {
+            title: String,
+            description: Option<String>,
+        }
 
-    HttpResponse::Ok()
-        .content_type("text/html")
-        .body(Contact.render().unwrap())
+        let page = Contact {
+            title: page.title,
+            description: page.description,
+        };
+
+        if let Ok(content) = page.render() {
+            return HttpResponse::Ok().content_type("text/html").body(content);
+        }
+    }
+
+    HttpResponse::InternalServerError().finish()
 }

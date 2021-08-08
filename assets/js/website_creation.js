@@ -34,6 +34,41 @@ const on_mount = () => {
             }
         }, swiper_options)
     );
+    new Swiper(
+        '#steps .swiper-container',
+        Object.assign({}, swiper_options, {
+            slidesPerView: 1,
+            spaceBetween: 60,
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+                renderBullet: (index, className) => {
+                    let title = `Étape ${index + 1}`;
+                    let description;
+
+                    switch (index) {
+                        case 0:
+                            description = 'Étude de votre besoin';
+                        break;
+                        case 1:
+                            description = 'Création graphique <span class="block">&</span> Développement';
+                        break;
+                        case 2:
+                            description = 'Choix serveur <span class="block">&</span> Optimisation SEO';
+                        break;
+                        case 3:
+                            description = 'Formation <span class="block">&</span> Suivi qualité';
+                        break;
+                    }
+                    console.log(index, className, description)
+                    return `<span class="${className}">
+                        <span class="index">${title}</span>
+                        <span class="descr">${description}</span>
+                    </span>`
+                }
+            }
+        })
+    )
 
     console.log(document.querySelectorAll('.stepper .stepper__wrapper__step')[0].getBoundingClientRect().height)
     

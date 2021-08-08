@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}Création de Site Vitrine{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block head %}
-    <meta
-        name="description"
-        content="Gagnez en visibilité et attirez des contacts qualifiés avec un site vitrine éco-conçu, design et performant 100% personnalisé. Développement sur-mesure et SEO."
-    />
+    {% match description %}
+        {% when Some with (description) %}
+            <meta name="description" content="{{ description }}" />
+        {% when None %}
+    {% endmatch %}
 
     <link rel="stylesheet" href="/css/components/swiper.css" />
     <link rel="stylesheet" href="/css/pages/onepage.css" />

@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}Création de site-web{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block head %}
-    <meta
-        name="description"
-        content="Démarquez-vous avec un site sur-mesure à votre image. Refonte ou création de site vitrine et e-commerce, faites le choix de la performance et de la singularité."
-    />
+    {% match description %}
+        {% when Some with (description) %}
+            <meta name="description" content="{{ description }}" />
+        {% when None %}
+    {% endmatch %}
 
     <link rel="stylesheet" href="/css/components/swiper.css" />
     <link rel="stylesheet" href="/css/components/stepper.css" />
@@ -282,8 +283,31 @@
             </div>
         </div>
 
-        <div>
+        <div id="steps">
             <h2>Les étapes de la création de votre site-web éco-conçu</h2>
+
+            <div class="swiper-container">
+                <div class="swiper-pagination"></div>
+
+                <div class="swiper-wrapper">
+                    <p class="swiper-slide">
+                        Nous écoutons dans un premier temps vos besoins et vos attentes. Puis nous définissons ensemble les meilleures solutions qui vous aideront à atteindre vos objectifs avant d’élaborer un cahier des charges permettant de définir les caractéristiques du projet.
+                    </p>
+                    <p class="swiper-slide">
+                        Une fois le cahier des charges validé, nous concevons l’UX (ou wireframe) qui permet de valider le parcours utilisateur sur le site avant de passer au maquettage, c’est-à-dire au design final, l’UI.<br /><br />
+                        Nous développons ensuite les fonctionnalités des différentes pages web. Nous créons des contenus textuels et visuels personnalisés (photos, vidéos, motion design) dans le respect de votre ligne éditoriale et de votre charte graphique.<br /><br />
+                        Pendant la phase de développement, nos équipes procèdent à l’élaboration de tests unitaires afin de vérifier le bon comportement des différents algorithmes et fonctionnalités et permettre une meilleure maintenabilité du site-web (pérennisation du code source).
+                    </p>
+                    <p class="swiper-slide">
+                        Dans le cadre de notre démarche d’éco-conception web, nous choisissons un <b>serveur adapté aux besoins réels de votre site-web</b>. Un moyen pour vous de payer le prix juste <span class="text_success font_bold">tout en limitant l’impact écologique de votre site-web</span>.<br /><br />
+                        Les textes et les visuels intégrés, nous procédons à l’optimisation du référencement naturel SEO afin de vous assurer une bonne visibilité sur les moteurs de recherche.
+                    </p>
+                    <p class="swiper-slide">
+                        Après la mise en ligne de votre site-web, nous vous montrons comment le gérer en toute autonomie (ajout de fiches produits, modification de contenus, création d’articles de blog). Un document reprenant toutes les fonctionnalités vous est également remis en guise de support.<br /><br />
+                        Si vous le souhaitez, nous assurons par la suite le suivi et la maintenance de votre site-web (performances SEO, analyse du parcours utilisateur, mises à jour du serveur).
+                    </p>
+                </div>
+            </div>
 
             <div class="stepper">
                 <nav aria-label="Étapes" class="stepper__nav">
