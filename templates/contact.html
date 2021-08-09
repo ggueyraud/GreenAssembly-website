@@ -45,14 +45,156 @@
         </div>
 
         <div class="carousel mt_24">
+            <nav aria-label="Progress" class="carousel__pagination">
+                <a href="#" class="carousel__pagination__item"></a>
+                <a href="#" class="carousel__pagination__item"></a>
+                <a href="#" class="carousel__pagination__item"></a>
+            </nav>
+
             <div class="carousel__wrapper">
-                <div class="stepper__wrapper__item">1</div>
-                <div class="stepper__wrapper__item">2</div>
-                <div class="stepper__wrapper__item">3</div>
+                <form name="why-for" class="carousel__wrapper__item">
+                    <p class="step_title">Je viens pour :</p>
+
+                    <div class="flex gap_4 justify_around">
+                        <label class="checkbox">
+                            <input type="radio" name="why_for" value="new_project" />
+                            vous parler de mon projet
+                        </label>
+
+                        <label class="checkbox">
+                            <input type="radio" name="why_for" value="simple_discussion" />
+                            discuter / prendre des nouvelles
+                        </label>
+                    </div>
+                </form>
+
+                <form name="informations" class="carousel__wrapper__item" autocomplete="off">
+                    <p class="step_title">Vos informations :</p>
+    
+                    <label for="lastname" class="mb_1">Nom *</label>
+                    <input
+                        type="text"
+                        id="lastname"
+                        name="lastname"
+                        required
+                        minlength="2"
+                        maxlength="120"
+                        data-fv-string_length-message="La valeur doit faire entre 2 et 120 caractères"
+                        data-fv-not_empty-message="Ce champ est obligatoire"
+                    />
+        
+                    <label for="firstname" class="mt_3 mb_1">Prénom *</label>
+                    <input
+                        type="text"
+                        id="firstname"
+                        name="firstname"
+                        required
+                        minlength="2"
+                        maxlength="120"
+                        data-fv-string_length-message="La valeur doit faire entre 2 et 120 caractères"
+                        data-fv-not_empty-message="Ce champ est obligatoire"
+                    />
+        
+                    <label for="company" class="mt_3 mb_1">Société *</label>
+                    <input
+                        type="text"
+                        id="company"
+                        name="company"
+                        required
+                        minlength="2"
+                        maxlength="120"
+                        data-fv-string_length-message="La valeur doit faire entre 2 et 120 caractères"
+                        data-fv-not_empty-message="Ce champ est obligatoire"
+                    />
+        
+                    <label for="email" class="mt_3 mb_1">Email *</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        required
+                        data-fv-string_length-message="La valeur doit faire entre 3 et 120 caractères"
+                        data-fv-not_empty-message="Ce champ est obligatoire"
+                    />
+        
+                    <label for="phone" class="mt_3 mb_1">Téléphone</label>
+                    <input type="tel" id="phone" name="phone" />
+    
+                    <div class="flex justify_end">
+                        <button type="submit" class="btn next_btn">
+                            Suivant 
+                            <svg class="icon icon--sm" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                <path fill="#fff" d="M218.101 38.101L198.302 57.9c-4.686 4.686-4.686 12.284 0 16.971L353.432 230H12c-6.627 0-12 5.373-12 12v28c0 6.627 5.373 12 12 12h341.432l-155.13 155.13c-4.686 4.686-4.686 12.284 0 16.971l19.799 19.799c4.686 4.686 12.284 4.686 16.971 0l209.414-209.414c4.686-4.686 4.686-12.284 0-16.971L235.071 38.101c-4.686-4.687-12.284-4.687-16.97 0z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+
+                <form name="project" class="carousel__wrapper__item">
+                    <label class="mb_1" for="services">J'ai besoin</label>
+        
+                    <div id="services" class="flex justify_around gap_4">
+                        <label class="checkbox">
+                            <input type="checkbox" name="services" value="website" />
+                            d'un site-web
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="services" value="visual_identity" />
+                            d'une identité visuelle
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="services" value="motion_design" />
+                            d'un motion design
+                        </label>
+                    </div>
+        
+                    <label for="message" class="mt_2 mb_1">Description | Message</label>
+                    <textarea
+                        id="message"
+                        name="message"
+                        minlength="30"
+                        maxlength="500"
+                        rows="5"
+                        required
+                    ></textarea>
+                    <div class="float_right"><span id="message_caracters_counter">0</span> / 500</div>
+                    <div class="clear_both"></div>
+
+                    <!-- <label for="resume" class="mt_2 mb_1">Curriculum *</label>
+                    <input type="file" name="resume" /> -->
+        
+                    <label for="budget" class="mt_2 mb_1">Budget</label>
+                    <select id="budget" name="budget">
+                        <option selected>Indéterminé</option>
+                        <option value="5000">- de 5000€</option>
+                        <option value="10000">- de 10 000€</option>
+                        <option value="15000">- de 15 000€</option>
+                    </select>
+                    
+                    <label for="found_by" class="mt_2 mb_1">Vous nous avez trouvé par</label>
+                    <select id="found_by" name="found_by">
+                        <option selected>Indéterminé</option>
+                        <option value="">une publicité</option>
+                        <option value="">le biais d'un.e ami.e/collègue/proche</option>
+                        <option value="">une recherche sur le Web</option>
+                        <option value="">un réseau social</option>
+                        <option value="">un site-web</option>
+                    </select>
+    
+                    <!-- TODO : fix send btn -->
+                    <div class="block w_full mt_4 text_center">
+                        <button
+                            type="submit"
+                            class="next_btn btn btn--lg border border-white rounded-lg hover:bg-white hover_text_black opacity_0"
+                        >
+                            Envoyer
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
 
-        <div class="stepper mt_24">
+        <!-- <div class="stepper mt_24">
             <nav aria-label="Progress" class="stepper__nav">
                 <a href="#" class="stepper__nav__item"></a>
                 <a href="#" class="stepper__nav__item"></a>
@@ -170,9 +312,6 @@
                     <div class="float_right"><span id="message_caracters_counter">0</span> / 500</div>
                     <div class="clear_both"></div>
 
-                    <!-- <label for="resume" class="mt_2 mb_1">Curriculum *</label>
-                    <input type="file" name="resume" /> -->
-        
                     <label for="budget" class="mt_2 mb_1">Budget</label>
                     <select id="budget" name="budget">
                         <option selected>Indéterminé</option>
@@ -191,7 +330,6 @@
                         <option value="">un site-web</option>
                     </select>
     
-                    <!-- TODO : fix send btn -->
                     <div class="block w_full mt_4 text_center">
                         <button
                             type="submit"
@@ -202,6 +340,6 @@
                     </div>
                 </form>
             </div>
-        </div>
+        </div> -->
     </section>
 {% endblock %}

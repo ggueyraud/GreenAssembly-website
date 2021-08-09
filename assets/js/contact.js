@@ -1,26 +1,23 @@
 import Form from './components/form';
-import Carousel from './components/carousel';
+import Carousel, { CarouselPagination, CarouselTouch } from './components/carousel';
 import { post } from './utils/http';
 
 const on_mount = () => {
     console.log(Carousel)
     let carousel = new Carousel(document.querySelector('.carousel'), {
         // slides_visible: 2,
+        auto_height: true,
         breakpoints: {
             768: {},
             1200: {},
-            600: {
-                slides_visible: 2,
-            }
+            // 600: {
+            //     slides_visible: 2,
+            // }
         }
     });
-    carousel.on('change', () => console.log('ok'));
-    // carousel.onChange(() => console.log('ok'))
-    document.addEventListener('keydown', () => {
-        console.log('keydpwn')
-        carousel.next()
-    })
-    console.log(carousel)
+    carousel.use(CarouselPagination);
+    carousel.use(CarouselTouch);
+
     const budget_label = document.querySelector('[for="budget"]');
     const budget_input = document.querySelector('[name="budget"]');
     const services_label = document.querySelector('[for=services]');
@@ -81,7 +78,7 @@ const on_mount = () => {
     
             Object.assign(body, e.detail);
     
-            stepper.next();
+            carousel.next();
         });
     const project_form = new Form(document.querySelector('[name="project"]'), {
         fields: {
@@ -168,7 +165,7 @@ const on_mount = () => {
                 // }
             }
     
-            stepper.next()
+            carousel.next();
         });
 }
 
