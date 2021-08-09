@@ -3,7 +3,8 @@ import Carousel, { CarouselPagination, CarouselTouch } from './components/carous
 import { post } from './utils/http';
 
 const on_mount = () => {
-    console.log(Carousel)
+    const body = {};
+
     let carousel = new Carousel(document.querySelector('.carousel'), {
         // slides_visible: 2,
         auto_height: true,
@@ -17,6 +18,18 @@ const on_mount = () => {
     });
     carousel.use(CarouselPagination);
     carousel.use(CarouselTouch);
+    carousel.on('change', (index) => {
+        if (index === 0) {
+            if (document.querySelector('[name=why_for]:checked').value === 'simple_discussion') {
+    
+            }
+
+            document
+                .querySelector('[name=why_for]:checked')
+                .checked = false
+        }
+        console.log('change to', index)
+    })
 
     const budget_label = document.querySelector('[for="budget"]');
     const budget_input = document.querySelector('[name="budget"]');
@@ -28,6 +41,7 @@ const on_mount = () => {
     // const resume_input = document.querySelector('[name=resume]');
     
     let stepper = null;
+    
 
     import('../wasm/pkg/wasm_bg.js')
     .then(wasm => {
@@ -58,7 +72,7 @@ const on_mount = () => {
     })
     .catch(console.error)
     
-    const body = {};
+    
     
     document
         .querySelector('[name="message"]')

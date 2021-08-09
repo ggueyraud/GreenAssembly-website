@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" href="/css/components/swiper.css" />
     <link rel="stylesheet" href="/css/pages/index.css" />
+    <link rel="stylesheet" href="/css/components/carousel.css" />
 
     <script src="/js/swiper.js" async></script>
 {% endblock %}
@@ -41,6 +42,60 @@
 {% block content %}
     <div class="space_y_12 md_space_y_24">
         <section id="engagements" class="md_my_12 mt_32">
+            <div class="carousel">
+                <div class="carousel__wrapper">
+                    <div class="carousel__wrapper__item">
+                        <div class="swiper-card">
+                            <img
+                                data-src="/icons/eco_conception.svg"
+                                alt="Éco-conception"
+                                class="lazy"
+                                width="202"
+                                height="221"
+                            />
+        
+                            <h3>Éco-conception</h3>
+        
+                            <p>Développement et webdesign <b>sur mesure</b> pour un site-web <b>réactif</b> et <b>durable</b>. Ou quand technologie et environnement s’assemblent pour le meilleur chez GreenAssembly.</p>
+                        </div>
+                    </div>
+    
+                    <div class="carousel__wrapper__item">
+                        <div class="swiper-card">
+                            <img
+                                data-src="/icons/qualite.svg"
+                                alt="Qualité"
+                                class="lazy"
+                                width="291"
+                                height="218"
+                            />
+                                
+                            <h3>Qualité</h3>
+        
+                            <p>Parce que l’à peu près n’a pas sa place dans votre business, la <b>qualité</b>, la <b>performance</b> et la <b>sécurité</b> font partie de nos priorités absolues chez GreenAssembly.</p>
+                        </div>
+                    </div>
+    
+                    <div class="carousel__wrapper__item">
+                        <div class="swiper-card">
+                            <img
+                                data-src="/icons/ethique.svg"
+                                alt="Éthique"
+                                class="lazy"
+                                width="192"
+                                height="181"
+                            />
+        
+                            <h3>Éthique</h3>
+        
+                            <p>Ni trop ni pas assez. Chez GreenAssembly, vous achetez les <b>fonctionnalités</b> vraiment <b>utiles à votre activité</b>. L’assurance pour vous de payer le <b>prix juste</b>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <nav aria-label="Progress" class="carousel__pagination"></nav>
+            </div>
+
             <div class="swiper-container">
                 <div class="swiper-wrapper">
                     <div class="swiper-slide">

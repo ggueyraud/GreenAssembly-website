@@ -1,16 +1,43 @@
 export class CarouselPagination {
-    constructor(carousel) {
+    constructor(carousel, options) {
         this.carousel = carousel;
+        this.options = Object.assign({}, {
+            render: () => `<a href="#" class="carousel__pagination__item"></a>`
+        }, options);
+
+        // Fire resize event to init pagination html
+        this.resize();
+
         this.items = carousel.container.querySelectorAll('.carousel__pagination__item');
         this.items.forEach((item, index) => {
+
             item.addEventListener('click', e => {
                 e.preventDefault();
 
                 this.carousel.goto_slide(index);
                 this.update();
             })
-        })
-        this.update()
+        });
+    }
+
+    resize() {
+        console.log('resize')
+        let nb_pages = Math.ceil(this.carousel.childrens.length / this.carousel.active_options.slides_visible);
+        console.log('Nb pages', nb_pages)
+    
+        let html = '';
+        if (nb_pages > 1) {
+            for (let i = 0; i < nb_pages; i++) {
+                html += this.options.render();
+            }
+        }
+
+        this.carousel.container.querySelector('.carousel__pagination').innerHTML = html;
+        this.items = this.carousel.container.querySelectorAll('.carousel__pagination__item');
+
+        if (this.items.length > 0) {
+            this.update();
+        }
     }
 
     update() {
@@ -59,31 +86,39 @@ export class CarouselTouch {
     }
 
     start_drag(e) {
+        e.target.style.setProperty('user-select', 'none');
+
         if (e.touches) {
             if (e.touches.length > 1) {
                 return;
             } else {
                 e = e.touches[0];
             }
-
-            this.carousel.wrapper.style.setProperty('transition-duration', '0ms');
-            this.carousel.wrapper.style.setProperty('will-change', 'transform');
-            this.origin = { x: e.screenX, y: e.screenY };
-            this.width = this.carousel.container.offsetWidth;
         }
+
+        this.carousel.wrapper.style.setProperty('transition-duration', '0ms');
+        this.carousel.wrapper.style.setProperty('will-change', 'transform');
+        this.carousel.wrapper.style.setProperty('cursor', 'grab');
+        this.origin = { x: e.screenX, y: e.screenY };
+        this.width = this.carousel.container.offsetWidth;
     }
 
-    end_drag(e) {
-        console.log(e)
+    end_drag() {
         if (this.origin && this.last_translate) {
+            console.log('end drag ok')
             this.carousel.wrapper.style.setProperty('transition-duration', '300ms');
             this.carousel.wrapper.style.removeProperty('will-change');
             
+            // TODO : pb ici à fix
             if (Math.abs(this.last_translate.x / this.carousel.container.offsetWidth) > 0.2) {
                 if (this.last_translate.x < 0) {
-                    this.carousel.next();
+                    if (!this.carousel.next()) {
+                        this.carousel.goto_slide(this.carousel.current_slide);
+                    }
                 } else {
-                    this.carousel.prev();
+                    if (!this.carousel.prev()) {
+                        this.carousel.goto_slide(this.carousel.current_slide);
+                    }
                 }
             } else {
                 console.log('return to current item')
@@ -91,8 +126,11 @@ export class CarouselTouch {
             }
 
             this.carousel.update();
+        } else {
+            console.log('end drag pas ok')
         }
 
+        this.carousel.wrapper.style.setProperty('cursor', 'default');
         this.origin = null;
     }
 
@@ -124,6 +162,32 @@ const calculate_height = carousel => {
     carousel.wrapper.style.setProperty('height', `${current_step.getBoundingClientRect().height}px`);
 }
 
+const handle_breakpoints = carousel => {
+    const breakpoints = carousel.base_options.breakpoints;
+
+    if (breakpoints !== null) {
+        const points = Object.keys(breakpoints)
+            .map(point => parseInt(point))
+            .sort((a, b) => {
+                if (a < b) 
+                    return 1;
+                else if (a > b)
+                    return -1;
+
+                return 0;
+            });
+
+        for (const point of points) {
+            if (window.innerWidth >= point) {
+                carousel.active_options = Object.assign({}, carousel.active_options, breakpoints[point])
+
+                carousel.set_style()
+                return;
+            }
+        }
+    }
+}
+
 export default class {
     constructor(container, options = {}) {
         this.modules = [];
@@ -140,34 +204,20 @@ export default class {
         this.active_options = this.base_options;
 
         window.addEventListener('resize', () => {
-            if (this.base_options.breakpoints !== null) {
-                const points = Object.keys(this.base_options.breakpoints)
-                    .map(point => parseInt(point))
-                    .sort((a, b) => {
-                        if (a < b) 
-                            return 1;
-                        else if (a > b)
-                            return -1;
-    
-                        return 0;
-                    });
-    
-                for (const point of points) {
-                    if (window.innerWidth >= point) {
-                        this.active_options = Object.assign({}, this.active_options, this.base_options.breakpoints[point])
-                        this.set_style()
-                        console.log(this.active_options, this.base_options)
-                        break;
-                    }
-                }
-            }
-
             
             this.active_options = this.base_options;
+            handle_breakpoints(this);
             if (this.active_options.auto_height) {
                 calculate_height(this);
             }
-            // console.log(this.active_options, this.base_options)
+
+            for (const module of this.modules) {
+                console.log(module)
+                if (module.resize) {
+                    module.resize();
+                }
+            }
+
             this.set_style()
         });
         
@@ -176,14 +226,22 @@ export default class {
         this.set_style();
         this.events = {};
 
+        handle_breakpoints(this);
+
         console.log(this.active_options)
         if (this.active_options.auto_height) {
+            this.wrapper.style.setProperty('align-items', 'flex-start');
             calculate_height(this);
         }
     }
 
-    use(module) {
-        this.modules.push(new module(this))
+    use(modules) {
+        // console.log('Typeof', typeof module)
+        if (Array.isArray(modules)) {
+            modules.forEach(module => this.modules.push(new module(this)))
+        } else {
+            this.modules.push(new modules(this))
+        }
     }
 
     update() {
@@ -195,6 +253,8 @@ export default class {
     }
 
     set_style() {
+        // debugger
+        console.log(this.active_options.slides_visible)
         let ratio = this.childrens.length / this.active_options.slides_visible;
 
         this.wrapper.style.width = `${ratio * 100}%`;
@@ -202,24 +262,38 @@ export default class {
     }
 
     next() {
-        if (this.current_slide + this.active_options.slides_to_scroll < this.childrens.length && this.active_options.allow_slide_next)
+        if (this.current_slide + this.active_options.slides_to_scroll < this.childrens.length && this.active_options.allow_slide_next) {
             this.goto_slide(this.current_slide + this.active_options.slides_to_scroll);
+
+            return true;
+        }
+
+        return false;
     }
 
     prev() {
-        if (this.current_slide - this.active_options.slides_to_scroll > 0 && this.active_options.allow_slide_prev)
+        if (this.current_slide - this.active_options.slides_to_scroll > 0 && this.active_options.allow_slide_prev) {
             this.goto_slide(this.current_slide - this.active_options.slides_to_scroll);
+
+            return true;
+        }
+
+        return false;
     }
 
     goto_slide(index) {
         this.current_slide = index;
         this.wrapper.style.transform = `translate3d(-${(100 / this.childrens.length) * index}%, 0, 0)`;
         this.update();
-        calculate_height(this);
+
+        if (this.active_options.auto_height) {
+            calculate_height(this);
+        }
+
         const on_change_evt = this.events['change'];
 
         if (on_change_evt) {
-            on_change_evt.call(this);
+            on_change_evt(index);
         }
     }
 
