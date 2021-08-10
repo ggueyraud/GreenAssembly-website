@@ -279,9 +279,9 @@ header#home_banner {
     #engagements {
         margin-bottom: 0;
 
-        .swiper-wrapper {
+        .carousel__wrapper {
             padding-top: 30px;
-            padding-bottom: 66px;
+            padding-bottom: 80px;
     
             :nth-child(even) {
                 .swiper-card {
@@ -301,10 +301,10 @@ header#home_banner {
                 }
             }
     
-            .swiper-slide {
-                flex-shrink: inherit;
-                height: auto
-            }
+            // .swiper-slide {
+            //     flex-shrink: inherit;
+            //     height: auto
+            // }
     
             .swiper-card {
                 position: relative;

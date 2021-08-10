@@ -9,7 +9,7 @@
         {% when None %}
     {% endmatch %}
 
-    <link rel="stylesheet" href="/css/components/swiper.css" />
+    <link rel="stylesheet" href="/css/components/carousel.css" />
     <link rel="stylesheet" href="/css/pages/agency.css" />
 
     <script src="/js/swiper.js" async></script>
@@ -72,7 +72,19 @@
         <section id="team">
             <h2>Notre Équipe</h2>
 
-            <div class="swiper-container">
+            <div class="carousel">
+                <div class="carousel__wrapper">
+                    {% for employee in employees %}
+                        <div class="carousel__wrapper__item">
+                            {{ employee|safe }}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <nav aria-label="Progress" class="carousel__pagination"></nav>
+            </div>
+
+            <!-- <div class="swiper-container">
                 <div class="swiper-wrapper">
                     {% for employee in employees %}
                         <div class="swiper-slide">
@@ -82,7 +94,7 @@
                 </div>
     
                 <div class="swiper-pagination"></div>
-            </div>
+            </div> -->
         </section>
     </div>
 {% endblock %}

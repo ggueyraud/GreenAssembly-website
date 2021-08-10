@@ -96,7 +96,7 @@ ul {
 #what_we_do {
     text-align: center;
 
-    .swiper-slide {
+    .carousel__wrapper__item {
         height: auto;
         padding: 12px
     }
@@ -124,10 +124,10 @@ ul {
 }
 
 #formules {
-    .swiper-wrapper {
-        margin-bottom: calc(28px)
-    }
-    .swiper-slide {
+    // .swiper-wrapper {
+    //     margin-bottom: calc(28px)
+    // }
+    .carousel__wrapper__item {
         display: grid;
         grid-template-columns: repeat(1, minmax(0, 1fr));
         
@@ -191,7 +191,7 @@ ul {
         }
     }
 
-    #formules .swiper-slide .preview {
+    #formules .carousel__wrapper__item .preview {
         width: 80%;
         margin: 0 auto
     }
@@ -222,7 +222,7 @@ ul {
             justify-content: flex-start !important;
         }
 
-        .swiper-slide {
+        .carousel__wrapper__item {
             grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
             gap: 1rem;
 
@@ -250,8 +250,8 @@ ul {
         --spacing: 16rem
     }
 }
-@media (min-width: map-get($break-points, xxl)) {
-    #formules .swiper-wrapper {
-        margin-bottom: calc(1.5rem + 28px) !important
-    }
-}
+// @media (min-width: map-get($break-points, xxl)) {
+//     #formules .swiper-wrapper {
+//         margin-bottom: calc(1.5rem + 28px) !important
+//     }
+// }

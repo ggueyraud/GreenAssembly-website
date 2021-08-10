@@ -11,14 +11,6 @@ use std::{cell::RefCell, rc::Rc, boxed::Box};
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 #[wasm_bindgen]
-extern "C" {
-    fn alert(s: &str);
-
-    #[wasm_bindgen(js_namespace = console)]
-    fn log(s: &str);
-}
-
-#[wasm_bindgen]
 #[derive(Clone)]
 pub enum Event {
     StepChange,
@@ -125,9 +117,6 @@ impl Stepper {
                 *sp.borrow_mut() = 1.0 - (((*x.clone().borrow() - touch.page_x()) * 100) as f64 / step_width);
                 let wrapper_percent = 1.0 - (((*x.clone().borrow() - touch.page_x()) * 100) as f64 / (*w).get_bounding_client_rect().width());
 
-                // if wrapper_percent >
-                log(&format!("Wrapper_percent: {}", wrapper_percent));
-    
                 (*w).style().set_property(
                     "transform",
                     &format!(
@@ -195,7 +184,6 @@ impl Stepper {
         let on_resize = Closure::wrap(Box::new(move |e: &web_sys::Event| {
             let win = e.target().unwrap();
             let win = win.dyn_ref::<web_sys::Window>().unwrap();
-            log(&format!("Resize: (x: {:?}; y: {:?})", win.inner_width(), win.inner_height()));
 
             if let Some(step) = st.get(*cs.borrow()) {
                 let step = step.dyn_ref::<HtmlElement>().unwrap();
@@ -290,16 +278,10 @@ impl Stepper {
             "transform",
             &format!("translate3d({}%, 0, 0)", translate_x)
         );
-        // log(&format!("Move old to: {}", -(new_step as i32) * 947));
-        log("Ok");
         *current_step.borrow_mut() = new_step;
-        log("Ok");
-        // log(&format!("New current_step = {}", *current_step.borrow()));
         let ns = steps.get(new_step).expect("1");
         let ns = ns.dyn_ref::<HtmlElement>().expect("2");
         ns.class_list().add_1("active");
-
-        log(&ns.style().get_property_value("height").unwrap());
 
         wrapper.style().set_property(
             "height",
@@ -311,8 +293,6 @@ impl Stepper {
     fn update_nav(container: Rc<HtmlElement>, current_step: Rc<RefCell<u32>>) {
         let li = (*container).query_selector_all("nav a").expect("nav a not founds");
         let mut index: u32 = 0;
-
-        log(&format!("{{Update nav}} index : {}; current_step : {}; length : {}", index, *current_step.borrow(), li.length()));
 
         while index < li.length() {
             let item = li.get(index).expect("1");

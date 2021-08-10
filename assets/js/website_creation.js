@@ -1,5 +1,6 @@
 import SwiperCore, { Pagination } from 'swiper/core';
 import Swiper from 'swiper';
+import Carousel, { CarouselPagination, CarouselTouch } from './components/carousel';
 
 const on_mount = () => {
     const swiper_options = {
@@ -10,30 +11,45 @@ const on_mount = () => {
         }
     };
 
-    SwiperCore.use([Pagination]);
-    new Swiper(
-        '#formules .swiper-container',
-        Object.assign({
-            slidesPerView: 1,
-            spaceBetween: 60
-        }, swiper_options)
-    );
-    new Swiper(
-        '#what_we_do .swiper-container',
-        Object.assign({
-            slidesPerView: 1,
-            spaceBetween: 30,
-            breakpoints: {
-                768: {
-                    slidesPerView: 2
-                },
-                1280: {
-                    slidesPerView: 3,
-                    spaceBetween: 60,
-                }
+    const carousel_formules = new Carousel(document.querySelector('#formules .carousel'));
+    carousel_formules.use([CarouselPagination, CarouselTouch]);
+
+    // SwiperCore.use([Pagination]);
+    // new Swiper(
+    //     '#formules .swiper-container',
+    //     Object.assign({
+    //         slidesPerView: 1,
+    //         spaceBetween: 60
+    //     }, swiper_options)
+    // );
+    const carousel_what_we_do = new Carousel(document.querySelector('#what_we_do .carousel'), {
+        breakpoints: {
+            768: {
+                slides_visible: 2
+            },
+            1280: {
+                slides_visible: 3,
+                space_between: '3rem'
             }
-        }, swiper_options)
-    );
+        }
+    });
+    carousel_what_we_do.use([CarouselPagination, CarouselTouch]);
+    // new Swiper(
+    //     '#what_we_do .swiper-container',
+    //     Object.assign({
+    //         slidesPerView: 1,
+    //         spaceBetween: 30,
+    //         breakpoints: {
+    //             768: {
+    //                 slidesPerView: 2
+    //             },
+    //             1280: {
+    //                 slidesPerView: 3,
+    //                 spaceBetween: 60,
+    //             }
+    //         }
+    //     }, swiper_options)
+    // );
     new Swiper(
         '#steps .swiper-container',
         Object.assign({}, swiper_options, {

@@ -10,6 +10,7 @@
     {% endmatch %}
 
     <link rel="stylesheet" href="/css/components/swiper.css" />
+    <link rel="stylesheet" href="/css/components/carousel.css" />
     <link rel="stylesheet" href="/css/components/stepper.css" />
     <link rel="stylesheet" href="/css/pages/website_creation.css" />
 
@@ -118,9 +119,9 @@
         <div id="what_we_do">
             <h2>Ce que notre Agence Web fait pour <span>vous</span></h2>
 
-            <div class="swiper-container">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide">
+            <div class="carousel">
+                <div class="carousel__wrapper">
+                    <div class="carousel__wrapper__item">
                         <div class="card">
                             <h3>sur-mesure 📐 <span class="block">&</span> sécurité 🔒</h3>
             
@@ -128,7 +129,7 @@
                         </div>
                     </div>
 
-                    <div class="swiper-slide">
+                    <div class="carousel__wrapper__item">
                         <div class="card">
                             <h3>✨ Singularité</h3>
             
@@ -136,7 +137,7 @@
                         </div>
                     </div>
 
-                    <div class="swiper-slide">
+                    <div class="carousel__wrapper__item">
                         <div class="card">
                             <h3>🌱 Éco-conception</h3>
             
@@ -144,7 +145,7 @@
                         </div>
                     </div>
 
-                    <div class="swiper-slide">
+                    <div class="carousel__wrapper__item">
                         <div class="card">
                             <h3>LIVRAISON 🚛 CLÉ EN MAIN 🔑✋</h3>
             
@@ -152,7 +153,7 @@
                         </div>
                     </div>
 
-                    <div class="swiper-slide">
+                    <div class="carousel__wrapper__item">
                         <div class="card">
                             <h3>SUIVI 🔍 <span class="block">&</span> MAINTENANCE 🛠</h3>
             
@@ -161,14 +162,128 @@
                     </div>
                 </div>
 
-                <div class="swiper-pagination"></div>
+                <nav aria-label="Progress" class="carousel__pagination"></nav>
             </div>
         </div>
 
         <div id="formules">
             <h2>Un besoin <span>=</span> un site-web</h2>
+
+            <div class="carousel">
+                <div class="carousel__wrapper">
+                    <div class="carousel__wrapper__item">
+                        <div class="infos">
+                            <h3>Site OnePage</h3>
+        
+                            <p>Vous souhaitez présenter vos produits et services de façon dynamique à vos clients et prospects. Telle une carte de visite digitale, nous créons votre <b>site-web onepage à l’image de votre marque</b>.</p>
+        
+                            <div class="read_more">
+                                <a o-follow href="/creation-site-web/onepage">
+                                    <span>en savoir plus</span>
+                    
+                                    <picture>
+                                        <source srcset="/icons/leaf.webp" />
+                    
+                                        <img
+                                            src="/icons/leaf.png"
+                                            alt="GreenAssembly Leaf"
+                                            width="48"
+                                            height="30"
+                                        />
+                                    </picture>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="preview">
+                            <picture class="lazy">
+                                <source data-srcset="/img/onepage.webp" />
+
+                                <img
+                                    data-src="/img/onepage.jpg"
+                                    alt="Création de site OnePage"
+                                />
+                            </picture>
+                        </div>
+                    </div>
+
+                    <div class="carousel__wrapper__item">
+                        <div class="infos">
+                            <h3>Site Vitrine</h3>
+        
+                            <p>Vous souhaitez valoriser votre savoir-faire et développer votre notoriété au niveau local ou à plus grande échelle. Nous développons votre <b>site vitrine sur-mesure</b> en fonction de vos besoins et des attentes de vos prospects et clients.</p>
+        
+                            <div class="read_more">
+                                <a o-follow href="/creation-site-web/vitrine">
+                                    <span>en savoir plus</span>
+                    
+                                    <picture>
+                                        <source srcset="/icons/leaf.webp" />
+                    
+                                        <img
+                                            src="/icons/leaf.png"
+                                            alt="GreenAssembly Leaf"
+                                            width="48"
+                                            height="30"
+                                        />
+                                    </picture>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="preview">
+                            <picture class="lazy">
+                                <source data-srcset="/img/showcase.webp" />
+
+                                <img
+                                    data-src="/img/showcase.jpg"
+                                    alt="Création de site vitrine"
+                                />
+                            </picture>
+                        </div>
+                    </div>
+
+                    <div class="carousel__wrapper__item">
+                        <div class="infos">
+                            <h3>Site E-Commerce</h3>
+        
+                            <p>Vous souhaitez vendre vos produits en ligne et élargir votre clientèle à l’échelle nationale ou internationale. Nous concevons votre <b>site e-commerce</b> avec les fonctionnalités indispensables à votre activité.</p>
+        
+                            <div class="read_more">
+                                <a o-follow href="/creation-site-web/e-commerce">
+                                    <span>en savoir plus</span>
+                    
+                                    <picture>
+                                        <source srcset="/icons/leaf.webp" />
+                    
+                                        <img
+                                            src="/icons/leaf.png"
+                                            alt="GreenAssembly Leaf"
+                                            width="48"
+                                            height="30"
+                                        />
+                                    </picture>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="preview">
+                            <picture class="lazy">
+                                <source data-srcset="/img/e_commerce.webp" />
+
+                                <img
+                                    data-src="/img/e_commerce.jpg"
+                                    alt="Création de site E-Commerce"
+                                />
+                            </picture>
+                        </div>
+                    </div>
+                </div>
+
+                <nav aria-label="Progress" class="carousel__pagination"></nav>
+            </div>
     
-            <div class="swiper-container">
+            <!-- <div class="swiper-container">
                 <div class="swiper-wrapper">
                     <div class="swiper-slide">
                         <div class="infos">
@@ -280,7 +395,7 @@
                 </div>
     
                 <div class="swiper-pagination"></div>
-            </div>
+            </div> -->
         </div>
 
         <div id="steps">
