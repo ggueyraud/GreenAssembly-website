@@ -44,3 +44,7 @@
         background-color: map-get($colors, 'white');
     }
 }
+
+#services {
+    flex-wrap: wrap;
+}
