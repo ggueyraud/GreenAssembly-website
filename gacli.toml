@@ -4,7 +4,8 @@ content = ["templates/base.html", ".build/production/js/global.js"]
 
 [[purgecss]]
 css = "pages/index.css"
-content = ["templates/index.html"]
+content = ["templates/index.html", ".build/production/js/index.js"]
+safelist = ["carousel__pagination__item", "carousel__pagination__item--current", "carousel__pagination__item--hidden"]
 
 [[purgecss]]
 css = "pages/agency.css"
@@ -17,10 +18,6 @@ content = ["templates/portfolio.html"]
 [[purgecss]]
 css = "pages/contact.css"
 content = ["templates/contact.html", ".build/production/js/contact.js"]
-
-[[purgecss]]
-css = "components/swiper.css"
-content = ["templates/agency.html", "templates/index.html", ".build/production/js/swiper.js"]
 
 [[purgecss]]
 css = "pages/onepage.css"
@@ -37,4 +34,3 @@ content = ["templates/404.html"]
 [[purgecss]]
 css = "pages/website_creation.css"
 content = ["templates/website_creation.html", ".build/production/js/global.js", ".build/production/js/website_creation.js"]
-safelist = ["stepper__nav__item--current"]
