@@ -11,7 +11,7 @@
     "postcss": "^8.3.5"
   },
   "dependencies": {
-    "swiper": "^6.8.1"
+    "carousel": "github:GreenAssembly/Carousel"
   },
   "browserslist": [
     "> 1%",
