@@ -45,7 +45,7 @@ CREATE TABLE metrics (
 );
 -- TODO : create hook to check if all fields are null, if true remove insert
 
-DROP TABLE IF EXITS ips_banned CASCADE;
+DROP TABLE IF EXISTS ips_banned CASCADE;
 CREATE TABLE ips_banned (
     id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     ip VARCHAR(60) NOT NULL,
