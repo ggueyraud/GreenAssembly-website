@@ -9,11 +9,9 @@
         {% when None %}
     {% endmatch %}
 
-    <link rel="stylesheet" href="/css/components/carousel.css" />
     <link rel="stylesheet" href="/css/pages/agency.css" />
 
-    <script src="/js/swiper.js" async></script>
-    <script src="/js/agency.js" async></script>
+    <script src="/js/carousel.js" async></script>
 {% endblock %}
 
 {% block banner %}
@@ -83,18 +81,6 @@
 
                 <nav aria-label="Progress" class="carousel__pagination"></nav>
             </div>
-
-            <!-- <div class="swiper-container">
-                <div class="swiper-wrapper">
-                    {% for employee in employees %}
-                        <div class="swiper-slide">
-                            {{ employee|safe }}
-                        </div>
-                    {% endfor %}
-                </div>
-    
-                <div class="swiper-pagination"></div>
-            </div> -->
         </section>
     </div>
 {% endblock %}

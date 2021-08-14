@@ -1,3 +1,4 @@
+@import '../../../node_modules/carousel/src/index.scss';
 @import '../abstracts/_variables.scss';
 @import '../base/_margins.scss';
 @import '../base/_space.scss';
@@ -5,58 +6,23 @@
 @import '../base/_display.scss';
 @import '../base/_typography.scss';
 @import '../components/_card.scss';
+@import '../components/_stepper.scss';
 @import '../layout/_banner.scss';
+
+.carousel__pagination__item--current {
+    background-color: map-get($colors, success) !important;
+    border-color: map-get($colors, success) !important;
+
+    svg {
+        height: 1.15rem;
+        width: auto;
+        color: map-get($colors, 'black')
+    }
+}
 
 header#banner {
     align-items: flex-end;
     padding-bottom: 5rem;
-}
-
-.stepper {
-    &__nav {
-        position: relative;
-        margin-top: 8rem;
-        margin-bottom: 1rem;
-
-        .label {
-            @extend .pb_4, .sm_hidden;
-            position: absolute;
-            bottom: calc(100%);
-            z-index: 1;
-            text-align: center;
-
-            .index {
-                @extend .text_gradient, .text_3xl, .pb_2;
-                text-transform: uppercase;
-                font-weight: bold;
-            }
-
-            .descr > * { display: inline}
-        }
-
-        &__item {
-            position: relative;
-            --spacing: 2.5rem;
-
-            &--current .index {
-                @extend .text_gradient;
-                font-size: 2.5rem;
-            }
-
-            .index {
-                @extend .text_lg;
-                font-weight: bold;
-                text-transform: uppercase;
-                white-space: nowrap;
-                color: map-get($colors, success);
-                bottom: calc(100% + .75rem);
-            }
-
-            div {
-                display: none;
-            }
-        }
-    }
 }
 
 h1 {
@@ -124,9 +90,6 @@ ul {
 }
 
 #formules {
-    // .swiper-wrapper {
-    //     margin-bottom: calc(28px)
-    // }
     .carousel__wrapper__item {
         display: grid;
         grid-template-columns: repeat(1, minmax(0, 1fr));
@@ -156,7 +119,7 @@ ul {
 }
 
 @media (min-width: map-get($break-points, sm)) {
-    .stepper__nav {
+    .carousel.stepper .carousel__pagination {
         margin-top: 3rem;
         margin-bottom: 8rem;
 
@@ -183,6 +146,7 @@ ul {
                 text-align: center;
                 top: calc(100% + 0.75rem);
                 width: 140px;
+                color: map-get($colors, 'white');
         
                 & > * {
                     line-height: 1.15
@@ -198,7 +162,7 @@ ul {
 }
 
 @media (min-width: map-get($break-points, md)) {
-    .stepper__nav__item {
+    .carousel.stepper .carousel__wrapper__item {
         --spacing: 9rem;
 
         .descr {
@@ -207,7 +171,7 @@ ul {
     }
 }
 @media (min-width: map-get($break-points, lg)) {
-    .stepper__nav__item {
+    .carousel.stepper .carousel__wrapper__item {
         --spacing: 12rem
     }
 
@@ -246,7 +210,7 @@ ul {
     }
 }
 @media (min-width: map-get($break-points, xl)) {
-    .stepper__nav__item {
+    .carousel.stepper .carousel__wrapper__item {
         --spacing: 16rem
     }
 }

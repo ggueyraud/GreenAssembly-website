@@ -8,7 +8,7 @@ pub async fn add(req: &HttpRequest, pool: &PgPool, page_id: i16) -> bool {
         Ok(ua) => metrics::add(
             &pool,
             page_id,
-            req.connection_info().realip_remote_addr(),
+            &req.peer_addr().unwrap().ip().to_string(),
             ua.product.name.clone(),
             ua.os.name.clone(),
             ua.device.name.clone(),

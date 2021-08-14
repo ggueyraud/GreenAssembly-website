@@ -40,12 +40,12 @@ document.addEventListener('readystatechange', e => {
 
         loader.style.visibility = 'hidden';
         loader.style.opacity = '0';
-        document.documentElement.style.overflow = 'auto'
+        document.documentElement.style.overflow = 'auto';
         
         window.addEventListener('router:loading', () => {
-            Object.assign(loader.style, { opacity: 100, visibility: 'visible' })
+            Object.assign(loader.style, { opacity: 100, visibility: 'visible' });
                 
-            document.documentElement.style.overflow = 'hidden'
+            document.documentElement.style.overflow = 'hidden';
         })
 
         window.router = new Router();
@@ -58,7 +58,7 @@ document.addEventListener('readystatechange', e => {
                     top: window.innerHeight,
                     behavior: 'smooth'
                 });
-            })
+            });
         }
         
         const navbar = document.querySelector('#navbar');
@@ -66,7 +66,6 @@ document.addEventListener('readystatechange', e => {
 
         const close_mobile_menu = () => {
             navbar.classList.remove('show');
-            // html.classList.remove('overflow_hidden');
             document.documentElement.style.overflow = null;
             window.history.pushState(null, null, ' ');
         }
@@ -78,14 +77,13 @@ document.addEventListener('readystatechange', e => {
                 e.preventDefault();
                 window.history.pushState({ menu_opened: true }, null, '#menu-opened');
                 navbar.classList.add('show');
-                // html.classList.add('overflow_hidden');
                 document.documentElement.style.overflow = 'hidden';
-            })
+            });
         
         // Close menu
         document
             .querySelector('#close-mobile-menu')
-            .addEventListener('click', close_mobile_menu)
+            .addEventListener('click', close_mobile_menu);
 
         navbar
             .querySelectorAll('#menu a')
@@ -94,9 +92,9 @@ document.addEventListener('readystatechange', e => {
                     .addEventListener('click', e => {
                         e.preventDefault();
         
-                        close_mobile_menu()
+                        close_mobile_menu();
                     })
-            })
+            });
 
         // TODO : finir d'implémenter le nouveau comportement du menu
         // window.addEventListener('popstate', (e) => {
@@ -111,9 +109,6 @@ document.addEventListener('readystatechange', e => {
                 html.classList.remove('overflow_hidden');
                 window.history.pushState(null, null, ' ');
             }
-        })
+        });
     }
-})
-
-// if (document.readyState === 'interactive' || document.readyState === 'complete') {
-// }
+});

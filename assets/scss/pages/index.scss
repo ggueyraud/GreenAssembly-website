@@ -1,3 +1,4 @@
+@import '../../../node_modules/carousel/src/index.scss';
 @import '../base/_animations.scss';
 @import '../base/_margins.scss';
 @import '../base/_text.scss';
@@ -73,6 +74,8 @@ header#home_banner {
     --sm_bg_img: url(/img/bg/sm_home.jpg);
     --webp_bg_img: url(/img/bg/home.webp);
     --bg_img: url(/img/bg/home.jpg);
+
+    background-image: var(--sm_bg_img);
 
     position: relative;
     width: 100%;
@@ -300,11 +303,6 @@ header#home_banner {
                     }
                 }
             }
-    
-            // .swiper-slide {
-            //     flex-shrink: inherit;
-            //     height: auto
-            // }
     
             .swiper-card {
                 position: relative;

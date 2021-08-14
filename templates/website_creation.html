@@ -9,9 +9,6 @@
         {% when None %}
     {% endmatch %}
 
-    <link rel="stylesheet" href="/css/components/swiper.css" />
-    <link rel="stylesheet" href="/css/components/carousel.css" />
-    <link rel="stylesheet" href="/css/components/stepper.css" />
     <link rel="stylesheet" href="/css/pages/website_creation.css" />
 
     <script src="/js/website_creation.js" async></script>
@@ -182,7 +179,7 @@
                                     <span>en savoir plus</span>
                     
                                     <picture>
-                                        <source srcset="/icons/leaf.webp" />
+                                        <source srcset="/icons/leaf.webp" type="image/webp" />
                     
                                         <img
                                             src="/icons/leaf.png"
@@ -197,7 +194,7 @@
 
                         <div class="preview">
                             <picture class="lazy">
-                                <source data-srcset="/img/onepage.webp" />
+                                <source data-srcset="/img/onepage.webp" type="image/webp" />
 
                                 <img
                                     data-src="/img/onepage.jpg"
@@ -218,7 +215,7 @@
                                     <span>en savoir plus</span>
                     
                                     <picture>
-                                        <source srcset="/icons/leaf.webp" />
+                                        <source srcset="/icons/leaf.webp" type="image/webp" />
                     
                                         <img
                                             src="/icons/leaf.png"
@@ -233,7 +230,7 @@
 
                         <div class="preview">
                             <picture class="lazy">
-                                <source data-srcset="/img/showcase.webp" />
+                                <source data-srcset="/img/showcase.webp" type="image/webp" />
 
                                 <img
                                     data-src="/img/showcase.jpg"
@@ -254,7 +251,7 @@
                                     <span>en savoir plus</span>
                     
                                     <picture>
-                                        <source srcset="/icons/leaf.webp" />
+                                        <source srcset="/icons/leaf.webp" type="image/webp" />
                     
                                         <img
                                             src="/icons/leaf.png"
@@ -269,7 +266,7 @@
 
                         <div class="preview">
                             <picture class="lazy">
-                                <source data-srcset="/img/e_commerce.webp" />
+                                <source data-srcset="/img/e_commerce.webp" type="image/webp" />
 
                                 <img
                                     data-src="/img/e_commerce.jpg"
@@ -282,204 +279,36 @@
 
                 <nav aria-label="Progress" class="carousel__pagination"></nav>
             </div>
-    
-            <!-- <div class="swiper-container">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <div class="infos">
-                            <h3>Site OnePage</h3>
-        
-                            <p>Vous souhaitez présenter vos produits et services de façon dynamique à vos clients et prospects. Telle une carte de visite digitale, nous créons votre <b>site-web onepage à l’image de votre marque</b>.</p>
-        
-                            <div class="read_more">
-                                <a o-follow href="/creation-site-web/onepage">
-                                    <span>en savoir plus</span>
-                    
-                                    <picture>
-                                        <source srcset="/icons/leaf.webp" />
-                    
-                                        <img
-                                            src="/icons/leaf.png"
-                                            alt="GreenAssembly Leaf"
-                                            width="48"
-                                            height="30"
-                                        />
-                                    </picture>
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="preview">
-                            <picture class="lazy">
-                                <source data-srcset="/img/onepage.webp" />
-
-                                <img
-                                    data-src="/img/onepage.jpg"
-                                    alt="Création de site OnePage"
-                                />
-                            </picture>
-                        </div>
-                    </div>
-    
-                    <div class="swiper-slide">
-                        <div class="infos">
-                            <h3>Site Vitrine</h3>
-        
-                            <p>Vous souhaitez valoriser votre savoir-faire et développer votre notoriété au niveau local ou à plus grande échelle. Nous développons votre <b>site vitrine sur-mesure</b> en fonction de vos besoins et des attentes de vos prospects et clients.</p>
-        
-                            <div class="read_more">
-                                <a o-follow href="/creation-site-web/vitrine">
-                                    <span>en savoir plus</span>
-                    
-                                    <picture>
-                                        <source srcset="/icons/leaf.webp" />
-                    
-                                        <img
-                                            src="/icons/leaf.png"
-                                            alt="GreenAssembly Leaf"
-                                            width="48"
-                                            height="30"
-                                        />
-                                    </picture>
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="preview">
-                            <picture class="lazy">
-                                <source data-srcset="/img/showcase.webp" />
-
-                                <img
-                                    data-src="/img/showcase.jpg"
-                                    alt="Création de site vitrine"
-                                />
-                            </picture>
-                        </div>
-                    </div>
-    
-                    <div class="swiper-slide">
-                        <div class="infos">
-                            <h3>Site E-Commerce</h3>
-        
-                            <p>Vous souhaitez vendre vos produits en ligne et élargir votre clientèle à l’échelle nationale ou internationale. Nous concevons votre <b>site e-commerce</b> avec les fonctionnalités indispensables à votre activité.</p>
-        
-                            <div class="read_more">
-                                <a o-follow href="/creation-site-web/e-commerce">
-                                    <span>en savoir plus</span>
-                    
-                                    <picture>
-                                        <source srcset="/icons/leaf.webp" />
-                    
-                                        <img
-                                            src="/icons/leaf.png"
-                                            alt="GreenAssembly Leaf"
-                                            width="48"
-                                            height="30"
-                                        />
-                                    </picture>
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="preview">
-                            <picture class="lazy">
-                                <source data-srcset="/img/e_commerce.webp" />
-
-                                <img
-                                    data-src="/img/e_commerce.jpg"
-                                    alt="Création de site E-Commerce"
-                                />
-                            </picture>
-                        </div>
-                    </div>
-                </div>
-    
-                <div class="swiper-pagination"></div>
-            </div> -->
         </div>
 
         <div id="steps">
             <h2>Les étapes de la création de votre site-web éco-conçu</h2>
 
-            <div class="swiper-container">
-                <div class="swiper-pagination"></div>
+            <div class="carousel stepper">
+                <div class="label">
+                    <div class="index">Étape 1</div>
+                    <div class="descr">Étude de votre besoin</div>
+                </div>
 
-                <div class="swiper-wrapper">
-                    <p class="swiper-slide">
+                <nav aria-label="Progress" class="carousel__pagination"></nav>
+
+                <div class="carousel__wrapper">
+                    <p class="carousel__wrapper__item">
                         Nous écoutons dans un premier temps vos besoins et vos attentes. Puis nous définissons ensemble les meilleures solutions qui vous aideront à atteindre vos objectifs avant d’élaborer un cahier des charges permettant de définir les caractéristiques du projet.
                     </p>
-                    <p class="swiper-slide">
+                    <p class="carousel__wrapper__item">
                         Une fois le cahier des charges validé, nous concevons l’UX (ou wireframe) qui permet de valider le parcours utilisateur sur le site avant de passer au maquettage, c’est-à-dire au design final, l’UI.<br /><br />
                         Nous développons ensuite les fonctionnalités des différentes pages web. Nous créons des contenus textuels et visuels personnalisés (photos, vidéos, motion design) dans le respect de votre ligne éditoriale et de votre charte graphique.<br /><br />
                         Pendant la phase de développement, nos équipes procèdent à l’élaboration de tests unitaires afin de vérifier le bon comportement des différents algorithmes et fonctionnalités et permettre une meilleure maintenabilité du site-web (pérennisation du code source).
                     </p>
-                    <p class="swiper-slide">
+                    <p class="carousel__wrapper__item">
                         Dans le cadre de notre démarche d’éco-conception web, nous choisissons un <b>serveur adapté aux besoins réels de votre site-web</b>. Un moyen pour vous de payer le prix juste <span class="text_success font_bold">tout en limitant l’impact écologique de votre site-web</span>.<br /><br />
                         Les textes et les visuels intégrés, nous procédons à l’optimisation du référencement naturel SEO afin de vous assurer une bonne visibilité sur les moteurs de recherche.
                     </p>
-                    <p class="swiper-slide">
+                    <p class="carousel__wrapper__item">
                         Après la mise en ligne de votre site-web, nous vous montrons comment le gérer en toute autonomie (ajout de fiches produits, modification de contenus, création d’articles de blog). Un document reprenant toutes les fonctionnalités vous est également remis en guise de support.<br /><br />
                         Si vous le souhaitez, nous assurons par la suite le suivi et la maintenance de votre site-web (performances SEO, analyse du parcours utilisateur, mises à jour du serveur).
                     </p>
-                </div>
-            </div>
-
-            <div class="stepper">
-                <nav aria-label="Étapes" class="stepper__nav">
-                    <div class="label">
-                        <div class="index">Étape 1</div>
-                        <div class="descr">Étude de votre besoin</div>
-                    </div>
-
-                    <a href="#" class="stepper__nav__item stepper__nav__item--editable">
-                        <div>
-                            <div class="index">Étape 1</div>
-                            <div class="descr">Étude de votre besoin</div>
-                        </div>
-                    </a>
-                    <a href="#" class="stepper__nav__item stepper__nav__item--editable">
-                        <div>
-                            <div class="index">Étape 2</div>
-                            <div class="descr">Création graphique <span class="block">&</span> Développement</div>
-                        </div>
-                    </a>
-                    <a href="#" class="stepper__nav__item stepper__nav__item--editable">
-                        <div>
-                            <div class="index">Étape 3</div>
-                            <div class="descr">Choix serveur <span class="block">&</span> Optimisation SEO</div>
-                        </div>
-                    </a>
-                    <a href="#" class="stepper__nav__item stepper__nav__item--editable">
-                        <div>
-                            <div class="index">Étape 4</div>
-                            <div class="descr">Formation <span class="block">&</span> Suivi qualité</div>
-                        </div>
-                    </a>
-                </nav>
-
-                <div class="stepper__wrapper">
-                    <div class="stepper__wrapper__step">
-                        <p>Nous écoutons dans un premier temps vos besoins et vos attentes. Puis nous définissons ensemble les meilleures solutions qui vous aideront à atteindre vos objectifs avant d’élaborer un cahier des charges permettant de définir les caractéristiques du projet.</p>
-                    </div>
-                    <div class="stepper__wrapper__step">
-                        <p>
-                            Une fois le cahier des charges validé, nous concevons l’UX (ou wireframe) qui permet de valider le parcours utilisateur sur le site avant de passer au maquettage, c’est-à-dire au design final, l’UI.<br /><br />
-                            Nous développons ensuite les fonctionnalités des différentes pages web. Nous créons des contenus textuels et visuels personnalisés (photos, vidéos, motion design) dans le respect de votre ligne éditoriale et de votre charte graphique.<br /><br />
-                            Pendant la phase de développement, nos équipes procèdent à l’élaboration de tests unitaires afin de vérifier le bon comportement des différents algorithmes et fonctionnalités et permettre une meilleure maintenabilité du site-web (pérennisation du code source).
-                        </p>
-                    </div>
-                    <div class="stepper__wrapper__step">
-                        <p>
-                            Dans le cadre de notre démarche d’éco-conception web, nous choisissons un <b>serveur adapté aux besoins réels de votre site-web</b>. Un moyen pour vous de payer le prix juste <span class="text_success font_bold">tout en limitant l’impact écologique de votre site-web</span>.<br /><br />
-                            Les textes et les visuels intégrés, nous procédons à l’optimisation du référencement naturel SEO afin de vous assurer une bonne visibilité sur les moteurs de recherche.
-                        </p>
-                    </div>
-                    <div class="stepper__wrapper__step">
-                        <p>
-                            Après la mise en ligne de votre site-web, nous vous montrons comment le gérer en toute autonomie (ajout de fiches produits, modification de contenus, création d’articles de blog). Un document reprenant toutes les fonctionnalités vous est également remis en guise de support.<br /><br />
-                            Si vous le souhaitez, nous assurons par la suite le suivi et la maintenance de votre site-web (performances SEO, analyse du parcours utilisateur, mises à jour du serveur).
-                        </p>
-                    </div>
                 </div>
             </div>
         </div>
@@ -516,7 +345,7 @@
                     <span>nous contacter</span>
     
                     <picture>
-                        <source srcset="/icons/leaf.webp" />
+                        <source srcset="/icons/leaf.webp" type="image/webp" />
     
                         <img
                             src="/icons/leaf.png"

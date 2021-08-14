@@ -4,9 +4,8 @@ const path = require('path');
 module.exports = {
     entry: {
         global: './assets/js/global.js',
-        agency: './assets/js/agency.js',
         contact: './assets/js/contact.js',
-        swiper: './assets/js/swiper.js',
+        carousel: './assets/js/carousel.js',
         website_creation: './assets/js/website_creation.js'
     },
     watch: process.env.NODE_ENV === 'development',

@@ -29,6 +29,7 @@ impl fmt::Display for ContactService {
 pub enum FoundBy {
     Ads,
     Friend,
+    WebSearch,
     SocialNetwork,
     Website,
 }
@@ -37,6 +38,7 @@ impl fmt::Display for FoundBy {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Ads => write!(f, "Publicité"),
+            Self::WebSearch => write!(f, "Recherche sur le web"),
             Self::Friend => write!(f, "Proche/Amie.e/Collègue"),
             Self::SocialNetwork => write!(f, "Réseau social"),
             Self::Website => write!(f, "Site-web"),

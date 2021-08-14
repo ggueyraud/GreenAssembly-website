@@ -3,7 +3,7 @@ use sqlx::{Error, PgPool};
 pub async fn add(
     pool: &PgPool,
     page_id: i16,
-    ip: Option<&str>,
+    ip: &str,
     browser: Option<String>,
     os: Option<String>,
     device_type: Option<String>,

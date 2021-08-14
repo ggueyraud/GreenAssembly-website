@@ -1,35 +1,156 @@
 import Form from './components/form';
-import Carousel, { CarouselPagination, CarouselTouch } from './components/carousel';
+import Carousel from 'carousel';
 import { post } from './utils/http';
+
+class StepperPagination {
+    constructor(carousel) {
+        this.carousel = carousel;
+        this.items = [];
+        
+        const nav = this.carousel.container.querySelector('.carousel__pagination');
+
+        this.carousel.childrens.forEach((child, index) => {
+            const content = document.createElement('div');
+
+            const data_title = child.dataset.title;
+
+            if (data_title) {
+                const index_el = document.createElement('div');
+                index_el.innerHTML = child.dataset.title;
+                index_el.classList.add('index');
+
+                content.appendChild(index_el);
+            }
+
+            const data_description = child.dataset.description;
+
+            if (data_description) {
+                const description = document.createElement('div');
+                description.innerHTML = child.dataset.description;
+                description.classList.add('descr');
+
+                content.appendChild(description);
+            }
+
+            let button = document.createElement('button');
+            button.classList.add('carousel__pagination__item');
+
+            console.log(index, this.carousel.current_slide)
+
+            if (index < this.carousel.current_slide) {
+                button.classList.add('carousel__pagination__item--past');
+            }
+
+            button.appendChild(content);
+            button.addEventListener('click', () => {
+                if (button.classList.contains('carousel__pagination__item--past')) {
+                    this.carousel.goto_slide(index)
+                }
+            });
+
+            nav.appendChild(button);
+            this.items.push(button);
+        });
+
+        this.resize()
+    }
+
+    resize() {
+        let nb_pages = Math.ceil(this.carousel.childrens.length / this.carousel.active_options.slides_visible);
+
+        this.items.forEach((item, index) => {
+            item.classList.remove('carousel__pagination__item--hidden');
+
+            if (index >= nb_pages) {
+                item.classList.add('carousel__pagination__item--hidden');
+            }
+        });
+
+        if (nb_pages === 1) {
+            this.items[0].classList.add('carousel__pagination__item--hidden');
+        }
+
+        if (this.items.length > 0) {
+            this.update();
+        }
+    }
+
+    update() {
+        const current_item = this.carousel.container.querySelector('.carousel__pagination__item--current');
+
+        if (current_item) {
+            current_item.classList.remove('carousel__pagination__item--current');
+        }
+
+        this.items[this.carousel.current_slide].classList.add("carousel__pagination__item--current");
+        this.items.forEach((item, index) => {
+            const icon = item.querySelector('svg');
+
+            if (index >= this.carousel.current_slide) {
+                item.classList.remove('carousel__pagination__item--past');
+
+                if (icon) {
+                    item.classList.remove('carousel__pagination__item--past');
+                    icon.remove();
+                }
+            }
+
+            console.log(index, this.carousel.current_slide)
+            if (index < this.carousel.current_slide) {
+                item.classList.add('carousel__pagination__item--past');
+
+                if (!icon) {
+                    item.insertAdjacentHTML(
+                        'beforeend',
+                        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                        </svg>`
+                    );
+                }
+            }
+        })
+    }
+}
 
 const on_mount = () => {
     const body = {};
 
-    let carousel = new Carousel(document.querySelector('.carousel'), {
-        // slides_visible: 2,
+    const carousel_el = document.querySelector('.carousel');
+    let carousel = new Carousel(carousel_el, {
         auto_height: true,
-        breakpoints: {
-            768: {},
-            1200: {},
-            // 600: {
-            //     slides_visible: 2,
-            // }
-        }
     });
-    carousel.use(CarouselPagination);
-    carousel.use(CarouselTouch);
+    carousel.use([StepperPagination]);
     carousel.on('change', (index) => {
         if (index === 0) {
-            if (document.querySelector('[name=why_for]:checked').value === 'simple_discussion') {
-    
-            }
+            document.querySelector('[name=project]').dataset.description = document.querySelector('[name=why_for]:checked').value === 'simple_discussion'
+                ? 'Message'
+                : 'Informations sur votre projet';
 
             document
                 .querySelector('[name=why_for]:checked')
                 .checked = false
         }
-        console.log('change to', index)
-    })
+
+        if (index === 0 || index === 1) {
+            document.querySelector('#error').classList.add('hidden');
+        }
+        
+        const label = carousel_el.querySelector(`.label`);
+        label.querySelector('.index').innerHTML = `Étape ${index + 1}`;
+        const descr = label.querySelector('.descr');
+        switch (index) {
+            case 0:
+                descr.innerHTML = 'Raison de la prise de contact';
+            break;
+            case 1:
+                descr.innerHTML = 'Informations personnelles';
+            break;
+            case 2:
+                descr.innerHTML = '??';
+            break;
+        }
+    });
+    
 
     const budget_label = document.querySelector('[for="budget"]');
     const budget_input = document.querySelector('[name="budget"]');
@@ -38,41 +159,7 @@ const on_mount = () => {
     const company_label = document.querySelector('[for="company"]');
     const company_input = document.querySelector('[name="company"]');
     // const resume_label = document.querySelector('[for=resume]');
-    // const resume_input = document.querySelector('[name=resume]');
-    
-    let stepper = null;
-    
-
-    import('../wasm/pkg/wasm_bg.js')
-    .then(wasm => {
-        stepper = wasm.Stepper.new(document.querySelector('.stepper'), wasm.Options.new(false));
-        stepper.on(wasm.Event.StepChange, (index) => {
-            if (index === 0) {
-                if (body.new_project === false) {
-                    personal_informations_form.add_field(company_input);
-                    project_form.add_field('services');
-        
-                    company_label.classList.remove('hidden');
-                    company_input.classList.remove('hidden');
-                    budget_label.classList.remove('hidden');
-                    budget_input.classList.remove('hidden');
-                    services.style.removeProperty('display');
-                    services_label.style.removeProperty('display');
-                    // resume_label.classList.add('hidden');
-                    // resume_input.classList.add('hidden');
-                }
-
-                document
-                    .querySelectorAll('[name=why_for')
-                    .forEach(chk => {
-                        chk.checked = false
-                    })
-            }
-        })
-    })
-    .catch(console.error)
-    
-    
+    // const resume_input = document.querySelector('[name=resume]');  
     
     document
         .querySelector('[name="message"]')
@@ -85,6 +172,7 @@ const on_mount = () => {
             e.target.querySelector('[type=submit]').classList.add('opacity_100');
         })
         .on('invalid', e => {
+            carousel.calculate_height();
             e.target.querySelector('[type=submit]').classList.remove('opacity_100');
         })
         .on('send', e => {
@@ -115,6 +203,7 @@ const on_mount = () => {
             e.target.querySelector('[type=submit]').classList.add('opacity_100');
         })
         .on('invalid', e => {
+            carousel.calculate_height();
             e.target.querySelector('[type=submit]').classList.remove('opacity_100');
         })
         .on('send', e => {
@@ -136,6 +225,10 @@ const on_mount = () => {
                         document.querySelector("#success").classList.remove('hidden');
                         document.querySelector('.steps').classList.add('hidden');
                     }
+                })
+                .catch(() => {
+                    document.querySelector('#error').classList.remove('hidden');
+                    carousel.calculate_height()
                 })
         });
     

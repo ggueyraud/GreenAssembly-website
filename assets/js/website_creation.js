@@ -1,27 +1,24 @@
-import SwiperCore, { Pagination } from 'swiper/core';
-import Swiper from 'swiper';
-import Carousel, { CarouselPagination, CarouselTouch } from './components/carousel';
+import Carousel, { CarouselPagination, CarouselTouch } from 'carousel';
+
+export class CarouselPaginationStep extends CarouselPagination {
+    constructor(carousel) {
+        super(carousel)
+
+        this.items.forEach(item => {
+            item.insertAdjacentHTML(
+                'beforeend',
+                `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>`
+            );
+        });
+    }
+}
 
 const on_mount = () => {
-    const swiper_options = {
-        grabCursor: true,
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true
-        }
-    };
-
     const carousel_formules = new Carousel(document.querySelector('#formules .carousel'));
     carousel_formules.use([CarouselPagination, CarouselTouch]);
 
-    // SwiperCore.use([Pagination]);
-    // new Swiper(
-    //     '#formules .swiper-container',
-    //     Object.assign({
-    //         slidesPerView: 1,
-    //         spaceBetween: 60
-    //     }, swiper_options)
-    // );
     const carousel_what_we_do = new Carousel(document.querySelector('#what_we_do .carousel'), {
         breakpoints: {
             768: {
@@ -34,78 +31,75 @@ const on_mount = () => {
         }
     });
     carousel_what_we_do.use([CarouselPagination, CarouselTouch]);
-    // new Swiper(
-    //     '#what_we_do .swiper-container',
-    //     Object.assign({
-    //         slidesPerView: 1,
-    //         spaceBetween: 30,
-    //         breakpoints: {
-    //             768: {
-    //                 slidesPerView: 2
-    //             },
-    //             1280: {
-    //                 slidesPerView: 3,
-    //                 spaceBetween: 60,
-    //             }
-    //         }
-    //     }, swiper_options)
-    // );
-    new Swiper(
-        '#steps .swiper-container',
-        Object.assign({}, swiper_options, {
-            slidesPerView: 1,
-            spaceBetween: 60,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-                renderBullet: (index, className) => {
-                    let title = `Étape ${index + 1}`;
-                    let description;
 
-                    switch (index) {
-                        case 0:
-                            description = 'Étude de votre besoin';
-                        break;
-                        case 1:
-                            description = 'Création graphique <span class="block">&</span> Développement';
-                        break;
-                        case 2:
-                            description = 'Choix serveur <span class="block">&</span> Optimisation SEO';
-                        break;
-                        case 3:
-                            description = 'Formation <span class="block">&</span> Suivi qualité';
-                        break;
-                    }
-                    console.log(index, className, description)
-                    return `<span class="${className}">
-                        <span class="index">${title}</span>
-                        <span class="descr">${description}</span>
-                    </span>`
-                }
+    const carousel_steps_el = document.querySelector('#steps .carousel');
+    const carousel_steps = new Carousel(carousel_steps_el, {
+        auto_height: true,
+        render_bullet: (carousel, index) => {
+            const index_el = document.createElement('div');
+            index_el.innerHTML = `Étape ${index + 1}`;
+            index_el.classList.add('index');
+            
+            const descr = document.createElement('div');
+            descr.classList.add('descr');
+            
+            const content = document.createElement('div');
+            content.appendChild(index_el);
+            content.appendChild(descr);
+
+            switch (index) {
+                case 0:
+                    descr.innerHTML = 'Étude de votre besoin';
+                break;
+                case 1:
+                    descr.innerHTML = 'Création graphique <span class="block">&</span> Développement';
+                break;
+                case 2:
+                    descr.innerHTML = 'Choix serveur <span class="block">&</span> Optimisation SEO';
+                break;
+                case 3:
+                    descr.innerHTML = 'Formation <span class="block">&</span> Suivi qualité';
+                break;
             }
-        })
-    )
 
-    console.log(document.querySelectorAll('.stepper .stepper__wrapper__step')[0].getBoundingClientRect().height)
-    
-    import('../wasm/pkg/wasm_bg.js')
-        .then(wasm => {
-            console.log(wasm.Options.new(true))
-            console.log(document.querySelectorAll('.stepper .stepper__wrapper__step')[0].getBoundingClientRect().height)
-            const stepper = wasm.Stepper.new(document.querySelector('.stepper'), wasm.Options.new(true));
+            let button = document.createElement('button');
+            button.classList.add('carousel__pagination__item');
 
-            stepper.on(wasm.Event.StepChange, (index) => {
-                console.log('Change', index);
-                const item = document.querySelector(`.stepper__nav a:nth-child(${index+1}n+1) div`);
-                document.querySelector('.stepper .label').innerHTML = item.innerHTML
-                console.log('Item', item);
-            })
-        })
+            if (index < carousel.current_slide) {
+                button.classList.add('carousel__pagination__item--completed');
+            }
+
+            button.appendChild(content);
+
+            return button
+        }
+    });
+    carousel_steps.on('change', () => {
+        const label = carousel_steps_el.querySelector(`.label`);
+        label.querySelector('.index').innerHTML = `Étape ${carousel_steps.current_slide + 1}`;
+        const descr = label.querySelector('.descr');
+
+        switch (carousel_steps.current_slide) {
+            case 0:
+                descr.innerHTML = 'Étude de votre besoin';
+            break;
+            case 1:
+                descr.innerHTML = 'Création graphique <span class="block">&</span> Développement';
+            break;
+            case 2:
+                descr.innerHTML = 'Choix serveur <span class="block">&</span> Optimisation SEO';
+            break;
+            case 3:
+                descr.innerHTML = 'Formation <span class="block">&</span> Suivi qualité';
+            break;
+        }
+    });
+    carousel_steps.use([CarouselPaginationStep, CarouselTouch]);
 }
 
 window.addEventListener('onMount', on_mount)
-window.addEventListener('router:change', on_mount)
+// window.addEventListener('router:change', on_mount)
 window.addEventListener('onDestroy', () => {
     window.removeEventListener('onMount', on_mount);
-    window.removeEventListener('router:change', on_mount)
+    // window.removeEventListener('router:change', on_mount)
 })

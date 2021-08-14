@@ -18,7 +18,7 @@
         id="loading"
         style="position: fixed; top: 0; right: 0; bottom: 0; left: 0; visibility: visible; background-color: #000F16; z-index: 9999; display: flex; justify-content: center; align-items: center"
     >
-        <source srcset="/img/logo.webp" />
+        <source srcset="/img/logo.webp" type="image/webp" />
 
         <img
             src="/img/logo.png"
@@ -150,13 +150,12 @@
                 href="/"
                 class="order_1 md_order_2 xl_order_3 md_col_span_2 xl_col_span_1"
             >
-                <picture>
-                    <source srcset="/img/logo.webp" />
+                <picture class="lazy">
+                    <source data-srcset="/img/logo.webp" type="image/webp" />
 
                     <img
                         data-src="/img/logo.png"
                         alt="GreenAssembly Logo"
-                        class="lazy"
                         width="400"
                         height="120"
                     />

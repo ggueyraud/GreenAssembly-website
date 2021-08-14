@@ -19,6 +19,6 @@ button {
     }
 
     &--lg {
-        @extend .px_3, .py_1;
+        @extend .px_3, .py_1, .text_lg;
     }
 }

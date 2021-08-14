@@ -1,30 +1,46 @@
+@import '../../../node_modules/carousel/src/index.scss';
 @import '../base/_display.scss';
 @import '../base/_float.scss';
 @import '../base/_width.scss';
 @import '../base/_opacity.scss';
+@import '../base/_borders.scss';
 @import '../components/_input.scss';
+@import '../components/_stepper.scss';
 @import '../layout/_banner.scss';
 
-.stepper__wrapper__step {
-    .step_title {
-        @extend .text_lg, .my_4;
-
-        text-align: center
-    }
-
-    > :first-child {
-        @extend .md_w_4\/5, .md_mx_auto;
+.carousel__pagination__item--current {
+    &::before {
+        background-color: map-get($colors, 'white');
+        border-radius: 50%;
+        content: '';
+        width: 10px;
+        height: 10px;
     }
 }
 
-.next_btn {
-    transition: opacity 250ms linear;
+.next_btn, .send_btn {
+    transition-duration: 250ms;
+    transition-timing-function: linear;
     opacity: 0;
-    color: white;
+    color: map-get($colors, 'white');
+}
+
+.next_btn {
+    transition-property: opacity;
 
     svg {
         @extend .ml_2;
-
         vertical-align: middle;
+    }
+}
+
+.send_btn {
+    border: 1px solid map-get($colors, 'white');
+    border-radius: .5rem;
+    transition-property: background-color, opacity, color;
+
+    &:hover {
+        color: map-get($colors, 'black');
+        background-color: map-get($colors, 'white');
     }
 }

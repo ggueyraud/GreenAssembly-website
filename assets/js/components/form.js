@@ -102,12 +102,12 @@ class Field {
             
             next_el.innerHTML = error;
             next_el.classList.add('active');
-            last.classList.add('border-yellow-500');
+            last.classList.add('border_warning');
         } else {
             if (next_el && next_el.classList && next_el.classList.contains('fv_error')) {
                 // next_el.remove();
                 next_el.classList.remove('active');
-                last.classList.remove('border-yellow-500');
+                last.classList.remove('border_warning');
             }
         }
     }

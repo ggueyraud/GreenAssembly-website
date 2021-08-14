@@ -54,11 +54,13 @@ fn serve_file(req: &HttpRequest, path: &Path, cache_duration: i64) -> Result<Htt
 }
 
 pub async fn ban_route(req: HttpRequest, pool: web::Data<sqlx::PgPool>) -> HttpResponse {
-    if let Some(ip) = req.connection_info().realip_remote_addr() {
-        if !services::ips_banned::is_banned(&pool, ip).await {
+    if let Some(val) = req.peer_addr() {
+        let ip = val.ip().to_string();
+
+        if !services::ips_banned::is_banned(&pool, &ip).await {
             let (_, counter) = futures::join!(
-                services::ips_banned::add(&pool, ip),
-                services::ips_banned::count(&pool, ip)
+                services::ips_banned::add(&pool, &ip),
+                services::ips_banned::count(&pool, &ip)
             );
 
             println!("Ban x{} times", counter);

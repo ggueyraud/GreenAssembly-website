@@ -1,15 +1,20 @@
 export class CarouselPagination {
-    constructor(carousel, options) {
+    constructor(carousel) {
         this.carousel = carousel;
-        this.options = Object.assign({}, {
-            render: () => `<a href="#" class="carousel__pagination__item"></a>`
-        }, options);
         this.items = [];
+        const render_bullet = (carousel, index) => {
+            let button = document.createElement('button');
+            button.classList.add('carousel__pagination__item');
+
+            return button
+        };
+        this.options = {
+            render_bullet: carousel.base_options.render_bullet || render_bullet
+        };
 
         const nav = this.carousel.container.querySelector('.carousel__pagination');
         for (let i = 0; i < this.carousel.childrens.length; i++) {
-            let button = document.createElement('button');
-            button.classList.add('carousel__pagination__item');
+            let button = this.options.render_bullet(this.carousel, i);
             button.addEventListener('click', () => {
                 this.carousel.goto_slide(i);
             });
@@ -28,10 +33,14 @@ export class CarouselPagination {
         this.items.forEach((item, index) => {
             item.classList.remove('carousel__pagination__item--hidden');
 
-            if (index > nb_pages) {
+            if (index >= nb_pages) {
                 item.classList.add('carousel__pagination__item--hidden');
             }
         });
+
+        if (nb_pages === 1) {
+            this.items[0].classList.add('carousel__pagination__item--hidden');
+        }
 
         if (this.items.length > 0) {
             this.update();
@@ -58,9 +67,129 @@ export class CarouselPagination {
     }
 }
 
-const disable_scroll = (x, y) => {
-    console.log('disable scroll')
-    window.scrollTo(x, y)
+export class StepperPagination {
+    constructor(carousel) {
+        this.carousel = carousel;
+        this.items = [];
+        
+        const nav = this.carousel.container.querySelector('.carousel__pagination');
+
+        this.carousel.childrens.forEach((child, index) => {
+            const content = document.createElement('div');
+
+            const data_title = child.dataset.title;
+
+            if (data_title) {
+                const index_el = document.createElement('div');
+                index_el.innerHTML = child.dataset.title;
+                index_el.classList.add('index');
+
+                content.appendChild(index_el);
+            }
+
+            const data_description = child.dataset.description;
+
+            if (data_description) {
+                const description = document.createElement('div');
+                description.innerHTML = child.dataset.description;
+                description.classList.add('descr');
+
+                content.appendChild(description);
+            }
+
+            let button = document.createElement('button');
+            button.classList.add('carousel__pagination__item');
+
+            console.log(index, this.carousel.current_slide)
+
+            if (index < this.carousel.current_slide) {
+                button.classList.add('carousel__pagination__item--past');
+            }
+
+            button.appendChild(content);
+            button.addEventListener('click', () => {
+                if (button.classList.contains('carousel__pagination__item--past')) {
+                    this.carousel.goto_slide(index)
+                }
+            });
+
+            nav.appendChild(button);
+            this.items.push(button);
+        });
+
+        this.resize()
+    }
+
+    resize() {
+        let nb_pages = Math.ceil(this.carousel.childrens.length / this.carousel.active_options.slides_visible);
+
+        this.items.forEach((item, index) => {
+            item.classList.remove('carousel__pagination__item--hidden');
+
+            if (index >= nb_pages) {
+                item.classList.add('carousel__pagination__item--hidden');
+            }
+        });
+
+        if (nb_pages === 1) {
+            this.items[0].classList.add('carousel__pagination__item--hidden');
+        }
+
+        if (this.items.length > 0) {
+            this.update();
+        }
+    }
+
+    update() {
+        const current_item = this.carousel.container.querySelector('.carousel__pagination__item--current');
+
+        if (current_item) {
+            current_item.classList.remove('carousel__pagination__item--current');
+        }
+
+        this.items[this.carousel.current_slide].classList.add("carousel__pagination__item--current");
+        this.items.forEach((item, index) => {
+            const icon = item.querySelector('svg');
+
+            if (index >= this.carousel.current_slide) {
+                item.classList.remove('carousel__pagination__item--past');
+
+                if (icon) {
+                    item.classList.remove('carousel__pagination__item--past');
+                    icon.remove();
+                }
+            }
+
+            console.log(index, this.carousel.current_slide)
+            if (index < this.carousel.current_slide) {
+                item.classList.add('carousel__pagination__item--past');
+
+                if (!icon) {
+                    item.insertAdjacentHTML(
+                        'beforeend',
+                        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                        </svg>`
+                    );
+                }
+            }
+        })
+    }
+}
+
+export class CarouselPaginationStep extends CarouselPagination {
+    constructor(carousel) {
+        super(carousel)
+
+        this.items.forEach(item => {
+            item.insertAdjacentHTML(
+                'beforeend',
+                `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>`
+            );
+        });
+    }
 }
 
 export class CarouselTouch {
@@ -71,13 +200,16 @@ export class CarouselTouch {
         carousel.wrapper.addEventListener('touchstart', this.start_drag.bind(this));
         carousel.wrapper.addEventListener('dragstart', e => e.preventDefault());
         window.addEventListener('mousemove', this.drag.bind(this));
-        window.addEventListener('touchmove', this.drag.bind(this));
+        window.addEventListener('touchmove', this.drag.bind(this), { passive: false });
         window.addEventListener('touchend', this.end_drag.bind(this));
         window.addEventListener('mouseup', this.end_drag.bind(this));
         window.addEventListener('touchcancel', this.end_drag.bind(this));
     }
 
     start_drag(e) {
+        // Prevent select text when drag in carousel
+        document.body.style.userSelect = 'none';
+
         if (this.carousel.active_options.slides_visible === this.carousel.childrens.length) {
             return;
         }
@@ -89,8 +221,6 @@ export class CarouselTouch {
                 e = e.touches[0];
             }
         }
-
-        console.log(e)
 
         this.carousel.wrapper.style.setProperty('transition-duration', '0ms');
         this.carousel.wrapper.style.setProperty('will-change', 'transform');
@@ -121,7 +251,8 @@ export class CarouselTouch {
             this.carousel.update();
         }
 
-        window.onscroll = null;
+        // Reactive user text selection on the document
+        document.body.style.userSelect = 'auto';
 
         this.carousel.wrapper.style.setProperty('cursor', 'default');
         this.origin = null;
@@ -134,12 +265,10 @@ export class CarouselTouch {
                 x: point.pageX - this.origin.x,
                 y: point.pageY - this.origin.y
             };
-
-            if (Math.abs(translate.x) > 20 && window.onscroll === null) {
-                const x = window.scrollX;
-                const y = window.scrollY;
-
-                window.onscroll = () => disable_scroll(x, y);
+            
+            // If carousel move more than 20 pixels in x axis then prevent scroll event
+            if (Math.abs(translate.x) > 20) {
+                e.preventDefault();
             }
 
             if (e.touches && Math.abs(translate.x) > Math.abs(translate.y)) {
@@ -150,8 +279,6 @@ export class CarouselTouch {
             }
 
             this.last_translate = translate;
-            let base_translate = this.carousel.current_slide * -100 / this.carousel.childrens.length;
-
 
             let p = 1.0 - (((this.origin.x - point.screenX) * 100) / (this.carousel.container.getBoundingClientRect().width));
             let a = 1.0 - (((this.origin.x - point.pageX) * 100) / this.carousel.wrapper.getBoundingClientRect().width);
@@ -159,12 +286,6 @@ export class CarouselTouch {
             this.carousel.wrapper.style.transform = `translate3d(${(this.carousel.current_slide * -100 / this.carousel.childrens.length) + a}%, 0, 0)`;
         }
     }
-}
-
-const calculate_height = carousel => {
-    const current_step = carousel.childrens[carousel.current_slide];
-
-    carousel.wrapper.style.setProperty('height', `${current_step.getBoundingClientRect().height}px`);
 }
 
 const handle_breakpoints = carousel => {
@@ -215,7 +336,7 @@ export default class {
             this.active_options = this.base_options;
             handle_breakpoints(this);
             if (this.active_options.auto_height) {
-                calculate_height(this);
+                this.calculate_height();
             }
 
             for (const module of this.modules) {
@@ -246,8 +367,14 @@ export default class {
 
         if (this.active_options.auto_height) {
             this.wrapper.style.setProperty('align-items', 'flex-start');
-            calculate_height(this);
+            this.calculate_height();
         }
+    }
+
+    calculate_height() {
+        const current_step = this.childrens[this.current_slide];
+
+        this.wrapper.style.setProperty('height', `${current_step.getBoundingClientRect().height}px`);
     }
 
     use(modules) {
@@ -303,7 +430,7 @@ export default class {
         this.update();
 
         if (this.active_options.auto_height) {
-            calculate_height(this);
+            this.calculate_height();
         }
 
         const on_change_evt = this.events['change'];

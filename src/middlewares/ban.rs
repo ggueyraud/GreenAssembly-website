@@ -52,14 +52,8 @@ where
     fn call(&mut self, req: ServiceRequest) -> Self::Future {
         let res = futures::executor::block_on(crate::services::ips_banned::get(
             &self.pool,
-            req.connection_info().realip_remote_addr().unwrap(),
+            &req.peer_addr().unwrap().ip().to_string()
         ));
-
-        println!(
-            "realip: {:?} | addr: {:?}",
-            req.connection_info().realip_remote_addr(),
-            req.connection_info().remote_addr()
-        );
 
         match res {
             Ok(ip_banned) => {

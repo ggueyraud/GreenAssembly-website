@@ -24,13 +24,22 @@ export default class Router {
                 .map(link => link.attributes.href.nodeValue)
         );
 
-        console.log('dispatch onMount')
         window.dispatchEvent(this.onMountEvent);
 
         window.addEventListener('popstate', e => {
             window.dispatchEvent(new Event('router:loading', { bubbles: true, cancelable: false }))
             window.dispatchEvent(this.onDestroyEvent)
-            this.clean(window.history.state ? window.history.state.prevUrl : document.referrer)
+
+            const last_page_visited = Object.entries(this.cache).sort((a, b) => {
+                if (a[1].last_loaded_time < b[1].last_loaded_time)
+                    return 1
+                if (a[1].last_loaded_time > b[1].last_loaded_time)
+                    return -1;
+
+                return 0
+            })[0][0];
+
+            this.clean(last_page_visited)
             this.handle_url(location.href)
         })
 
@@ -69,7 +78,10 @@ export default class Router {
 
                 // }
 
+                console.log('Précédente url', location.href, link.href)
+
                 history.pushState({ prevUrl: location.href }, null, link.href)
+                console.log(location.href, history.state.prevUrl)
                 
                 this.clean(window.history.state.prevUrl)
                 this.handle_url(link.href, true, true)
@@ -107,7 +119,7 @@ export default class Router {
 
     onMount(callback) {
         this.cache[location.href].onMount = callback
-        console.log('CREATE ONMOUNT', this.cache[location.href])
+        // console.log('CREATE ONMOUNT', this.cache[location.href])
         window.addEventListener('onMount', this.cache[location.href].onMount)
     }
 
@@ -134,7 +146,7 @@ export default class Router {
         if (!page) {
             let res = await fetch(url)
 
-            console.log(res)
+            // console.log(res)
 
             if (res.ok) {
                 res = await res.text()
@@ -192,7 +204,7 @@ export default class Router {
     }
 
     render(page) {
-        console.log('render')
+        // console.log('render')
         let loadings = []
 
         // window.dispatchEvent(new Event('router:loading'))
@@ -215,7 +227,7 @@ export default class Router {
         page.links.forEach(link => {
             loadings.push(
                 new Promise((resolve, reject) => {
-                    console.log('Link', link)
+                    // console.log('Link', link)
                     let link_el = document.createElement('link');
                     link_el.rel = 'stylesheet';
                     link_el.href = link;
@@ -235,11 +247,11 @@ export default class Router {
                     }
                 }
 
-                console.log('dispatch onMount2')
+                // console.log('dispatch onMount2')
                 window.dispatchEvent(this.onMountEvent)
 
                 if (page.onMount) {
-                    console.log('Create onMount listener')
+                    // console.log('Create onMount listener')
                     window.addEventListener('onMount', page.onMount)
                     // window.dispatchEvent(this.onMountEvent)
                 }
@@ -251,13 +263,14 @@ export default class Router {
     }
 
     clean(url) {
-        console.log('clean')
         const page_to_clear = this.cache[url]
+        console.log('clean', page_to_clear)
 
         if (page_to_clear) {
             // Remove old CSS files
             page_to_clear.links.forEach(link => {
                 const link_el = document.head.querySelector(`link[href="${link}"]`);
+                // console.log(link, link_el)
                 link_el.remove()
             })
     

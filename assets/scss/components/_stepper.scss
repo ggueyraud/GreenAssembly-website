@@ -1,0 +1,181 @@
+@import '../abstracts/_variables.scss';
+@import '../base/_margins.scss';
+@import '../base/_display.scss';
+@import '../base/_typography.scss';
+
+.carousel.stepper {
+    .label {
+        @extend .pb_4, .sm_hidden;
+        z-index: 1;
+        text-align: center;
+
+        .index {
+            @extend .text_gradient, .text_3xl, .pb_2;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .descr > * { display: inline}
+    }
+
+    .carousel__pagination {
+        position: relative;
+        margin-bottom: 1rem;
+
+        &__item {
+            --spacing: 2.5rem;
+            position: relative;
+            display: flex;
+            border: solid 2px map-get($colors, 'white');
+            background: map-get($colors, 'black');
+            justify-content: center;
+            align-items: center;
+            height: 2rem;
+            width: 2rem;
+
+            &--current {
+                border-color: map-get($colors, success);
+
+                .index {
+                    @extend .text_gradient;
+                    font-size: 2.5rem !important;
+                }
+            }
+
+            &--current .index {
+                @extend .text_gradient;
+                font-size: 2.5rem;
+                display: inline-block;
+                color: transparent !important
+            }
+
+            .index {
+                @extend .text_lg;
+                font-weight: bold;
+                text-transform: uppercase;
+                white-space: nowrap;
+                color: map-get($colors, success);
+                bottom: calc(100% + .75rem);
+                transition: font-size 250ms linear;
+            }
+
+            div {
+                display: none;
+            }
+
+            &--past {
+                &::after {
+                    border-bottom-style: solid;
+                    border-bottom-color: map-get($colors, success);
+                }
+
+                background-color: map-get($colors, success);
+                border-color: map-get($colors, success);
+
+                svg {
+                    height: 1.15rem;
+                    width: auto;
+                    color: map-get($colors, 'black')
+                }
+            }
+
+            &:not(:last-child)::after {
+                position: absolute;
+                width: calc(100% + var(--spacing));
+                border-bottom: map-get($colors, 'white') 2px dashed;
+                z-index: -1;
+                content: '';
+                left: 0
+            }
+
+            &:not(&--past):not(&--current) {
+                &:hover {
+                    &::before {
+                        opacity: 100;
+                    }
+                }
+
+                svg {
+                    display: none;
+                    visibility: hidden
+                }
+
+                &::before {
+                    background-color: map-get($colors, 'white');
+                    opacity: 0;
+                    border-radius: 50%;
+                    content: '';
+                    width: 10px;
+                    height: 10px;
+                    transition: opacity 200ms ease-in-out;
+                }
+            }
+        }
+    }
+
+    .carousel__wrapper__item__title {
+        @extend .text_lg, .my_4;
+
+        text-align: center
+    }
+}
+
+@media (min-width: map-get($break-points, sm)) {
+    .carousel.stepper .carousel__pagination {
+        margin-top: 3rem;
+        margin-bottom: 8rem;
+
+        &__item {
+            --spacing: 7.5rem;
+
+            div {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+                position: absolute;
+                flex-direction: column
+            }
+        
+            .index, .descr {
+                position: absolute;
+                z-index: 1;
+                
+            }
+
+            .descr {
+                display: inline-block;
+                text-align: center;
+                top: calc(100% + 0.75rem);
+                width: 140px;
+                color: map-get($colors, 'white');
+        
+                & > * {
+                    line-height: 1.15
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: map-get($break-points, md)) {
+    .carousel.stepper .carousel__wrapper__item {
+        --spacing: 9rem;
+
+        .descr {
+            width: 160px
+        }
+    }
+}
+
+@media (min-width: map-get($break-points, lg)) {
+    .carousel.stepper .carousel__wrapper__item {
+        --spacing: 12rem
+    }
+}
+
+@media (min-width: map-get($break-points, xl)) {
+    .carousel.stepper .carousel__wrapper__item {
+        --spacing: 16rem
+    }
+}
