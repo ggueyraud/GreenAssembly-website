@@ -21,6 +21,7 @@
     .carousel__pagination {
         position: relative;
         margin-bottom: 1rem;
+        margin-top: 0;
 
         &__item {
             --spacing: 2.5rem;
@@ -159,7 +160,7 @@
 }
 
 @media (min-width: map-get($break-points, md)) {
-    .carousel.stepper .carousel__wrapper__item {
+    .carousel.stepper .carousel__pagination__item {
         --spacing: 9rem;
 
         .descr {
@@ -169,13 +170,13 @@
 }
 
 @media (min-width: map-get($break-points, lg)) {
-    .carousel.stepper .carousel__wrapper__item {
+    .carousel.stepper .carousel__pagination__item {
         --spacing: 12rem
     }
 }
 
 @media (min-width: map-get($break-points, xl)) {
-    .carousel.stepper .carousel__wrapper__item {
+    .carousel.stepper .carousel__pagination__item {
         --spacing: 16rem
     }
 }

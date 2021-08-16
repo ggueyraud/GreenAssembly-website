@@ -90,30 +90,33 @@ ul {
 }
 
 #formules {
-    .carousel__wrapper__item {
-        display: grid;
-        grid-template-columns: repeat(1, minmax(0, 1fr));
+    .carousel__wrapper {
+        position: relative;
+        &__item {
+            display: grid;
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+            
+            h3 {
+                @extend .text_gradient, .text_3xl, .sm_text_4xl, .md_text_5xl, .py_8;
         
-        h3 {
-            @extend .text_gradient, .text_3xl, .sm_text_4xl, .md_text_5xl, .py_8;
+                word-wrap: break-word;
+                line-height: 1.25 !important
+            }
+        
+            p {
+                @extend .mb_6, .sm_mb_12;
+            }
     
-            word-wrap: break-word;
-            line-height: 1.25 !important
-        }
+            .infos {
+                @extend .lg_py_8, .lg_pt_36;
     
-        p {
-            @extend .mb_6, .sm_mb_12;
-        }
-
-        .infos {
-            @extend .lg_py_8, .lg_pt_36;
-
-            order: 2;
-        }
-
-        .preview {
-            order: 1;
-            width: 100%;
+                order: 2;
+            }
+    
+            .preview {
+                order: 1;
+                width: 100%;
+            }
         }
     }
 }
