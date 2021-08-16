@@ -10,6 +10,7 @@ safelist = ["carousel__pagination__item", "carousel__pagination__item--current",
 [[purgecss]]
 css = "pages/agency.css"
 content = ["templates/agency.html", "templates/components/employee.html"]
+safelist = ["carousel__pagination__item", "carousel__pagination__item--current", "carousel__pagination__item--hidden"]
 
 [[purgecss]]
 css = "pages/portfolio.css"
