@@ -26,7 +26,8 @@ pub async fn get(pool: &PgPool, ip: &str) -> Result<IPBanned, Error> {
             id, date
         FROM ips_banned
         WHERE ip = $1
-        AND date BETWEEN NOW() - INTERVAL '10 minutes' AND NOW()",
+        AND date BETWEEN NOW() - INTERVAL '10 minutes' AND NOW()
+        LIMIT 1",
         ip
     )
     .fetch_one(pool)

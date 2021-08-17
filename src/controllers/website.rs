@@ -79,10 +79,7 @@ pub async fn showcase(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse
 }
 
 #[get("/e-commerce")]
-pub async fn e_commerce(
-    req: HttpRequest,
-    pool: web::Data<PgPool>,
-) -> HttpResponse {
+pub async fn e_commerce(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
     if let Ok(page) = services::pages::get(&pool, "creation_site_e_commerce").await {
         crate::controllers::metrics::add(&req, &pool, page.id).await;
 

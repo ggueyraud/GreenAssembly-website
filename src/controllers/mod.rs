@@ -9,6 +9,7 @@ pub mod metrics;
 pub mod users;
 pub mod website;
 
+
 #[get("/")]
 pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
     if let Ok(page) = services::pages::get(&pool, "accueil").await {
@@ -37,7 +38,7 @@ pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
 #[get("/agence")]
 async fn agency(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
     match futures::join!(
-        services::pages::get(&pool, "contact"),
+        services::pages::get(&pool, "agence"),
         services::employees::get_all(&pool)
     ) {
         (Ok(page), Ok(employees)) => {

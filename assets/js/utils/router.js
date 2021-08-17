@@ -78,10 +78,7 @@ export default class Router {
 
                 // }
 
-                console.log('Précédente url', location.href, link.href)
-
                 history.pushState({ prevUrl: location.href }, null, link.href)
-                console.log(location.href, history.state.prevUrl)
                 
                 this.clean(window.history.state.prevUrl)
                 this.handle_url(link.href, true, true)
@@ -264,7 +261,6 @@ export default class Router {
 
     clean(url) {
         const page_to_clear = this.cache[url]
-        console.log('clean', page_to_clear)
 
         if (page_to_clear) {
             // Remove old CSS files

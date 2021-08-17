@@ -1,28 +1,29 @@
 [[purgecss]]
 css = "pages/global.css"
 content = ["templates/base.html", ".build/production/js/global.js"]
+safelist = ["webp_support"]
 
 [[purgecss]]
 css = "pages/index.css"
 content = ["templates/index.html", ".build/production/js/index.js"]
-safelist = ["carousel__pagination__item", "carousel__pagination__item--current", "carousel__pagination__item--hidden"]
+safelist = ["webp_support", "carousel__pagination__item", "carousel__pagination__item--current", "carousel__pagination__item--hidden"]
 
 [[purgecss]]
 css = "pages/agency.css"
 content = ["templates/agency.html", "templates/components/employee.html"]
-safelist = ["carousel__pagination__item", "carousel__pagination__item--current", "carousel__pagination__item--hidden"]
+safelist = ["webp_support", "carousel__pagination__item", "carousel__pagination__item--current", "carousel__pagination__item--hidden"]
 
 [[purgecss]]
 css = "pages/portfolio.css"
-content = ["templates/portfolio.html"]
+content = ["webp_support", "templates/portfolio.html"]
 
 [[purgecss]]
 css = "pages/contact.css"
-content = ["templates/contact.html", ".build/production/js/contact.js"]
+content = ["webp_support", "templates/contact.html", ".build/production/js/contact.js"]
 
 [[purgecss]]
 css = "pages/onepage.css"
-content = ["templates/showcase_website.html", "templates/onepage.html", "templates/e_commerce.html", ".build/production/js/global.js"]
+content = ["webp_support", "templates/showcase_website.html", "templates/onepage.html", "templates/e_commerce.html", ".build/production/js/global.js"]
 
 [[purgecss]]
 css = "pages/legals.css"
@@ -34,4 +35,4 @@ content = ["templates/404.html"]
 
 [[purgecss]]
 css = "pages/website_creation.css"
-content = ["templates/website_creation.html", ".build/production/js/global.js", ".build/production/js/website_creation.js"]
+content = ["webp_support", "templates/website_creation.html", ".build/production/js/global.js", ".build/production/js/website_creation.js"]

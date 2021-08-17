@@ -10,6 +10,7 @@ use actix_web::{
 };
 use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
 use std::path::Path;
+use user_agent_parser::UserAgentParser;
 
 mod controllers;
 mod middlewares;
@@ -106,8 +107,10 @@ async fn main() -> std::io::Result<()> {
     use dotenv::dotenv;
 
     dotenv().ok();
-    std::env::set_var("RUST_LOG", "actix_web=info,sqlx=debug");
-    env_logger::init();
+    if cfg!(debug_assertions) {
+        std::env::set_var("RUST_LOG", "actix_web=info,sqlx=debug");
+        env_logger::init();
+    }
 
     const HTTP_PORT: u32 = if cfg!(debug_assertions) { 8080 } else { 80 };
     const HTTPS_PORT: u32 = if cfg!(debug_assertions) { 8443 } else { 443 };
@@ -144,8 +147,9 @@ async fn main() -> std::io::Result<()> {
     let server = HttpServer::new(move || {
         App::new()
             .data(pool.clone())
+            .data(UserAgentParser::from_path("regexes.yaml").expect("regexes.yaml not found"))
             .wrap(Compress::default())
-            .wrap(middlewares::ban::Ban { pool: pool.clone() })
+            // .wrap(middlewares::ban::Ban { pool: pool.clone() })
             .service(controllers::index)
             .service(controllers::agency)
             .service(
@@ -161,8 +165,8 @@ async fn main() -> std::io::Result<()> {
                     .service(controllers::contact::page)
                     .service(controllers::contact::send),
             )
-            .route("/admin", web::get().to(ban_route))
-            .route("/backup", web::get().to(ban_route))
+            // .route("/admin", web::get().to(ban_route))
+            // .route("/backup", web::get().to(ban_route))
             .service(controllers::legals)
             .service(controllers::sitemap)
             .service(controllers::robots)

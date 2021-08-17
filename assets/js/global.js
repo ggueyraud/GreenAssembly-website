@@ -90,7 +90,10 @@ document.addEventListener('readystatechange', e => {
             .forEach(link => {
                 link
                     .addEventListener('click', e => {
-                        e.preventDefault();
+                        console.log(link)
+                        if (!link.classList.contains('social')) {
+                            e.preventDefault();
+                        }
         
                         close_mobile_menu();
                     })

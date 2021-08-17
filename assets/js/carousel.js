@@ -1,7 +1,5 @@
 import Carousel, { CarouselPagination, CarouselTouch } from 'carousel';
 
-console.log(Carousel)
-
 const on_mount = () => {
     const carousel = new Carousel(document.querySelector('.carousel'), {
         breakpoints: {
@@ -24,5 +22,4 @@ const on_destroy = () => {
 }
 
 window.addEventListener('onMount', on_mount)
-// window.addEventListener('router:change', on_mount)
 window.addEventListener('onDestroy', on_destroy)

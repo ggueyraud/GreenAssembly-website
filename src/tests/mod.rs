@@ -79,7 +79,6 @@ mod tests {
             .uri("/sitemap.xml")
             .send_request(&mut app)
             .await;
-        // let resp = test::call_service(&mut app, req).await;
 
         assert!(resp.status().is_success());
     }
@@ -95,7 +94,6 @@ mod tests {
             .uri("/robots.txt")
             .send_request(&mut app)
             .await;
-        // let resp = test::call_service(&mut app, req).await;
 
         assert!(resp.status().is_success());
     }
@@ -157,13 +155,14 @@ mod tests {
         dotenv().ok();
 
         let pool = create_pool().await.unwrap();
-        let mut app = test::init_service(
-            App::new()
-                .data(pool.clone())
-                .service(web::scope("/creation-site-web").service(controllers::website::website_creation))
-        )
+        let mut app = test::init_service(App::new().data(pool.clone()).service(
+            web::scope("/creation-site-web").service(controllers::website::website_creation),
+        ))
         .await;
-        let resp = test::TestRequest::get().uri("/creation-site-web").send_request(&mut app).await;
+        let resp = test::TestRequest::get()
+            .uri("/creation-site-web")
+            .send_request(&mut app)
+            .await;
 
         assert!(resp.status().is_success());
     }
@@ -171,18 +170,18 @@ mod tests {
     #[actix_rt::test]
     async fn integration_test_onepage() {
         dotenv().ok();
-        
+
         let pool = create_pool().await.unwrap();
         let mut app = test::init_service(
             App::new()
                 .data(pool.clone())
-                .service(
-                    web::scope("/creation-site-web")
-                        .service(controllers::website::onepage)
-                )
+                .service(web::scope("/creation-site-web").service(controllers::website::onepage)),
         )
         .await;
-        let resp = test::TestRequest::get().uri("/creation-site-web/onepage").send_request(&mut app).await;
+        let resp = test::TestRequest::get()
+            .uri("/creation-site-web/onepage")
+            .send_request(&mut app)
+            .await;
 
         assert!(resp.status().is_success());
     }
@@ -190,18 +189,18 @@ mod tests {
     #[actix_rt::test]
     async fn integration_test_showcase() {
         dotenv().ok();
-        
+
         let pool = create_pool().await.unwrap();
         let mut app = test::init_service(
             App::new()
                 .data(pool.clone())
-                .service(
-                    web::scope("/creation-site-web")
-                        .service(controllers::website::showcase)
-                )
+                .service(web::scope("/creation-site-web").service(controllers::website::showcase)),
         )
         .await;
-        let resp = test::TestRequest::get().uri("/creation-site-web/vitrine").send_request(&mut app).await;
+        let resp = test::TestRequest::get()
+            .uri("/creation-site-web/vitrine")
+            .send_request(&mut app)
+            .await;
 
         assert!(resp.status().is_success());
     }
@@ -209,18 +208,17 @@ mod tests {
     #[actix_rt::test]
     async fn integration_test_e_commerce() {
         dotenv().ok();
-        
+
         let pool = create_pool().await.unwrap();
-        let mut app = test::init_service(
-            App::new()
-                .data(pool.clone())
-                .service(
-                    web::scope("/creation-site-web")
-                        .service(controllers::website::e_commerce)
-                )
-        )
-        .await;
-        let resp = test::TestRequest::get().uri("/creation-site-web/e-commerce").send_request(&mut app).await;
+        let mut app =
+            test::init_service(App::new().data(pool.clone()).service(
+                web::scope("/creation-site-web").service(controllers::website::e_commerce),
+            ))
+            .await;
+        let resp = test::TestRequest::get()
+            .uri("/creation-site-web/e-commerce")
+            .send_request(&mut app)
+            .await;
 
         assert!(resp.status().is_success());
     }

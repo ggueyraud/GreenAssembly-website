@@ -74,10 +74,11 @@ impl FromRequest for UserAgent {
     type Config = ();
 
     fn from_request(req: &HttpRequest, _: &mut dev::Payload) -> Self::Future {
+        use user_agent_parser::UserAgentParser;
         if let Some(ua) = req.headers().get("User-Agent") {
-            use user_agent_parser::UserAgentParser;
-            let ua_parser = UserAgentParser::from_path("regexes.yaml").unwrap();
-            let ua = ua.to_str().unwrap();
+            match req.app_data::<actix_web::web::Data<UserAgentParser>>() {
+                Some(ua_parser) => {
+                    let ua = ua.to_str().unwrap();
 
             let product = ua_parser.parse_product(ua);
             let os = ua_parser.parse_os(ua);
@@ -88,6 +89,22 @@ impl FromRequest for UserAgent {
                 os: OS::from(os),
                 device: Device::from(device),
             })
+                },
+                _ => err(ErrorBadRequest("no luck"))
+            }
+            // use user_agent_parser::UserAgentParser;
+            // let ua_parser = UserAgentParser::from_path("regexes.yaml").unwrap();
+            // let ua = ua.to_str().unwrap();
+
+            // let product = ua_parser.parse_product(ua);
+            // let os = ua_parser.parse_os(ua);
+            // let device = ua_parser.parse_device(ua);
+
+            // ok(UserAgent {
+            //     product: Product::from(product),
+            //     os: OS::from(os),
+            //     device: Device::from(device),
+            // })
         } else {
             err(ErrorBadRequest("no luck"))
         }

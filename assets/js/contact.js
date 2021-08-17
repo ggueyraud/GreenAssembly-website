@@ -14,6 +14,24 @@ class StepperPagination {
 
             const data_title = child.dataset.title;
 
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach(mutation => {
+                    if (mutation.attributeName === 'data-description') {
+                        const description = content.querySelector('.descr');
+
+                        if (description) {
+                            description.innerHTML = mutation.target.dataset.description;
+                        }
+                    }
+                })
+            })
+
+            observer.observe(child, {
+                attributes: true,
+                childList: false,
+                characterData: false
+            })
+
             if (data_title) {
                 const index_el = document.createElement('div');
                 index_el.innerHTML = child.dataset.title;
@@ -34,8 +52,6 @@ class StepperPagination {
 
             let button = document.createElement('button');
             button.classList.add('carousel__pagination__item');
-
-            console.log(index, this.carousel.current_slide)
 
             if (index < this.carousel.current_slide) {
                 button.classList.add('carousel__pagination__item--past');
@@ -95,7 +111,6 @@ class StepperPagination {
                 }
             }
 
-            console.log(index, this.carousel.current_slide)
             if (index < this.carousel.current_slide) {
                 item.classList.add('carousel__pagination__item--past');
 
@@ -118,14 +133,11 @@ const on_mount = () => {
     const carousel_el = document.querySelector('.carousel');
     let carousel = new Carousel(carousel_el, {
         auto_height: true,
+        arrow_navigation: false
     });
     carousel.use([StepperPagination]);
     carousel.on('change', (index) => {
         if (index === 0) {
-            document.querySelector('[name=project]').dataset.description = document.querySelector('[name=why_for]:checked').value === 'simple_discussion'
-                ? 'Message'
-                : 'Informations sur votre projet';
-
             document
                 .querySelector('[name=why_for]:checked')
                 .checked = false
@@ -138,17 +150,7 @@ const on_mount = () => {
         const label = carousel_el.querySelector(`.label`);
         label.querySelector('.index').innerHTML = `Étape ${index + 1}`;
         const descr = label.querySelector('.descr');
-        switch (index) {
-            case 0:
-                descr.innerHTML = 'Raison de la prise de contact';
-            break;
-            case 1:
-                descr.innerHTML = 'Informations personnelles';
-            break;
-            case 2:
-                descr.innerHTML = '??';
-            break;
-        }
+        descr.innerHTML = carousel.childrens[index].dataset.description;
     });
     
 
@@ -196,6 +198,7 @@ const on_mount = () => {
                     stringLength: 'Le message doit faire entre 30 et 500 caractères',
                 }
             },
+            found_by: {},
             budget: {}
         }
     })
@@ -223,7 +226,7 @@ const on_mount = () => {
                 .then(res => {
                     if (res.ok) {
                         document.querySelector("#success").classList.remove('hidden');
-                        document.querySelector('.steps').classList.add('hidden');
+                        document.querySelector('.stepper').classList.add('hidden');
                     }
                 })
                 .catch(() => {
@@ -243,8 +246,11 @@ const on_mount = () => {
         }
     })
         .on('valid', e => {
+            document.querySelector('[name=project]').dataset.description = document.querySelector('[name=why_for]:checked').value === 'simple_discussion'
+                ? 'Message'
+                : 'Informations sur votre projet';
             const message_label = document.querySelector('label[for="message"]');
-            document.querySelector('[name="lastname"]').focus({ preventScroll: true });
+            setTimeout(() => document.querySelector('[name="lastname"]').focus({ preventScroll: true }), 300);
     
             if (e.detail.why_for === 'new_project') {
                 body.new_project = true;
