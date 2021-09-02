@@ -1,13 +1,8 @@
 use actix_files::NamedFile;
-use actix_web::{
-    get,
-    http::{
+use actix_web::{App, Error, HttpRequest, HttpResponse, HttpServer, Result, get, guard, http::{
         header::{CACHE_CONTROL, EXPIRES},
         HeaderValue,
-    },
-    middleware::Compress,
-    web, App, Error, HttpRequest, HttpResponse, HttpServer, Result,
-};
+    }, middleware::Compress, web};
 use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
 use std::path::Path;
 use user_agent_parser::UserAgentParser;
@@ -18,9 +13,11 @@ mod services;
 mod templates;
 mod tests;
 mod utils;
+mod routes;
 
 async fn create_pool() -> Result<sqlx::PgPool, sqlx::Error> {
     let pool: sqlx::PgPool = sqlx::pool::PoolOptions::new()
+        .max_connections(300)
         .connect(&std::env::var("DATABASE_URL").expect("DATABASE_URL not found"))
         .await?;
 
@@ -107,10 +104,10 @@ async fn main() -> std::io::Result<()> {
     use dotenv::dotenv;
 
     dotenv().ok();
-    if cfg!(debug_assertions) {
+    // if cfg!(debug_assertions) {
         std::env::set_var("RUST_LOG", "actix_web=info,sqlx=debug");
         env_logger::init();
-    }
+    // }
 
     const HTTP_PORT: u32 = if cfg!(debug_assertions) { 8080 } else { 80 };
     const HTTPS_PORT: u32 = if cfg!(debug_assertions) { 8443 } else { 443 };
@@ -149,27 +146,12 @@ async fn main() -> std::io::Result<()> {
             .data(pool.clone())
             .data(UserAgentParser::from_path("regexes.yaml").expect("regexes.yaml not found"))
             .wrap(Compress::default())
-            // .wrap(middlewares::ban::Ban { pool: pool.clone() })
-            .service(controllers::index)
-            .service(controllers::agency)
-            .service(
-                web::scope("/creation-site-web")
-                    .service(controllers::website::website_creation)
-                    .service(controllers::website::onepage)
-                    .service(controllers::website::showcase)
-                    .service(controllers::website::e_commerce),
-            )
-            .service(controllers::portfolio)
-            .service(
-                web::scope("/contact")
-                    .service(controllers::contact::page)
-                    .service(controllers::contact::send),
-            )
-            // .route("/admin", web::get().to(ban_route))
-            // .route("/backup", web::get().to(ban_route))
-            .service(controllers::legals)
-            .service(controllers::sitemap)
-            .service(controllers::robots)
+            .wrap(utils::www::RedirectWWW {
+                to: "https://greenassembly.fr/".to_string()
+            })
+            .configure(routes::website::config)
+            .configure(routes::config)
+            .configure(routes::contact::config)
             .service(serve_upload_file)
             .service(serve_public_file)
     })
