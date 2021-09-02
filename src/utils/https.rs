@@ -69,6 +69,7 @@ where
             Either::Right(ok(req.into_response(
                 HttpResponse::MovedPermanently()
                     .header(http::header::LOCATION, url)
+                    .header(http::header::REFERER, format!("http://{}{}", host, uri))
                     .finish()
                     .into_body(),
             )))
