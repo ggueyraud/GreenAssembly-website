@@ -1,6 +1,13 @@
 import Form from './components/form';
+import chk from './components/checkbox';
 import Carousel from 'carousel';
 import { post } from './utils/http';
+
+const chks = chk('.checkbox', { checked: true });
+// chks[1].checked = false
+// console.log(chks)
+
+// document.addEventListener('keyup', () => chks[0].checked = false)
 
 class StepperPagination {
     constructor(carousel) {
