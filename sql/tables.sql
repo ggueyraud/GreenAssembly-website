@@ -51,3 +51,23 @@ CREATE TABLE ips_banned (
     ip VARCHAR(60) NOT NULL,
     "date" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
+
+DROP TABLE IF EXISTS faq_categories CASCADE;
+CREATE TABLE faq_categories (
+    id SMALLINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    name VARCHAR(60) NOT NULL,
+    "order" SMALLINT NOT NULL,
+    UNIQUE (id, "order")
+);
+
+DROP TABLE IF EXISTS faq_answers CASCADE;
+CREATE TABLE faq_answers (
+    id SMALLINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    category_id SMALLINT NOT NULL
+        REFERENCES faq_categories (id)
+        ON DELETE CASCADE,
+    question VARCHAR(120) NOT NULL,
+    answer TEXT NOT NULL
+    "order" SMALLINT NOT NULL,
+    UNIQUE (id, "order")
+);
