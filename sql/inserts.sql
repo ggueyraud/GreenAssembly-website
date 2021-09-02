@@ -4,7 +4,7 @@ INSERT INTO employees (firstname, lastname, job, description, picture, "order") 
 ('Ludivine', 'Farat', 'Designer Graphique', 'J''ai à cœur de trouver ce petit plus qui fait que vous êtes vous et pas un autre, et je le retranscris dans l''ensemble de votre communication visuelle.', 'lf', 3);
 
 INSERT INTO pages (title, identifier, description, is_seo) VALUES
-('Accueil', 'accueil', 'Agence Digitale Verte | Développement sur mesure de site-web éco-conçu | Création d''Identité Visuelle | Motion Design', true),
+('Accueil', 'accueil', 'GreenAssembly l''Agence Digitale Verte spécialisée dans la création de site-web éco-conçu sur-mesure, d''identité visuelle et de motion design à votre image.', true),
 ('Agence', 'agence', 'Démarquez-vous sur le web avec un site éco-conçu sur mesure – Une identité visuelle unique et singulière – Des vidéos Motion Design créatives et originales.', true),
 ('Contact', 'contact', 'Notre agence web à Annecy est spécialisée dans la conception de sites internet sur-mesure, la création d''identité visuelle et le montage de vidéos Motion Design.', true),
 ('Création de site E-commerce', 'creation_site_e_commerce', 'Gagnez des parts de marché et vendez vos produits avec un site e-commerce éco-conçu - développé sur-mesure - unique - 100% sécurisé - optimisé SEO', true),
