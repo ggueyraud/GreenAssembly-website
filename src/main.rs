@@ -104,10 +104,10 @@ async fn main() -> std::io::Result<()> {
     use dotenv::dotenv;
 
     dotenv().ok();
-    // if cfg!(debug_assertions) {
+    if cfg!(debug_assertions) {
         std::env::set_var("RUST_LOG", "actix_web=info,sqlx=debug");
         env_logger::init();
-    // }
+    }
 
     const HTTP_PORT: u32 = if cfg!(debug_assertions) { 8080 } else { 80 };
     const HTTPS_PORT: u32 = if cfg!(debug_assertions) { 8443 } else { 443 };
@@ -146,9 +146,7 @@ async fn main() -> std::io::Result<()> {
             .data(pool.clone())
             .data(UserAgentParser::from_path("regexes.yaml").expect("regexes.yaml not found"))
             .wrap(Compress::default())
-            .wrap(utils::www::RedirectWWW {
-                to: "https://greenassembly.fr/".to_string()
-            })
+            .wrap(utils::www::RedirectWWW)
             .configure(routes::website::config)
             .configure(routes::config)
             .configure(routes::contact::config)

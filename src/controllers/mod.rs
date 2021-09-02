@@ -2,6 +2,7 @@ use crate::services;
 use crate::templates::Employee;
 use actix_web::{get, web, HttpRequest, HttpResponse};
 use askama::Template;
+
 use sqlx::PgPool;
 pub mod contact;
 pub mod employees;
