@@ -116,7 +116,8 @@ async fn main() -> std::io::Result<()> {
 
     let pool = create_pool().await.expect("Connection to database failed");
 
-    let mut builder = SslAcceptor::mozilla_intermediate(SslMethod::tls()).expect("SSL build");
+    let mut builder = SslAcceptor::mozilla_modern(SslMethod::tls()).expect("SSL build");
+
     builder
         .set_private_key_file(
             &std::env::var("PRIVATE_KEY_FILE")
@@ -147,6 +148,7 @@ async fn main() -> std::io::Result<()> {
             .data(UserAgentParser::from_path("regexes.yaml").expect("regexes.yaml not found"))
             .wrap(Compress::default())
             .wrap(utils::www::RedirectWWW)
+            .wrap(utils::HSTS::HSTS)
             .configure(routes::website::config)
             .configure(routes::config)
             .configure(routes::contact::config)

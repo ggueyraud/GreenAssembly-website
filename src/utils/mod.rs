@@ -4,3 +4,4 @@ pub mod https;
 pub mod multipart;
 pub mod ua;
 pub mod www;
+pub mod HSTS;
