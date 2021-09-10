@@ -6,29 +6,27 @@
 
     <title>{% block title %}{{ title }}{% endblock %} | GreenAssembly - Agence Digitale Verte</title>
 
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <link rel="stylesheet" href="/css/pages/global.css" o-no-load />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" type="image/png" href="/favicon.png" />
+    <link rel="stylesheet" href="/css/global.css" o-no-load />
 
     <script src="/js/global.js" o-no-load async></script>
 
     {% block head %}{% endblock %}
 </head>
 <body>
-    <picture
+    <div
         id="loading"
         style="position: fixed; top: 0; right: 0; bottom: 0; left: 0; visibility: visible; background-color: #000F16; z-index: 9999; display: flex; justify-content: center; align-items: center"
     >
-        <source srcset="/img/logo.webp" type="image/webp" />
-
         <img
-            src="/img/logo.png"
-            alt="GreenAssembly Logo"
-            class="animation_bounce"
-            style="max-width: 80%"
+            src="/img/logo.svg"
             width="400"
             height="120"
+            style="max-width: 80%"
+            alt="GreenAssembly Logo"
         />
-    </picture>
+    </div>
 
     <ga-frame id="banner">
         {% block banner %}{% endblock %}
@@ -91,13 +89,9 @@
                         class="social"
                         rel="noopener"
                     >
-                        <img
-                            src="/icons/linkedin.svg"
-                            class="icon icon--lg"
-                            alt="GreenAssembly Linkedin"
-                            width="28"
-                            height="32"
-                        />
+                        <svg class="icon icon--lg" height="32">
+                            <use xlink:href="/icons/socials.svg#linkedin"></use>
+                        </svg>
                     </a>
                     <a
                         href="https://www.instagram.com/greenassembly.fr/"
@@ -105,13 +99,9 @@
                         class="social"
                         rel="noopener"
                     >
-                        <img
-                            src="/icons/instagram.svg"
-                            class="icon icon--lg"
-                            alt="GreenAssembly Instagram"
-                            width="28"
-                            height="32"
-                        />
+                        <svg class="icon icon--lg" height="32">
+                            <use xlink:href="/icons/socials.svg#instagram"></use>
+                        </svg>
                     </a>
                 </div>
 
@@ -150,38 +140,21 @@
                 href="/"
                 class="order_1 md_order_2 xl_order_3 md_col_span_2 xl_col_span_1"
             >
-                <picture class="lazy">
-                    <source data-srcset="/img/logo.webp" type="image/webp" />
-
-                    <img
-                        data-src="/img/logo.png"
-                        alt="GreenAssembly Logo"
-                        width="400"
-                        height="120"
-                    />
-                </picture>
+                <img src="/img/logo.svg" width="400" height="120" alt="GreenAssembly Logo" />
             </a>
     
             <div class="text_center order_4 md_col_span_3 xl_col_span_1">
                 <div class="uppercase pb_2 font_bold">Suivez-nous</div>
     
                 <a href="https://www.linkedin.com/company/greenassembly/" target="_blank" class="social" rel="noopener">
-                    <img
-                        src="/icons/linkedin.svg"
-                        class="icon"
-                        alt="GreenAssembly Linkedin"
-                        width="28"
-                        height="32"
-                    />
+                    <svg class="icon icon--lg" height="32">
+                        <use xlink:href="/icons/socials.svg#linkedin"></use>
+                    </svg>
                 </a>
                 <a href="https://www.instagram.com/greenassembly.fr/" target="_blank" class="social ml_1" rel="noopener">
-                    <img
-                        src="/icons/instagram.svg"
-                        class="icon"
-                        alt="GreenAssembly Instagram" 
-                        width="28"
-                        height="32"
-                    />
+                    <svg class="icon icon--lg" height="32">
+                        <use xlink:href="/icons/socials.svg#instagram"></use>
+                    </svg>
                 </a>
             </div>
     
