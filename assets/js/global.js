@@ -1,5 +1,5 @@
 import LazyLoader from './utils/lazy_loader';
-import Router from './utils/router';
+import Router from 'router';
 
 const loader = document.querySelector('#loading');
 
