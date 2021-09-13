@@ -1,0 +1,95 @@
+@use "sass:map";
+@use '../abstracts/variables' as vars;
+@use '../abstracts/_mixins/margins' as margin_mixin;
+@use '../abstracts/_mixins/media_query' as mq;
+@use '../abstracts/_mixins/text';
+@use '../abstracts/_mixins/colors';
+
+@import '../base/_typography.scss';
+@import '../base/_text.scss';
+@import '../base/_space.scss';
+@import '../base/_display.scss';
+@import '../base/_grid.scss';
+@import '../components/_card.scss';
+@import '../layout/_banner.scss';
+
+header#banner {
+    align-items: flex-end;
+    padding-bottom: 5rem;
+}
+
+@media (max-width: map.get(vars.$break-points, sm)) and (min-height: 600px) {
+    header#banner {
+        padding-bottom: 8rem;
+    }
+}
+
+.card {
+    justify-content: start;
+
+    .read_more {
+        justify-content: center
+    }
+}
+
+.read_more {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+
+    a {
+        @include text.text(xl);
+        @include colors.text('white');
+
+        display: inline-block;
+
+        span {
+            text-decoration: underline;
+        }
+
+        img {
+            vertical-align: middle;
+        }
+    }
+}
+
+h1 {
+    word-break: break-word;
+}
+
+h2 {
+    @include margin_mixin.in(12, bottom);
+    @extend .title;
+
+    @include mq.sm {
+        @include margin_mixin.in(20, bottom);
+    }
+
+    line-height: 1.25 !important;
+    width: 100%;
+    text-align: center;
+    text-transform: uppercase;
+    word-wrap: break-word;    
+    
+    span {
+        @extend %text_gradient;
+    }
+}
+
+ul {
+    &.list_check {
+        list-style: none;
+        padding-left: 0;
+
+        li {
+            & + li {
+                @include margin_mixin.in(3, top)
+            }
+    
+            &:before {
+                @include margin_mixin.in(3, right);
+                content: '✅';
+            }
+        }
+    }
+}

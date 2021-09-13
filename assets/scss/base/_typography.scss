@@ -1,0 +1,50 @@
+@use "sass:map";
+@use '../abstracts/variables' as vars;
+@use '../abstracts/_mixins/media_query' as mq;
+@use '../abstracts/_mixins/text';
+@use '../abstracts/_mixins/colors';
+
+@import '../base/_text.scss';
+
+h1, h2, h3 {
+    text-transform: uppercase;
+    margin: 0
+}
+
+h1, h2, .h1 {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+    line-height: 2rem;
+}
+
+h5 {
+    font-size: inherit;
+    margin: 0
+}
+
+.title {
+    @include text.text(4xl);
+    @include colors.text('black');
+
+    font-weight: bold;
+    text-transform: uppercase;
+    user-select: none;
+    line-height: 1.25;
+    background: -webkit-linear-gradient(right, rgba(239, 255, 25, 1), rgba(0, 255, 181, 1));
+    background-clip: text;
+    -webkit-text-stroke: 3px transparent;
+
+    @include mq.md {
+        @include text.text(6xl, true);
+
+        // font-size: 3.75rem;
+    }
+
+    @include mq.lg {
+        font-size: 6rem;
+    }
+}

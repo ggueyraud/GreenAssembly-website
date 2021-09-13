@@ -1,0 +1,46 @@
+@use "sass:map";
+@use '../abstracts/variables' as vars;
+@use '../abstracts/_mixins/margins' as margin;
+@use '../abstracts/_mixins/media_query' as mq;
+@use '../abstracts/_mixins/grid';
+@use '../abstracts/_functions/space';
+@use '../abstracts/_mixins/colors';
+
+@import '../base/_container.scss';
+@import '../base/_width.scss';
+
+footer {
+    @extend .container;
+    @include margin.in(10, top);
+    @include margin.in(8, bottom);
+    @include grid.cols(1);
+    @include colors.text('white');
+
+    gap: space.calculate(8);
+    display: grid;
+    margin: 0 auto;
+    align-items: center;
+
+    @include mq.sm {
+        @include margin.in(12, y);
+    }
+
+    @include mq.md {
+        @include margin.in(32, y);
+        @include grid.rows(2);
+        @include grid.cols(6)
+    }
+
+    @include mq.xl {
+        @include grid.rows(1);
+        @include grid.cols(5);
+        justify-content: start;
+    }
+
+    img {
+        @extend .md_w_full, .w_7\/12;
+
+        margin: 0 auto;
+        display: block
+    }
+}

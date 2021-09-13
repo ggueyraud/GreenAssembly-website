@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block head %}
+    {% match description %}
+        {% when Some with (description) %}
+            <meta name="description" content="{{ description }}" />
+        {% when None %}
+    {% endmatch %}
+
+    <link rel="stylesheet" href="/css/pages/contact.css" />
+
+    <script src="/js/contact.js" async></script>
+{% endblock %}
+
+{% block banner %}
+    <header
+        id="banner"
+        style="--sm_webp_bg_img: url(/img/bg/sm_global.webp); --sm_bg_img: url(/img/bg/sm_global.jpg); --webp_bg_img: url(/img/bg/global.webp); --bg_img: url(/img/bg/global.jpg)"
+    >
+        <h1>Contact</h1>
+
+        <button id="scroll_down">
+            <svg xmlns="http://www.w3.org/2000/svg" class="animate-bounce h-6 w_6" fill="none" viewBox="0 0 24 24" stroke="#fff">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+        </button>
+    </header>
+{% endblock %}
+
+{% block content %}
+    <section>
+        <p class="text_center">
+            Vous avez une envie folle de <b>marquer les esprits</b> et <b>gagner en visibilité</b> sur le net ? Ou souhaitez simplement en savoir plus sur l’<b>éco-conception web</b> ?<br />
+            <span class="text_2xl mt_2">Contactez-nous !</span>
+        </p>
+
+        <div id="success">
+            <h2>Félicitation !! 🎉</h2>
+
+            <p>Votre message nous a bien été parvenu, nous répondrons à ce dernier dans <u>les plus brefs délais</u> ! 😊</p>
+        </div>
+
+        <div class="carousel stepper mt_24">
+            <div class="label">
+                <div class="index">Étape 1</div>
+                <div class="descr">Raison de la prise de contact</div>
+            </div>
+            <nav aria-label="Progress" class="carousel__pagination"></nav>
+
+            <div class="carousel__wrapper">
+                <form class="carousel__wrapper__item" name="why-for" data-title="Étape 1" data-description="Raison de la prise de contact">
+                    <div class="container">
+                        <div class="flex flex_col sm_flex_row gap_4 justify_around">
+                            <label class="checkbox">
+                                <input type="radio" name="why_for" value="new_project" />
+                                vous parler de mon projet
+                            </label>
+    
+                            <label class="checkbox">
+                                <input type="radio" name="why_for" value="simple_discussion" />
+                                discuter / prendre des nouvelles
+                            </label>
+                        </div>
+                    </div>
+                </form>
+
+                <form class="carousel__wrapper__item" name="informations" autocomplete="off" data-title="Étape 2" data-description="Informations personnelles">
+                    <div class="container">
+                        <label for="lastname" class="mb_1">Nom *</label>
+                        <input
+                            type="text"
+                            id="lastname"
+                            name="lastname"
+                            required
+                            minlength="2"
+                            maxlength="120"
+                            data-fv-string_length-message="La valeur doit faire entre 2 et 120 caractères"
+                            data-fv-not_empty-message="Ce champ est obligatoire"
+                        />
+            
+                        <label for="firstname" class="mt_3 mb_1">Prénom *</label>
+                        <input
+                            type="text"
+                            id="firstname"
+                            name="firstname"
+                            required
+                            minlength="2"
+                            maxlength="120"
+                            data-fv-string_length-message="La valeur doit faire entre 2 et 120 caractères"
+                            data-fv-not_empty-message="Ce champ est obligatoire"
+                        />
+            
+                        <label for="company" class="mt_3 mb_1">Société *</label>
+                        <input
+                            type="text"
+                            id="company"
+                            name="company"
+                            required
+                            minlength="2"
+                            maxlength="120"
+                            data-fv-string_length-message="La valeur doit faire entre 2 et 120 caractères"
+                            data-fv-not_empty-message="Ce champ est obligatoire"
+                        />
+            
+                        <label for="email" class="mt_3 mb_1">Email *</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            required
+                            data-fv-string_length-message="La valeur doit faire entre 3 et 120 caractères"
+                            data-fv-not_empty-message="Ce champ est obligatoire"
+                        />
+            
+                        <label for="phone" class="mt_3 mb_1">Téléphone</label>
+                        <input type="tel" id="phone" name="phone" />
+        
+                        <div class="flex justify_end">
+                            <button type="submit" class="btn next_btn">
+                                Suivant 
+                                <svg class="icon icon--sm" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                    <path fill="#fff" d="M218.101 38.101L198.302 57.9c-4.686 4.686-4.686 12.284 0 16.971L353.432 230H12c-6.627 0-12 5.373-12 12v28c0 6.627 5.373 12 12 12h341.432l-155.13 155.13c-4.686 4.686-4.686 12.284 0 16.971l19.799 19.799c4.686 4.686 12.284 4.686 16.971 0l209.414-209.414c4.686-4.686 4.686-12.284 0-16.971L235.071 38.101c-4.686-4.687-12.284-4.687-16.97 0z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <form class="carousel__wrapper__item" name="project" data-title="Étape 3" data-description="???">
+                    <div class="container">
+                        <label class="mb_1" for="services">J'ai besoin *</label>
+            
+                        <div id="services">
+                            <label class="checkbox">
+                                <input type="checkbox" name="services" value="website" />
+                                d'un site-web
+                            </label>
+                            <label class="checkbox">
+                                <input type="checkbox" name="services" value="visual_identity" />
+                                d'une identité visuelle
+                            </label>
+                            <label class="checkbox">
+                                <input type="checkbox" name="services" value="motion_design" />
+                                d'un motion design
+                            </label>
+                        </div>
+            
+                        <label for="message" class="mt_2 mb_1">Description | Message</label>
+                        <textarea
+                            id="message"
+                            name="message"
+                            minlength="30"
+                            maxlength="500"
+                            rows="5"
+                            required
+                        ></textarea>
+                        <div class="float_right"><span id="message_caracters_counter">0</span> / 500</div>
+                        <div class="clear_both"></div>
+    
+                        <label for="budget" class="mt_2 mb_1">Budget</label>
+                        <select id="budget" name="budget">
+                            <option selected>Indéterminé</option>
+                            <option value="5000">- de 5000€</option>
+                            <option value="10000">- de 10 000€</option>
+                            <option value="15000">- de 15 000€</option>
+                        </select>
+                        
+                        <label for="found_by" class="mt_2 mb_1">Vous nous avez trouvé par</label>
+                        <select id="found_by" name="found_by">
+                            <option selected>Indéterminé</option>
+                            <option value="ads">une publicité</option>
+                            <option value="friend">le biais d'un.e ami.e/collègue/proche</option>
+                            <option value="web_search">une recherche sur le Web</option>
+                            <option value="social_network">un réseau social</option>
+                            <option value="website">un site-web</option>
+                        </select>
+    
+                        <div id="error" class="hidden text_center text_warning py_4">
+                            <span class="font_bold">Oups, une erreur est survenue 😬</span><br />Si l'erreur persiste contactez nous directement sur notre ligne <a href="tel:+33650308591">06•50•30•85•91</a>
+                        </div>
+        
+                        <div class="block w_full mt_4 text_center">
+                            <button
+                                type="submit"
+                                class="send_btn btn btn--lg opacity_0"
+                            >
+                                Envoyer
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+{% endblock %}

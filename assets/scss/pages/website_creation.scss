@@ -1,0 +1,256 @@
+@use "sass:map";
+@use '../abstracts/variables' as vars;
+@use '../abstracts/_mixins/margins' as margin_mixin;
+@use '../abstracts/_mixins/text';
+@use '../abstracts/_mixins/colors';
+
+@import '../../../node_modules/carousel/src/index.scss';
+@import '../base/_space.scss';
+@import '../base/_text.scss';
+@import '../base/_display.scss';
+@import '../base/_typography.scss';
+@import '../components/_card.scss';
+@import '../components/_stepper.scss';
+@import '../layout/_banner.scss';
+
+.carousel__pagination__item--current {
+    @include colors.bgc(success, true);
+
+    border-color: map.get(vars.$colors, success) !important;
+
+    svg {
+        @include colors.text('black');
+
+        height: 1.15rem;
+        width: auto;
+    }
+}
+
+header#banner {
+    align-items: flex-end;
+    padding-bottom: 5rem;
+}
+
+h1 {
+    text-align: center;
+    width: 100%;
+}
+
+h2 {
+    @include margin_mixin.in(12, bottom);
+    @extend .title;
+
+    line-height: 1.25 !important;
+    width: 100%;
+    text-align: center;
+    text-transform: uppercase;
+    word-wrap: break-word;
+    
+    span {
+        @extend %text_gradient;
+    }
+}
+
+ul {
+    list-style: none;
+    padding-left: 0;
+
+    li {
+        &+li {
+            @include margin_mixin.in(3, top);
+        }
+
+        &:before {
+            @include margin_mixin.in(3, right);
+
+            content: '✅';
+        }
+    }
+}
+
+#what_we_do {
+    text-align: center;
+
+    .carousel__wrapper__item {
+        height: auto;
+        padding: 12px
+    }
+}
+
+.read_more {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+
+    a {
+        @include text.text(xl);
+        @include colors.text('white');
+
+        display: inline-block;
+
+        span {
+            text-decoration: underline;
+        }
+
+        img {
+            vertical-align: middle;
+        }
+    }
+}
+
+#formules {
+    .carousel__wrapper {
+        position: relative;
+
+        &__item {
+            display: grid;
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+            
+            h3 {
+                @include margin_mixin.in(8, y);
+                @include text.text(3xl);
+                @extend %text_gradient;
+        
+                word-wrap: break-word;
+                line-height: 1.25 !important
+            }
+        
+            p {
+                @include margin_mixin.out(6, bottom);
+            }
+    
+            .infos {
+                order: 2;
+            }
+    
+            .preview {
+                order: 1;
+                width: 100%;
+            }
+        }
+    }
+}
+
+@media (min-width: map.get(vars.$break-points, sm)) {
+    h2 {
+        @include margin_mixin.in(20, bottom)
+    }
+
+    #formules .carousel__wrapper__item {
+        p {
+            @include margin_mixin.out(12, bottom);
+        }
+
+        h3 {
+            @include text.text(4xl)
+        }
+    }
+
+    .carousel.stepper .carousel__pagination {
+        @include margin_mixin.out(12, top);
+        @include margin_mixin.out(32, bottom);
+
+        &__item {
+            --spacing: 7.5rem;
+
+            div {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+                position: absolute;
+                flex-direction: column
+            }
+        
+            .index, .descr {
+                position: absolute;
+                z-index: 1;
+            }
+
+            .descr {
+                @include colors.text('white');
+
+                display: inline-block;
+                text-align: center;
+                top: calc(100% + 0.75rem);
+                width: 140px;
+        
+                & > * {
+                    line-height: 1.15
+                }
+            }
+        }
+    }
+
+    #formules .carousel__wrapper__item .preview {
+        width: 80%;
+        margin: 0 auto
+    }
+}
+
+@media (min-width: map.get(vars.$break-points, md)) {
+    #formules .carousel__wrapper__item {
+        h3 {
+            @include text.text(5xl);
+        }
+
+        .infos {
+            @include margin_mixin.in(36, top);
+            @include margin_mixin.in(8, y);
+        }
+    }
+
+    .carousel.stepper .carousel__wrapper__item {
+        --spacing: 9rem;
+
+        .descr {
+            width: 160px
+        }
+    }
+}
+
+@media (min-width: map.get(vars.$break-points, lg)) {
+    .carousel.stepper .carousel__wrapper__item {
+        --spacing: 12rem
+    }
+
+    h1, h2 {
+        width: 80%;
+        margin-right: auto;
+        margin-left: auto
+    }
+
+    #formules {
+        .read_more {
+            justify-content: flex-start !important;
+        }
+
+        .carousel__wrapper__item {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: 1rem;
+
+            h3 {
+                position: absolute;
+                top: 1rem;
+                white-space: nowrap;
+            }
+
+            .infos {
+                @include margin_mixin.in(36, top);
+                order: 1 !important
+            }
+            .preview {
+                order: 2;
+                height: 100%;
+                width: 100%;
+                margin: 0
+            }
+        }
+    }
+}
+
+@media (min-width: map.get(vars.$break-points, xl)) {
+    .carousel.stepper .carousel__wrapper__item {
+        --spacing: 16rem
+    }
+}

@@ -1,0 +1,53 @@
+@use '../abstracts/variables' as vars;
+
+@mixin border_style($style) {
+    border-style: $style
+}
+
+@mixin border_color($color) {
+    border-color: $color
+}
+
+@mixin border_width($width, $direction) {
+    @if $direction {
+        border-#{$direction}-width: $width
+    } @else {
+        border-width: $width
+    }
+}
+
+@each $name, $color in vars.$colors {
+    .border_#{$name} {
+        @include border_color($color)
+    }
+}
+
+@for $i from 0 through 8 {
+    $value: $i + px;
+
+    @each $name, $direction in vars.$borders {
+        .border_#{$name}_#{$i} {
+            @include border_width($value, $direction)
+        }
+    }
+
+    .border_#{$i} {
+        @include border_width($value, null)
+    }
+}
+
+.border_solid {
+    @include border_style(solid)
+}
+.border_dashed {
+    @include border_style(dashed)
+}
+.border_dotted {
+    @include border_style(dotted)
+}
+.border_double {
+    @include border_style(double)
+}
+.border_none {
+    @include border_style(none)
+}

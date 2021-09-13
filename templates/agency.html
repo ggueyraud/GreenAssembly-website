@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block head %}
+    {% match description %}
+        {% when Some with (description) %}
+            <meta name="description" content="{{ description }}" />
+        {% when None %}
+    {% endmatch %}
+
+    <link rel="stylesheet" href="/css/pages/agency.css" />
+
+    <script src="/js/carousel.js" async></script>
+{% endblock %}
+
+{% block banner %}
+    <header
+        id="banner"
+        style="--sm_webp_bg_img: url(/img/bg/sm_global.webp); --sm_bg_img: url(/img/bg/sm_global.jpg); --webp_bg_img: url(/img/bg/global.webp); --bg_img: url(/img/bg/global.jpg)"
+    >
+        <h1>Agence</h1>
+
+        <button id="scroll_down">
+            <svg xmlns="http://www.w3.org/2000/svg" class="animate-bounce icon" fill="none" viewBox="0 0 24 24" stroke="#fff">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+        </button>
+    </header>
+{% endblock %}
+
+{% block content %}
+    <div class="space_y_12 md_space_y_24 mt_12 md_mt_8">
+        <section id="approach">
+            <h2>Notre démarche</h2>
+
+            <div class="content">
+                <p class="text_impactful text_impactful--lg">
+                    <b>éco-conception web</b> pour un environnement plus <span class="text_success">green</span><br /><br />
+                    Parce que <span class="text_white">le web fait désormais partie de notre quotidien</span>, il est aujourd’hui <span class="text_white">urgent de trouver des solutions pour limiter ses effets</span> sur notre <span class="text_success">environnement</span>.
+                </p>
+
+                <p>
+                    Chez GreenAssembly, nous nous sommes donnés pour mission de trouver les bons compromis pour <span class="text_success font_bold">préserver notre planète</span> tout en continuant de profiter des atouts du digital.<br /><br />
+                    <span class="font_bold">De la conception</span> (ergonomie, contenu, graphisme, développement) <span class="font_bold">à la livraison</span> (référencement, hébergement, suivi et maintenance), chaque étape dans la conception de votre site-web prend en compte cet <span class="text_success font_bold">aspect écologique</span> qui nous tient à cœur.<br /><br />
+                    Pour cela, nous avons choisi une solution simple : <span class="text_success font_bold">utiliser la technologie à bon escient</span>.<br /><br />
+                    En créant des <b>sites-web dynamiques</b> qui vont à l’essentiel avec le développement de fonctionnalités dont vous avez réellement besoin, sur lesquelles nous vous <span class="font_bold">formons</span> afin de <span  class="font_bold">vous rendre autonome</span> par la suite.<br /><br />
+                    Des sites également <b class="font_bold text_success">moins gourmands en énergie que les sites web traditionnels</b> grâce à des <span class="font_bold">technologies modernes très performantes</span>, permettant un affichage rapide et sécurisé.<br /><br />
+                    Et parce que la qualité est notre priorité, nous réalisons systématiquement un <b class="text_success">contrôle qualité</b> avant la mise en ligne du site afin de vérifier que tout fonctionne correctement, pour une <span class="font_bold">expérience utilisateur optimale</span>.
+                </p>
+            </div>
+        </section>
+
+        <section id="story">
+            <h2>Notre histoire</h2>
+
+            <div class="content">
+                <p>
+                    GreenAssembly, c’est une <b class="text_success">équipe de passionnés du web</b> et de tout ce qui a trait aux <span class="text_success font_bold">nouvelles technologies</span>. Une équipe pour qui l’émancipation et la liberté sont des critères fondamentaux dans l’épanouissement professionnel et personnel de chacun de ses membres.<br /><br />
+                    Alors quand l’occasion de créer leur société s’est présentée, le rêve de laisser libre cours à leur imagination et de proposer un concept novateur a rapidement fait place à la réalité.
+                </p>
+
+                <p class="text_impactful">
+                    Aujourd’hui, l’agence est fière de pouvoir accomplir des missions qui l’inspirent en mettant la <span class="text_success">technologie</span> <span class="text_white">au service de la</span> <span class="text_success">créativité</span>.<br /><br />
+                    Avec pour <span class="text_white">objectif de créer</span> <span class="text_success">ce qu’on ne voit pas ailleurs</span> et, ainsi, <b class="text_white">aider ses clients à se démarquer</b>.
+                </p>
+            </div>
+        </section>
+
+        <section id="team">
+            <h2>Notre Équipe</h2>
+
+            <div class="carousel">
+                <div class="carousel__wrapper">
+                    {% for employee in employees %}
+                        <div class="carousel__wrapper__item">
+                            {{ employee|safe }}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <nav aria-label="Progress" class="carousel__pagination"></nav>
+            </div>
+        </section>
+    </div>
+{% endblock %}

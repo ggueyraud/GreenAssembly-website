@@ -1,0 +1,7 @@
+@use '../abstracts/variables' as vars;
+
+@each $name, $color in vars.$colors {
+    .bg_#{$name} {
+        background-color: $color
+    }
+}

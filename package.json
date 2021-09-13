@@ -1,0 +1,22 @@
+{
+  "name": "GreenAssembly Website",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "sass": "sass --watch --no-source-map assets/scss:dist",
+    "webpack": "NODE_ENV=development webpack --progress",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "postcss": "^8.3.5"
+  },
+  "dependencies": {
+    "carousel": "../Carousel",
+    "router": "../Router"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ],
+  "license": "ISC"
+}

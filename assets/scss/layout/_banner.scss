@@ -1,0 +1,65 @@
+@use "sass:map";
+@use '../abstracts/variables' as vars;
+@use '../abstracts/_mixins/media_query' as mq;
+@use '../abstracts/_mixins/text';
+@use '../abstracts/_functions/space';
+
+@import '../base/_placement.scss';
+@import '../base/_animations.scss';
+@import '../base/_text.scss';
+
+.webp_support header#banner {
+    background-image: var(--sm_webp_bg_img);
+}
+
+header#banner {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    --sm_bg_img: url(/img/bg/home_mobile.webp);
+    background-size: cover;
+    background-image: var(--sm_bg_img);
+
+    h1 {
+        @include text.text(5xl);
+
+        @include mq.md {
+            @include text.text(7xl)
+        }
+
+        @include mq.lg {
+            @include text.text(8xl)
+        }
+
+        @include mq.xxl {
+            @include text.text(9xl)
+        }
+
+        text-align: center;
+        font-weight: bold;
+        text-transform: uppercase
+    }
+
+    #scroll_down {
+        @extend .animation_bounce;
+
+        position: absolute;
+        bottom: space.calculate(2)
+    }
+}
+
+@media (min-width: map.get(vars.$break-points, sm)) {
+    .webp_support header#banner {
+        background-image: var(--webp_bg_img);
+    }
+
+    header#banner {
+        --bg_img: url(/img/bg/home.webp);
+        background-image: var(--bg_img);
+    }
+}

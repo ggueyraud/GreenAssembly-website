@@ -1,0 +1,33 @@
+@use '../_functions/space';
+
+@mixin margin($direction, $index, $side: null, $important: false) {
+    $value: space.calculate($index);
+
+    @if $direction != in and $direction != out {
+        @error "Margin direction must be in ou out";
+    }
+
+    $direction: if($direction == in, padding, margin);
+
+    @if $side != null {
+        @if $side == x {
+            #{$direction}-left: $value #{if($important == true, ' !important', '')};
+            #{$direction}-right: $value #{if($important == true, ' !important', '')}
+        } @else if $side == y {
+            #{$direction}-top: $value #{if($important == true, ' !important', '')};
+            #{$direction}-bottom: $value #{if($important == true, ' !important', '')}
+        } @else {
+            #{$direction}-#{$side}: $value #{if($important == true, ' !important', '')}
+        }
+    } @else {
+        #{$direction}: $value #{if($important == true, '!important', '')}
+    }
+}
+
+@mixin in($index, $side: null, $important: false) {
+    @include margin(in, $index, $side, $important)
+}
+
+@mixin out($index, $side: null, $important: false) {
+    @include margin(out, $index, $side, $important)
+}

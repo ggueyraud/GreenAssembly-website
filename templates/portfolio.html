@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block head %}
+    {% match description %}
+        {% when Some with (description) %}
+            <meta name="description" content="{{ description }}" />
+        {% when None %}
+    {% endmatch %}
+
+    <link rel="stylesheet" href="/css/pages/portfolio.css" />
+{% endblock %}
+
+{% block banner %}
+    <header
+        id="banner"
+        style="--sm_webp_bg_img: url(/img/bg/sm_global.webp); --sm_bg_img: url(/img/bg/sm_global.jpg); --webp_bg_img: url(/img/bg/global.webp); --bg_img: url(/img/bg/global.jpg)"
+    >
+        <h1>Portfolio</h1>
+
+        <button id="scroll_down">
+            <svg xmlns="http://www.w3.org/2000/svg" class="animate-bounce icon" fill="none" viewBox="0 0 24 24" stroke="#fff">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+        </button>
+    </header>
+{% endblock %}
+
+{% block content %}
+    <section class="mt_12 md_mt_8 text_center">
+        <p class="h1">Soyez notre premier bourgeon🌱 à apparaitre ici !</p>
+        <a
+            o-follow
+            o-preload-once
+            href="/contact"
+            class="underline mt_4 text_lg inline_block"
+        >
+            J'ai un projet !
+        </a>
+    </section>
+{% endblock %}

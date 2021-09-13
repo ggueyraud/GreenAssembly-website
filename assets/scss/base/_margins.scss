@@ -1,0 +1,87 @@
+@use "sass:map";
+@use '../abstracts/variables' as vars;
+@use '../abstracts/_mixins/margins' as margin_mixin;
+
+.mx_auto {
+    margin: 0 auto
+}
+
+@each $name, $width in vars.$break-points {
+    @media (min-width: #{$width}) {
+        .#{$name}_mx_auto {
+            margin: 0 auto
+        }
+    }
+}
+
+@for $i from 0 through 96 {
+    .m_#{$i} {
+        @include margin_mixin.out($i)
+    }
+    .my_#{$i} {
+        @include margin_mixin.out($i, y)
+    }
+    .mx_#{$i} {
+        @include margin_mixin.out($i, x)
+    }
+
+    @each $symbol, $value in vars.$borders {
+        .m#{$symbol}_#{$i} {
+            @include margin_mixin.out($i, $value)
+        }
+    }
+
+    @each $symbol, $value in vars.$borders {
+        .p#{$symbol}_#{$i} {
+            @include margin_mixin.in($i, $value)
+        }
+    }
+    
+    .p_#{$i} {
+        @include margin_mixin.in($i)
+    }
+    .py_#{$i} {
+        @include margin_mixin.in($i, y)
+    }
+    .px_#{$i} {
+        @include margin_mixin.in($i, x)
+    }
+}
+
+@each $name, $width in vars.$break-points {
+    @media (min-width: #{$width}) {
+        @for $i from 0 through 96 {
+            .#{$name}_m_#{$i} {
+                @include margin_mixin.out($i)
+            }
+            .#{$name}_my_#{$i} {
+                @include margin_mixin.out($i, y)
+            }
+            .#{$name}_mx_#{$i} {
+                @include margin_mixin.out($i, x)
+            }
+
+            @each $symbol, $value in vars.$borders {
+                .#{$name}_m#{$symbol}_#{$i} {
+                    @include margin_mixin.out($i, $value)
+                }
+            }
+    
+            .#{$name}_p_#{$i} {
+                @include margin_mixin.in($i)
+            }
+            .#{$name}_py_#{$i} {
+                @include margin_mixin.in($i, y)
+            }
+            .#{$name}_px_#{$i} {
+                @include margin_mixin.in($i, x)
+            }
+
+            @each $symbol, $value in vars.$borders {
+                .#{$name}_p#{$symbol}_#{$i} {
+                    @include margin_mixin.in($i, $value)
+                }
+            }
+        }
+    }
+}

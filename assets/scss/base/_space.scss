@@ -1,0 +1,33 @@
+@use '../abstracts/variables';
+
+@for $i from 0 through 96 {
+    $value: ($i * .25) + rem;
+
+    .space_x_#{$i} > * + * {
+        margin-right: $value;
+        margin-left: $value;
+    }
+
+    .space_y_#{$i} > * + *:not(:last-child) {
+        margin-top: $value;
+        margin-bottom: $value;
+    }
+}
+
+@each $name, $width in variables.$break-points {
+    @media (min-width: #{$width}) {
+        @for $i from 0 through 96 {
+            $value: ($i * .25) + rem;
+
+            .#{$name}_space_x_#{$i} > * + * {
+                margin-right: $value;
+                margin-left: $value
+            }
+        
+            .#{$name}_space_y_#{$i} > * + *:not(:last-child) {
+                margin-top: $value;
+                margin-bottom: $value
+            }
+        }
+    }
+}

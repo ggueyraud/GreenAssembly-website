@@ -1,0 +1,39 @@
+@use "sass:map";
+@use '../abstracts/variables' as vars;
+@use '../abstracts/_mixins/margins' as margin_mixin;
+@use '../abstracts/_mixins/media_query' as mq;
+
+@import '../base/_display.scss';
+@import '../base/_space.scss';
+@import '../base/_typography.scss';
+
+section {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+
+    a {
+        @include margin_mixin.out(4, top);
+
+        span {
+            @include margin_mixin.out(1, left);
+            text-decoration: underline
+        }
+
+        img {
+            vertical-align: middle;
+        }
+    }
+
+    h1 {
+        @extend .title;
+        margin: 0 auto !important;
+        word-break: break-word;
+
+        @include mq.sm {
+            width: 80%
+        }
+    }
+}

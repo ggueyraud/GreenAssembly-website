@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block head %}
+    {% match description %}
+        {% when Some with (description) %}
+            <meta name="description" content="{{ description }}" />
+        {% when None %}
+    {% endmatch %}
+
+    <link rel="stylesheet" href="/css/pages/onepage.css" />
+
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Product",
+            "name": "Création de site Vitrine",
+            "description": "Gagnez en visibilité et attirez des contacts qualifiés avec un site vitrine éco-conçu, design et performant 100% personnalisé. Développement sur-mesure et SEO.",
+            "offers": {
+                "@type": "Offer",
+                "price": "2080",
+                "priceCurrency": "EUR"
+            },    
+            "image": "https://greenassembly.fr/img/showcase.jpg",
+            "manufacturer": {
+                "@type": "Organization",
+                "name": "GreenAssembly",
+                "logo": "https://greenassembly.fr/img/logo.svg",
+                "telephone": "+33650308591",
+                "email": "contact@greenassembly.fr",
+                "vatID": "20%",
+                "areaServed": {
+                  "@type": "GeoCircle",
+                  "geoMidpoint": {
+                    "@type": "GeoCoordinates",
+                    "postalCode": "74000",
+                    "latitude": "45.8899344",
+                    "longitude": "6.0933974"
+                  },
+                  "geoRadius": "45000"
+                }
+            },
+            "isSimilarTo": [
+                {
+                    "@type": "Product",
+                    "name": "Création de site OnePage",
+                    "alternateName": "Site OnePage",
+                    "description": "Démarquez-vous avec un site OnePage à l’image de votre entreprise. Conseils et développement sur-mesure, éco-conception web, optez pour la performance.",
+                    "image": "https://greenassembly.fr/img/onepage.jpg",
+                    "url": "https://greenassembly.fr/creation-site-web/onepage"
+                },
+                {
+                    "@type": "Product",
+                    "name": "Création de site E-commerce",
+                    "alternateName": "Site E-commerce",
+                    "description": "Gagnez des parts de marché et vendez vos produits avec un site e-commerce éco-conçu - développé sur-mesure - unique - 100% sécurisé - optimisé SEO",
+                    "image": "https://greenassembly.fr/img/e_commerce.jpg",
+                    "url": "https://greenassembly.fr/creation-site-web/e-commerce"
+                }
+            ]
+        }
+    </script>
+{% endblock %}
+
+{% block banner %}
+    <header
+        id="banner"
+        style="--sm_webp_bg_img: url(/img/bg/sm_showcase.webp); --sm_bg_img: url(/img/bg/sm_showcase.jpg); --webp_bg_img: url(/img/bg/showcase.webp); --bg_img: url(/img/bg/showcase.jpg)"
+    >
+        <h1 class="container">Création de Site Vitrine</h1>
+
+        <button id="scroll_down">
+            <svg xmlns="http://www.w3.org/2000/svg" class="animate-bounce icon" fill="none" viewBox="0 0 24 24" stroke="#fff">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+        </button>
+    </header>
+{% endblock %}
+
+{% block content %}
+    <section class="space_y_12 md_space_y_24 mt_12 md_mt_8">
+        <div>
+            <h2>pour valoriser <span>votre savoir-faire</span> et développer <span>votre notoriété</span></h2>
+
+            <div class="grid grid_cols_1 md_grid_cols_2 gap_10 lg_gap_18 items_center">
+                <p class="text_impactful text_impactful--lg">
+                    Que vous vendiez des produits ou des services, le site Vitrine vous permet de <span class="text_white">séduire vos clients</span> cibles tout en vous assurant une <span class="text_white">bonne visibilité sur le web</span>.
+                </p>
+
+                <p>
+                    Plus complet que le site OnePage, le site Vitrine présente dans les détails votre marque, qui vous êtes et ce que vous faites.<br /><br />
+                    Le site vitrine est idéal pour vous faire connaître et mettre en avant votre expertise auprès des internautes.
+                </p>
+            </div>
+        </div>
+
+        <div>
+            <h2>Qu’est-ce qu’un site vitrine et pourquoi en avoir un ?</h2>
+
+            <p class="text_impactful">
+                Un <b>site Vitrine</b> est un site-web composé de <b>plusieurs pages</b> présentant votre entreprise, vos équipes, vos produits et/ou vos prestations de service.<br /><br />
+                Il vous permet de <span class="text_white">valoriser votre savoir-faire</span> et d’augmenter la réputation de votre société au niveau local ou à plus grande échelle, en mettant en avant vos idées et vos valeurs de façon personnalisée.<br /><br />
+                <b>Optimisé pour le référencement naturel SEO</b>, le site vitrine vous aide également à être bien visible sur les moteurs de recherche.
+            </p>
+
+            <div class="grid grid_cols_1 md_grid_cols_2 gap_10 lg_gap_18 items_center py_16">
+                <div class="card justify_start">
+                    <h3 class="text_center">Les <span class="text_success">+</span> du site vitrine</h3>
+                    <p>
+                        Un site vitrine est moins coûteux que la création de campagnes publicitaires. Il est aussi fonctionnel tout au long de l’année, 7 jours sur 7 et 24h sur 24.<br /><br />
+                        Vous vous assurez ainsi une <b>présence en ligne continue</b> et augmentez vos chances de trouver de nouveaux clients.<br /><br />
+                        Le site vitrine est aussi très utile pour <span class="font_bold">susciter la curiosité</span> des internautes et <span class="font_bold">attirer du monde</span> vers vos points de vente, boutiques ou magasins physiques. En présentant ce que vous proposez, les avis de vos clients, vos promotions et offres du moment, le consommateur arrive chez vous avec un bon apriori.<br /><br />
+                        Enfin, le site vitrine vous aide à maintenir un <span class="font_bold">lien de proximité et de qualité</span> avec vos clients.
+                    </p>
+                </div>
+                <div class="card justify_start">
+                    <h3 class="text_center">Les <span class="text_danger">-</span> du site vitrine</h3>
+                    <p>
+                        Si vous avez un budget limité et n’avez pas envie de consacrer trop de temps à la gestion de votre site-web, le site <a o-follow href="onepage" class="text_success font_bold">OnePage</a> sera peut-être mieux adapté à vos attentes.<br /><br />
+                        Si votre objectif est de vendre des produits directement en ligne, le site <a o-follow href="e-commerce" class="text_success font_bold">e-commerce</a> est la solution la plus adéquate pour vous.
+                    </p>
+                </div>
+            </div>
+
+            <div class="text_2xl font_bold pb_4 uppercase">Le site vitrine est fait pour vous si :</div>
+            <ul class="list_check">
+                <li>Vous vendez des produits ou services</li>
+                <li>Votre objectif est de <b>faire connaître votre marque</b></li>
+                <li>Vous souhaitez <b>attirer à vous des prospects qualifiés</b></li>
+                <li>Vous voulez <b>fidéliser vos clients</b></li>
+                <li>Vous ne vendez pas de produits en ligne</li>
+            </ul>
+        </div>
+
+        <div>
+            <h2>Ce que nos spécialistes en site vitrine réalisent pour vous</h2>
+
+            <p>
+                <ul class="list_check pb_8">
+                    <li>Un <b>site-web performant entièrement personnalisé</b> et <b>bien référencé</b> dans les résultats de recherche Google</li>
+                    <li>Des <span class="font_bold">conseils pertinents</span> quant à l’ergonomie et au design de votre site pour <span class="font_bold">répondre au mieux aux attentes de vos clients</span> (étude de vos besoins, mise en place d’un cahier des charges, étude ergonomique)</li>
+                    <li>Un <b>site-web sécurisé</b> et développé <b>sur-mesure</b> avec la création de fonctionnalités qui vous sont vraiment utiles, selon les règles de l’<b class="text_success">éco-conception web</b></li>
+                    <li>La mise en place de <span class="font_bold">tests unitaires</span> intensifs pour contrôler le bon fonctionnement du site</li>
+                    <li>Une <span class="font_bold">formation d’une heure</span> sur l’utilisation de votre site-web avec, à l’appui, une <span class="font_bold">documentation</span> récapitulant les différentes fonctionnalités que vous devez maîtriser</li>
+                    <li>Un <span class="font_bold">accompagnement de nos experts</span> pour maximiser votre présence en ligne</li>
+                </ul>
+            </p>
+        </div>
+
+        <div>
+            <h2>Votre site vitrine <span>à partir de 2080€ HT</span></h2>
+
+            <div class="grid grid_cols_1 md_grid_cols_2 gap_10 lg_gap_18 items_center">
+                <p class="text_impactful text_impactful--lg">
+                    La <b class="text_success">préservation de l’environnement</b> faisant partie de nos priorités, <span class="text_white">chaque site vitrine créé</span> par GreenAssembly est l’équivalent d’<span class="text_success text_2xl md_text_3xl">un à plusieurs arbres plantés</span> avec <span class="text_white text_2xl md_text_3xl">EcoTree</span><br /><br />
+                    Vous souhaitez en savoir plus sur la création de votre site vitrine unique et personnalisé ? <a o-follow href="/contact" class="text_success">Contactez-nous !</a>
+                </p>
+
+                <div>
+                    <div class="card">
+                        <div class="pb_6 sm_pb_10 text_4xl text_center font_bold pb_2">2080€ HT</div>
+
+                        <p>
+                            Pour un <b>site-web optimisé SEO</b> et à l’image de votre entreprise, découvrez notre formule site Vitrine.<br /><br />
+                            Une offre sur-mesure comprenant :
+    
+                            <ul class="list_check">
+                                <li>La création de <span class="font_bold">4 à 5 pages</span> web présentant votre activité, vos produits et prestations</li>
+                                <li>Création et intégration d'une <b>maquette qui vous ressemble</b></li>
+                                <li>Un formulaire de contact</li>
+                                <li>Une mise en page <b>Responsive Design</b> compatible avec tous les écrans (ordinateur – smartphone – tablette)</li>
+                                <li>Un programme <span class="font_bold">évolutif</span> vous laissant la <span class="font_bold">possibilité de créer de nouvelles fonctionnalités en fonction de vos besoins</span></li>
+                                <li>Une <b>interface d’administration</b> (ou back office) pour <b>gérer le contenu</b> de votre site vitrine en toute <b>autonomie</b> (modification du contenu en temps réel)</li>
+                            </ul>
+
+                            En option :
+                            <ul class="list_check">
+                                <li>La mise en ligne de votre site vitrine sur un <b class="text_success">serveur dimensionné intelligemment</b></li>
+                                <li>Un contrat de maintenance pour une <b>optimisation pérenne des performances</b> de votre site et les <b>mises à jour de sécurité</b></li>
+                            </ul>
+    
+                            <div class="read_more pt_6 sm_pt_10">
+                                <a o-follow href="/contact" class="text_center">
+                                    <span>J'ai un projet</span>
+                    
+                                    <img src="/favicon.svg" width="48" height="30" alt="GreenAssembly Leaf" />
+                                </a>
+                            </div>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

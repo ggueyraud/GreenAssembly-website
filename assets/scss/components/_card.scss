@@ -1,0 +1,34 @@
+@use "sass:map";
+@use '../abstracts/variables' as vars;
+@use '../abstracts/_mixins/margins' as margin_mixin;
+@use '../abstracts/_mixins/media_query' as mq;
+@use '../abstracts/_mixins/text';
+
+.card {
+    @include margin_mixin.in(6, y);
+    @include margin_mixin.in(4, x);
+
+    @include mq.sm {
+        @include margin_mixin.in(10, y);
+        @include margin_mixin.in(6, x);
+    
+        h3 {
+            @include margin_mixin.out(8, bottom, true);
+        }
+    }
+
+    box-shadow: 1px 1px 12px 4px map.get(vars.$colors, success);
+    border-radius: 4rem;
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    flex-direction: column;
+
+    h3 {
+        @include text.text(2xl);
+        @include margin_mixin.out(4, bottom);
+
+        text-transform: uppercase;
+        line-height: 1.5;
+    }
+}

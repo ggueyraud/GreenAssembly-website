@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block head %}
+    {% match description %}
+        {% when Some with (description) %}
+            <meta name="description" content="{{ description }}" />
+        {% when None %}
+    {% endmatch %}
+
+    <link rel="stylesheet" href="/css/pages/index.css" />
+
+    <script src="/js/carousel.js" async></script>
+{% endblock %}
+
+{% block banner %}
+    <header id="home_banner">
+        <div id="shape">
+            <h1>Agence Digitale Verte</h1>
+
+            <a o-follow href="/portfolio">
+                <span>voir nos projets</span>
+
+                <img src="/favicon.svg" width="48" height="30" alt="GreenAssembly Leaf" />
+            </a>
+        </div>
+    </header>
+{% endblock %}
+
+{% block content %}
+    <div class="space_y_12 md_space_y_24">
+        <section id="engagements" class="md_my_12 mt_32">
+            <div class="carousel">
+                <div class="carousel__wrapper">
+                    <div class="carousel__wrapper__item">
+                        <div class="swiper-card">
+                            <img
+                                data-src="/icons/eco_conception.svg"
+                                alt="Éco-conception"
+                                class="lazy"
+                                width="202"
+                                height="221"
+                            />
+        
+                            <h3>Éco-conception</h3>
+        
+                            <p>Développement et webdesign <b>sur mesure</b> pour un site-web <b>réactif</b> et <b>durable</b>. Ou quand technologie et environnement s’assemblent pour le meilleur chez GreenAssembly.</p>
+                        </div>
+                    </div>
+    
+                    <div class="carousel__wrapper__item">
+                        <div class="swiper-card">
+                            <img
+                                data-src="/icons/qualite.svg"
+                                alt="Qualité"
+                                class="lazy"
+                                width="291"
+                                height="218"
+                            />
+                                
+                            <h3>Qualité</h3>
+        
+                            <p>Parce que l’à peu près n’a pas sa place dans votre business, la <b>qualité</b>, la <b>performance</b> et la <b>sécurité</b> font partie de nos priorités absolues chez GreenAssembly.</p>
+                        </div>
+                    </div>
+    
+                    <div class="carousel__wrapper__item">
+                        <div class="swiper-card">
+                            <img
+                                data-src="/icons/ethique.svg"
+                                alt="Éthique"
+                                class="lazy"
+                                width="192"
+                                height="181"
+                            />
+        
+                            <h3>Éthique</h3>
+        
+                            <p>Ni trop ni pas assez. Chez GreenAssembly, vous achetez les <b>fonctionnalités</b> vraiment <b>utiles à votre activité</b>. L’assurance pour vous de payer le <b>prix juste</b>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <nav aria-label="Progress" class="carousel__pagination"></nav>
+            </div>
+
+            <div class="read_more">
+                <a o-follow href="/agence">
+                    <span>en savoir plus</span>
+    
+                    <img src="/favicon.svg" width="48" height="30" alt="GreenAssembly Leaf" />
+                </a>
+            </div>
+        </section>
+
+        <section class="prestation">
+            <h2>Identité Visuelle</h2>
+
+            <div class="content">
+                <picture class="preview lazy">
+                    <source data-srcset="/img/visual_identity.webp" type="image/webp" />
+    
+                    <img
+                        data-src="/img/visual_identity.png"
+                        alt="Identité Visuelle"
+                        width="700"
+                        height="666"
+                    />
+                </picture>
+    
+                <p class="description">
+                    <span class="text_impactful text_impactful--lg">
+                        Marquez les esprits et pimentez votre image de marque avec une <b class="text_success"><span class="text_white">identité visuelle</span> unique et singulière</b>.<br /><br />
+                    </span>
+                    De votre <span class="font_bold">logo</span> à votre  <span class="font_bold">charte graphique</span>, en passant par vos <span class="font_bold">supports de communication</span> et <span class="font_bold">flyers</span>, trouvons ensemble ce petit plus qui fera qu’on se souviendra de vous !
+                </p>
+            </div>
+        </section>
+
+        <section class="prestation">
+            <h2>Création de site-web</h2>
+
+            <div class="content">
+                <p class="description order_2 md_order_1">
+                    <span class="text_impactful text_impactful--lg">
+                        Prendre le temps de <b class="text_white">sélectionner les meilleures fonctionnalités</b> et chouchouter l’image ainsi que le message de votre <b class="text_white">site-web</b>, telle est notre vision de l’<b class="text_success">éco conception</b> web chez GreenAssembly.<br /><br />
+                    </span>
+                    Design, expérience utilisateur, développement web, référencement naturel SEO, hébergement… Prenez place sur le web avec un site éco-conçu <b>100% sur mesure</b> 100% performant 100% vous.
+
+                    <span class="read_more">
+                        <a href="/creation-site-web">
+                            <span>en savoir plus</span>
+            
+                            <img src="/favicon.svg" width="48" height="30" alt="GreenAssembly Leaf" />
+                        </a>
+                    </span>
+                </p>
+    
+                <picture class="preview lazy order_1 md_order_2">
+                    <source data-srcset="/img/website.webp" type="image/webp" />
+    
+                    <img
+                        data-src="/img/website.png"
+                        alt="Site-Web"
+                        width="700"
+                        height="666"
+                    />
+                </picture>
+            </div>
+        </section>
+        
+        <section class="prestation">
+            <h2>Motion Design</h2>
+
+            <div class="content">
+                <div class="preview">
+                    <video preload="none" controls controlsList="nofullscreen">
+                        <source src="/video/motion_home.mp4" type="video/mp4">
+    
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+    
+                <p class="description">
+                    <span class="text_impactful text_impactful--lg">
+                        Cultivez et nourrissez votre comm’ avec des <b class="text_white">vidéos motion design</b>, <b class="text_success">créatives et originales</b> qui font toute la différence.<br /><br />
+                    </span>
+                    Démarquez-vous avec un logo animé, des vidéos dynamiques à l’image de votre marque et un rythme captivant qui font <b>passer votre message en 2 minutes</b>. Les internautes n’auront d’yeux que pour vous !
+                </p>
+            </div>
+        </section>
+    </div>
+{% endblock %}

@@ -1,0 +1,25 @@
+@use '../abstracts/variables' as vars;
+
+.z_auto {
+    z-index: auto
+}
+
+@for $i from 0 through 5 {
+    .z_#{$i * 10} {
+        z-index: $i * 10
+    }
+}
+
+@each $name, $width in vars.$break-points {
+    @media (min-width: #{$width}) {
+        @for $i from 0 through 5 {
+            .#{$name}_z_#{$i * 10} {
+                z-index: $i * 10
+            }
+        }
+
+        .#{$name}_z_auto {
+            z-index: auto
+        }
+    }
+}

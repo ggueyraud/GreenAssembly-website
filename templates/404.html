@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Page introuvable{% endblock %}
+
+{% block head %}
+    <meta name="robots" content="noindex" />
+
+    <link rel="stylesheet" href="/css/pages/404.css" />
+{% endblock %}
+
+{% block content %}
+    <section>
+        <h1>Page introuvable</h1>
+
+        <a o-follow href="/">
+            <img src="/favicon.svg" width="48" height="30" alt="GreenAssembly Leaf" />
+
+            <span>Retournez à la page d'accueil</span>
+        </a>
+    </section>
+{% endblock %}

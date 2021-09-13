@@ -1,0 +1,324 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block head %}
+    {% match description %}
+        {% when Some with (description) %}
+            <meta name="description" content="{{ description }}" />
+        {% when None %}
+    {% endmatch %}
+
+    <link rel="stylesheet" href="/css/pages/website_creation.css" />
+
+    <script src="/js/website_creation.js" async></script>
+
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "provider": {
+                "@type": "Organization",
+                "name": "GreenAssembly",
+                "logo": "https://greenassembly.fr/img/logo.svg",
+                "telephone": "+33650308591",
+                "email": "contact@greenassembly.fr",
+                "vatID": "20%",
+                "areaServed": {
+                    "@type": "GeoCircle",
+                    "geoMidpoint": {
+                        "@type": "GeoCoordinates",
+                        "postalCode": "74000",
+                        "latitude": "45.8899344",
+                        "longitude": "6.0933974"
+                    },
+                    "geoRadius": "45000"
+                }
+            },
+            "description": "Démarquez-vous avec un site sur-mesure à votre image. Refonte ou création de site vitrine et e-commerce, faites le choix de la performance et de la singularité.",
+            "name": "Création de Site-Web",
+            "image": "https://greenassembly.fr/img/site_web.png",
+            "hasOfferCatalog": {
+                "@type": "OfferCatalog",
+                "name": "Création de Site-Web",
+                "itemListElement": [
+                    {
+                        "@type": "Offer",
+                        "name": "Création de site OnePage",
+                        "alternateName": "Site OnePage",
+                        "description": "Démarquez-vous avec un site OnePage à l’image de votre entreprise. Conseils et développement sur-mesure, éco-conception web, optez pour la performance.",
+                        "image": "https://greenassembly.fr/img/onepage.jpg",
+                        "url": "https://greenassembly.fr/creation-site-web/onepage"
+                    },
+                    {
+                        "@type": "Offer",
+                        "name": "Création de site Vitrine",
+                        "alternateName": "Site Vitrine",
+                        "description": "Gagnez en visibilité et attirez des contacts qualifiés avec un site vitrine éco-conçu, design et performant 100% personnalisé. Développement sur-mesure et SEO.",
+                        "image": "https://greenassembly.fr/img/showcase.jpg",
+                        "url": "https://greenassembly.fr/creation-site-web/vitrine"
+                    },
+                    {
+                        "@type": "Offer",
+                        "name": "Création de site E-commerce",
+                        "alternateName": "Site E-commerce",
+                        "description": "Gagnez des parts de marché et vendez vos produits avec un site e-commerce éco-conçu - développé sur-mesure - unique - 100% sécurisé - optimisé SEO",
+                        "image": "https://greenassembly.fr/img/e_commerce.jpg",
+                        "url": "https://greenassembly.fr/creation-site-web/e-commerce"
+                    }
+                ]
+            }
+        }
+    </script>
+{% endblock %}
+
+{% block banner %}
+    <header
+        id="banner"
+        style="--sm_webp_bg_img: url(/img/bg/sm_website_creation.webp); --sm_bg_img: url(/img/bg/sm_website_creation.jpg); --webp_bg_img: url(/img/bg/website_creation.webp); --bg_img: url(/img/bg/website_creation.jpg)"
+    >
+        <h1 class="container">Création de Site-Web</h1>
+
+        <button id="scroll_down">
+            <svg xmlns="http://www.w3.org/2000/svg" class="animate-bounce icon" fill="none" viewBox="0 0 24 24" stroke="#fff">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+        </button>
+    </header>
+{% endblock %}
+
+{% block content %}
+    <section class="space_y_12 md_space_y_24 mt_12 md_mt_8">
+        <div class="grid grid_cols_1 md_grid_cols_2 gap_10 lg_gap_18 items_center">
+            <div>
+                <p>
+                    <b>Boostez votre visibilité et marquez les esprits avec un site-web unique et original</b>. Parce que vous êtes différent, nous concevons votre site autrement que ceux déjà présents sur la toile et de ce que vos concurrents proposent.<br /><br />
+                    Chez <b><span class="text_success">GreenAssembly</span>, agence web Annecy</b>, nous faisons de chaque nouveau projet web un vrai challenge. Celui de faire passer votre message au travers d’un <b>site-web moderne au design unique et singulier</b>, dans le respect de votre image de marque.<br /><br />
+    
+                    <span class="font_bold">Ensemble</span>, cassons les codes.<br />
+                    <span class="font_bold">Réalisons de belles performances</span> dans la limite du raisonnable.<br /><br />
+
+                    Tant d’un point de vue :
+                </p>
+
+                <ul>
+                    <li>👉 <span class="font_bold">économique</span> (pour VOUS)</li>
+                    <li class="font_bold">👉 qu’<span class="text_success">écologique</span> (pour NOUS TOUS)</li>
+                </ul>
+            </div>
+
+            <p class="text_impactful text_impactful--lg">
+                <b class="text_success">Un site-web vert et <span class="text_white">performant</span></b>, aux <span class="text_white">fonctionnalités</span> qui vous sont <span class="text_white">réellement utiles</span> pour limiter au maximum son impact sur <span class="text_success">l’environnement</span>.
+            </p>
+        </div>
+
+        <div id="what_we_do">
+            <h2>Ce que notre Agence Web fait pour <span>vous</span></h2>
+
+            <div class="carousel">
+                <div class="carousel__wrapper">
+                    <div class="carousel__wrapper__item">
+                        <div class="card">
+                            <h3>sur-mesure 📐 <span class="block">&</span> sécurité 🔒</h3>
+            
+                            <p>De la <b>création à la refonte de site-web</b>, nos équipes mettent leur expertise technique et leur créativité débordante dans la conception de votre <b class="text_success font_bold">site écologique, sur-mesure et sécurisé</b>.</p>
+                        </div>
+                    </div>
+
+                    <div class="carousel__wrapper__item">
+                        <div class="card">
+                            <h3>✨ Singularité</h3>
+            
+                            <p>Développement web, arborescence, co-design, hébergement… Tout est pensé pour que votre site-web propose une expérience <span class="text_success font_bold">différenciante aux internautes</span>.</p>
+                        </div>
+                    </div>
+
+                    <div class="carousel__wrapper__item">
+                        <div class="card">
+                            <h3>🌱 Éco-conception</h3>
+            
+                            <p>Un <b>site-web <span class="text_success font_bold">éco-conçu peu gourmand en énergie</span></b> et en ressource grâce à des <span class="text_success font_bold">fonctionnalités</span> développées <span class="text_success font_bold">sur-mesure</span> pour répondre à vos <span class="text_success font_bold">besoins spécifiques</span>.</p>
+                        </div>
+                    </div>
+
+                    <div class="carousel__wrapper__item">
+                        <div class="card">
+                            <h3>LIVRAISON 🚛 CLÉ EN MAIN 🔑✋</h3>
+            
+                            <p>À la livraison, vous êtes <span class="text_success font_bold">formé à l’utilisation des différents outils</span> pour être <span class="text_success font_bold">autonome</span> dans la gestion et le suivi de votre site-web écologique.</p>
+                        </div>
+                    </div>
+
+                    <div class="carousel__wrapper__item">
+                        <div class="card">
+                            <h3>SUIVI 🔍 <span class="block">&</span> MAINTENANCE 🛠</h3>
+            
+                            <p>Nous assurons le suivi et la maintenance de votre site éco-conçu. Développement de <span class="text_success font_bold">nouvelles fonctionnalités, mise à jour sécurité, nos équipes restent à vos côtés</span>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <nav aria-label="Progress" class="carousel__pagination"></nav>
+            </div>
+        </div>
+
+        <div id="formules">
+            <h2>Un besoin <span>=</span> un site-web</h2>
+
+            <div class="carousel">
+                <div class="carousel__wrapper">
+                    <div class="carousel__wrapper__item">
+                        <div class="infos">
+                            <h3>Site OnePage</h3>
+        
+                            <p>Vous souhaitez présenter vos produits et services de façon dynamique à vos clients et prospects. Telle une carte de visite digitale, nous créons votre <b>site-web onepage à l’image de votre marque</b>.</p>
+        
+                            <div class="read_more">
+                                <a o-follow href="/creation-site-web/onepage">
+                                    <span>en savoir plus</span>
+                    
+                                    <img src="/favicon.svg" width="48" height="30" alt="GreenAssembly Leaf" />
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="preview">
+                            <picture class="lazy">
+                                <source data-srcset="/img/onepage.webp" type="image/webp" />
+
+                                <img
+                                    data-src="/img/onepage.jpg"
+                                    alt="Création de site OnePage"
+                                />
+                            </picture>
+                        </div>
+                    </div>
+
+                    <div class="carousel__wrapper__item">
+                        <div class="infos">
+                            <h3>Site Vitrine</h3>
+        
+                            <p>Vous souhaitez valoriser votre savoir-faire et développer votre notoriété au niveau local ou à plus grande échelle. Nous développons votre <b>site vitrine sur-mesure</b> en fonction de vos besoins et des attentes de vos prospects et clients.</p>
+        
+                            <div class="read_more">
+                                <a o-follow href="/creation-site-web/vitrine">
+                                    <span>en savoir plus</span>
+                    
+                                    <img src="/favicon.svg" width="48" height="30" alt="GreenAssembly Leaf" />
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="preview">
+                            <picture class="lazy">
+                                <source data-srcset="/img/showcase.webp" type="image/webp" />
+
+                                <img
+                                    data-src="/img/showcase.jpg"
+                                    alt="Création de site vitrine"
+                                />
+                            </picture>
+                        </div>
+                    </div>
+
+                    <div class="carousel__wrapper__item">
+                        <div class="infos">
+                            <h3>Site E-Commerce</h3>
+        
+                            <p>Vous souhaitez vendre vos produits en ligne et élargir votre clientèle à l’échelle nationale ou internationale. Nous concevons votre <b>site e-commerce</b> avec les fonctionnalités indispensables à votre activité.</p>
+        
+                            <div class="read_more">
+                                <a o-follow href="/creation-site-web/e-commerce">
+                                    <span>en savoir plus</span>
+                    
+                                    <img src="/favicon.svg" width="48" height="30" alt="GreenAssembly Leaf" />
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="preview">
+                            <picture class="lazy">
+                                <source data-srcset="/img/e_commerce.webp" type="image/webp" />
+
+                                <img
+                                    data-src="/img/e_commerce.jpg"
+                                    alt="Création de site E-Commerce"
+                                />
+                            </picture>
+                        </div>
+                    </div>
+                </div>
+
+                <nav aria-label="Progress" class="carousel__pagination"></nav>
+            </div>
+        </div>
+
+        <div id="steps">
+            <h2>Les étapes de la création de votre site-web éco-conçu</h2>
+
+            <div class="carousel stepper">
+                <div class="label">
+                    <div class="index">Étape 1</div>
+                    <div class="descr">Étude de votre besoin</div>
+                </div>
+
+                <nav aria-label="Progress" class="carousel__pagination"></nav>
+
+                <div class="carousel__wrapper">
+                    <p class="carousel__wrapper__item">
+                        Nous écoutons dans un premier temps vos besoins et vos attentes. Puis nous définissons ensemble les meilleures solutions qui vous aideront à atteindre vos objectifs avant d’élaborer un cahier des charges permettant de définir les caractéristiques du projet.
+                    </p>
+                    <p class="carousel__wrapper__item">
+                        Une fois le cahier des charges validé, nous concevons l’UX (ou wireframe) qui permet de valider le parcours utilisateur sur le site avant de passer au maquettage, c’est-à-dire au design final, l’UI.<br /><br />
+                        Nous développons ensuite les fonctionnalités des différentes pages web. Nous créons des contenus textuels et visuels personnalisés (photos, vidéos, motion design) dans le respect de votre ligne éditoriale et de votre charte graphique.<br /><br />
+                        Pendant la phase de développement, nos équipes procèdent à l’élaboration de tests unitaires afin de vérifier le bon comportement des différents algorithmes et fonctionnalités et permettre une meilleure maintenabilité du site-web (pérennisation du code source).
+                    </p>
+                    <p class="carousel__wrapper__item">
+                        Dans le cadre de notre démarche d’éco-conception web, nous choisissons un <b>serveur adapté aux besoins réels de votre site-web</b>. Un moyen pour vous de payer le prix juste <span class="text_success font_bold">tout en limitant l’impact écologique de votre site-web</span>.<br /><br />
+                        Les textes et les visuels intégrés, nous procédons à l’optimisation du référencement naturel SEO afin de vous assurer une bonne visibilité sur les moteurs de recherche.
+                    </p>
+                    <p class="carousel__wrapper__item">
+                        Après la mise en ligne de votre site-web, nous vous montrons comment le gérer en toute autonomie (ajout de fiches produits, modification de contenus, création d’articles de blog). Un document reprenant toutes les fonctionnalités vous est également remis en guise de support.<br /><br />
+                        Si vous le souhaitez, nous assurons par la suite le suivi et la maintenance de votre site-web (performances SEO, analyse du parcours utilisateur, mises à jour du serveur).
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h2>L'éco-conception web en pratique</h2>
+    
+            <div class="grid grid_cols_1 md_grid_cols_2 gap_10 lg_gap_18 items_center">
+                <p class="text_impactful text_impactful--lg">
+                    Il est désormais connu et reconnu que la <span class="text_success">consommation numérique</span> a un fort impact sur <span class="text_white">l’environnement</span>. C’est pourquoi, chez <span class="text_success">GreenAssembly</span>, nous privilégions la <span class="text_white">création de sites web écologiques moins gourmands en ressources énergétiques</span> qu’un site-web conçu de manière traditionnelle.
+                </p>
+    
+                <div>
+                    <div class="text_3xl font_bold text_gradient pb_6">Comment ?</div>
+                    <p class="text_lg md_text_2xl font_bold md_pb_6">En respectant les règles de l’éco-conception web, à savoir :</p>
+    
+                    <ul class="py_6 md_pb_8 pt_4">
+                        <li>Le choix d’un serveur approprié aux réels besoins de votre site-web, et donc le <span class="font_bold text_success">moins énergivore possible</span>.</li>
+                        <li>Un développement sur-mesure utilisant une technologie puissante et parfaitement prédisposée à l’éco-conception limitant l’utilisation serveur, participant ainsi à la modération du rejet de gaz à effet de serre.</li>
+                        <li>Un design responsive volontairement épuré, parfaitement adapté à tous les supports digitaux (smartphone, ordinateur, tablette).</li>
+                        <li>Des fonctionnalités qui vous sont vraiment nécessaires , <span class="font_bold text_success">réduisant de ce fait l’impact écologique du site</span>.</li>
+                        <li>Des contenus légers avec des images compressées et au bon format pour un temps de chargement des pages optimisé.</li>
+                        <li>Des requêtes limitées à l’essentiel et éliminant le superflu, optimisant l’expérience utilisateur et les performances de votre site-web (ce que Google apprécie).</li>
+                    </ul>
+    
+                    <p>
+                        Chacune de ces actions contribue à <span class="font_bold text_success">réduire l’empreinte écologique du web</span> tout en vous permettant d’<b>améliorer votre e-réputation tout comme votre référencement naturel</b>. N’hésitez pas à nous contacter pour en savoir plus.
+                    </p>
+                </div>
+            </div>
+
+            <div class="read_more justify_center pt_8 md_pt_24">
+                <a o-follow href="/contact">
+                    <span>nous contacter</span>
+    
+                    <img src="/favicon.svg" width="48" height="30" alt="GreenAssembly Leaf" />
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

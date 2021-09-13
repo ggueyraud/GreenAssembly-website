@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block head %}
+    {% match description %}
+        {% when Some with (description) %}
+            <meta name="description" content="{{ description }}" />
+        {% when None %}
+    {% endmatch %}
+
+    <link rel="stylesheet" href="/css/pages/onepage.css" />
+
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Product",
+            "name": "Création de site E-commerce",
+            "description": "Gagnez des parts de marché et vendez vos produits avec un site e-commerce éco-conçu - développé sur-mesure - unique - 100% sécurisé - optimisé SEO",
+            "offers": {
+                "@type": "Offer",
+                "price": "3200",
+                "priceCurrency": "EUR"
+            },    
+            "image": "https://greenassembly.fr/img/e_commerce.jpg",
+            "manufacturer": {
+                "@type": "Organization",
+                "name": "GreenAssembly",
+                "logo": "https://greenassembly.fr/img/logo.svg",
+                "telephone": "+33650308591",
+                "email": "contact@greenassembly.fr",
+                "vatID": "20%",
+                "areaServed": {
+                  "@type": "GeoCircle",
+                  "geoMidpoint": {
+                    "@type": "GeoCoordinates",
+                    "postalCode": "74000",
+                    "latitude": "45.8899344",
+                    "longitude": "6.0933974"
+                  },
+                  "geoRadius": "45000"
+                }
+            },
+            "isSimilarTo": [
+                {
+                  "@type": "Product",
+                  "name": "Création de site OnePage",
+                  "alternateName": "Site OnePage",
+                  "description": "Démarquez-vous avec un site OnePage à l’image de votre entreprise. Conseils et développement sur-mesure, éco-conception web, optez pour la performance.",
+                  "image": "https://greenassembly.fr/img/onepage.jpg",
+                  "url": "https://greenassembly.fr/creation-site-web/onepage"
+                },
+                {
+                  "@type": "Product",
+                  "name": "Création de site Vitrine",
+                  "alternateName": "Site Vitrine",
+                  "description": "Gagnez en visibilité et attirez des contacts qualifiés avec un site vitrine éco-conçu, design et performant 100% personnalisé. Développement sur-mesure et SEO.",
+                  "image": "https://greenassembly.fr/img/showcase.jpg",
+                  "url": "https://greenassembly.fr/creation-site-web/vitrine"
+                }
+            ]
+        }
+    </script>
+{% endblock %}
+
+{% block banner %}
+    <header
+        id="banner"
+        style="--sm_webp_bg_img: url(/img/bg/sm_e_commerce.webp); --sm_bg_img: url(/img/bg/sm_e_commerce.jpg); --webp_bg_img: url(/img/bg/e_commerce.webp); --bg_img: url(/img/bg/e_commerce.jpg)"
+    >
+        <h1 class="container">Création de Site E-Commerce</h1>
+
+        <button id="scroll_down">
+            <svg xmlns="http://www.w3.org/2000/svg" class="animate-bounce icon" fill="none" viewBox="0 0 24 24" stroke="#fff">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+        </button>
+    </header>
+{% endblock %}
+
+{% block content %}
+    <section class="space_y_12 md_space_y_24 mt_12 md_mt_8">
+        <div>
+            <h2>pour <span>faire connaître vos produits</span> et <span>élargir votre clientèle</span></h2>
+
+            <div class="grid grid_cols_1 md_grid_cols_2 gap_10 lg_gap_18 items_center">
+                <p class="text_impactful text_impactful--lg">
+                    Le <b class="text_white">site e-commerce</b> vous aide à <span class="text_white">toucher plus de clients</span> et à <span class="text_white">étendre votre zone de chalandise</span>.
+                </p>
+
+                <p>
+                    Une notoriété simple à acquérir à condition d’avoir un <b>site-web performant</b> et <span class="font_bold">sécurisé</span>, proposant une bonne expérience client et des fiches produits <span class="font_bold">bien référencées sur les moteurs de recherche</span>.
+                </p>
+            </div>
+        </div>
+
+        <div>
+            <h2>Qu’est-ce qu’un site e-commerce ? Pourquoi créer une boutique en ligne ?</h2>
+
+            <p class="text_impactful">
+                Le site e-commerce permet de <b>réaliser des ventes en ligne de produits ou de services</b>.<br /><br />
+                Il est composé d’une page d’accueil et de <b>fiches produits</b> présentant les détails de ce que vous vendez.<br /><br />
+                Le client peut acheter directement sur votre site-web grâce à un service de <b>paiement en ligne sécurisé</b>.<br />
+                Vous gagnez en visibilité et en notoriété
+            </p>
+
+            <div class="grid grid_cols_1 md_grid_cols_2 gap_10 lg_gap_18 items_center py_16">
+                <div class="card justify_start">
+                    <h3 class="text_center">Les <span class="text_success">+</span> du site E-Commerce</h3>
+                    <p>
+                        Que vous ayez un magasin physique ou non, vendre sur internet vous offre la possibilité de capter <b>une nouvelle clientèle</b> à l’échelle <span class="font_bold">nationale et/ou internationale</span>.
+                        Un investissement rentable d’autant plus que les achats sur internet sont définitivement entrés dans les habitudes des consommateurs.
+                        Par ailleurs, contrairement à une boutique, votre site e-commerce est ouvert 24h/24 et 7j/7. Ainsi, les ventes peuvent se faire en dehors de vos heures d’ouverture. <span class="font_bold">Vous augmentez vos chances de vendre plus</span>.
+                        Enfin, un site marchand <span class="font_bold">nécessite moins de frais qu’un magasin physique</span>.
+                    </p>
+                </div>
+                <div class="card justify_start">
+                    <h3 class="text_center">Les <span class="text_danger">-</span> du site E-Commerce</h3>
+                    <p>
+                        La concurrence est particulièrement rude sur le web. D’où l’importance d’optimiser le référencement naturel SEO des fiches produits afin de bien ressortir sur Google.
+                        Pour éviter les pannes techniques qui pourraient avoir des conséquences dommageables sur votre chiffre d’affaires, il est indispensable de choisir un hébergeur fiable et de procéder à des mises à jour régulières.
+                        Enfin, la protection des données clients et des paiements se doit d’être optimale.
+                    </p>
+                </div>
+            </div>
+
+            <div class="text_white text_2xl font_bold pb_4 uppercase">Le site E-Commerce est fait pour vous si :</div>
+            <ul class="list_check">
+                <li>Vous proposez des produits, des objets, des créations ou même des services</li>
+                <li>Vous souhaitez gagner en visibilité et faire connaître votre marque sur le web</li>
+                <li>Vous avez un magasin physique et souhaitez élargir votre clientèle</li>
+                <li>Vous n’avez pas de commerce local et désirez vendre à moindres frais</li>
+                <li>Vous voulez avoir votre propre boutique en ligne sans forcément passer par une marketplace</li>
+                <li>Vous avez besoin d’une boutique virtuelle pour présenter votre marque et vos produits en ligne</li>
+            </ul>
+        </div>
+
+        <div>
+            <h2>Ce que nos professionnels du site E-Commerce vous proposent</h2>
+
+            <p>
+                <ul class="list_check pb_8">
+                    <li>Un site marchand <span class="font_bold">fonctionnel et parfaitement sécurisé</span> avec des fiches produits optimisées pour les moteurs de recherche</li>
+                    <li>Des <span class="font_bold">conseils personnalisés</span>, une étude approfondie des besoins de vos clients, la mise en place d’un cahier des charges ainsi qu’une étude ergonomique</li>
+                    <li>Le développement de fonctionnalités <b>sur-mesure</b> correspondantes à vos besoins réels, et conçues selon les critères de l’<b class="text_success">éco-conception web</b></li>
+                    <li> La réalisation de <span class="font_bold">tests unitaires</span> intensifs pour une sécurisation optimale du site</li>
+                    <li>Une <span class="font_bold">formation d’une heure</span> sur l’utilisation des différentes fonctionnalités de votre site-web</li>
+                    <li>Un <span class="font_bold">accompagnement sur-mesure</span> pour vous assurer une bonne présence en ligne</li>
+                </ul>
+            </p>
+        </div>
+
+        <div>
+            <h2>Votre site e-commerce <span>à partir de 3200€ HT</span></h2>
+
+            <div class="grid grid_cols_1 md_grid_cols_2 gap_10 lg_gap_18 items_center">
+                <p class="text_impactful text_impactful--lg">
+                    <b class="text_success">Préserver l’environnement</b> compte beaucoup pour nous. C’est pourquoi <b class="text_white">chaque site e-commerce <span class="text_success">éco-conçu</span></b> par GreenAssembly équivaut à la <span class="text_success">plantation d’un à plusieurs arbres</span> avec EcoTree.<br /><br />
+                    Vous souhaitez en savoir plus sur la création de votre site e-commerce sur-mesure 100% sécurisé ? <a o-follow href="/contact" class="text_success">Contactez-nous !</a>
+                </p>
+
+                <div>
+                    <div class="card">
+                        <div class="pb_6 sm_pb_10 text_4xl text_center font_bold pb_2">3200€ HT</div>
+
+                        <p>
+                            Pour un <b>site marchand différenciant, fonctionnel et sécurisé</b>, découvrez notre formule site E-commerce.<br /><br />
+                            Notre offre sur-mesure comprend :
+    
+                            <ul class="list_check">
+                                <li>Création et intégration d'une maquette qui vous ressemble</li>
+                                <li>La mise en place d’une solution de <b>paiement fiable et sécurisée</b> (Paypal, Stripe)</li>
+                                <li><span class="font_bold">Une structure adaptable</span> dans le temps avec la création de nouvelles fonctionnalités <span class="font_bold">selon l’évolution de vos besoins</span></li>
+                                <li>Un site-web <b>responsive design</b> qui s’adapte à tous les supports (smartphone – ordinateur - tablette)</li>
+                                <li>Un <b>back office</b> vous permettant de <span class="font_bold">gérer vous-même</span>, et <span class="font_bold">en temps réel</span>, vos fiches produits et <span class="font_bold">le contenu de votre boutique en ligne</span></li>
+                            </ul>
+
+                            En option :
+                            <ul class="list_check">
+                                <li>L’hébergement de votre site e-commerce sur un <span class="font_bold text_success">serveur dimensionné intelligemment</span></li>
+                                <li>La <b>maintenance</b> de votre site-web avec des <b>mises à jour régulières de sécurité</b></li>
+                            </ul>
+    
+                            <div class="read_more pt_6 sm_pt_10">
+                                <a o-follow href="/contact" class="text_center">
+                                    <span>J'ai un projet</span>
+
+                                    <img src="/favicon.svg" width="48" height="30" alt="GreenAssembly Leaf" />
+                                </a>
+                            </div>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

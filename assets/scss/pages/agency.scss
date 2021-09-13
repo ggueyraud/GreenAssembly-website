@@ -1,0 +1,106 @@
+@use "sass:map";
+@use '../abstracts/variables' as vars;
+@use '../abstracts/_mixins/margins' as margin_mixin;
+@use '../abstracts/_mixins/media_query' as mq;
+@use '../abstracts/_mixins/text';
+@use '../abstracts/_mixins/colors';
+@use '../abstracts/_functions/space';
+
+@import '../../../node_modules/carousel/src/index.scss';
+@import '../base/_text.scss';
+@import '../base/_margins.scss';
+@import '../base/_typography.scss';
+@import '../base/_width.scss';
+@import '../base/_space.scss';
+@import '../base/_grid.scss';
+@import '../base/_display.scss';
+@import '../base/_borders.scss';
+@import '../layout/_banner.scss';
+
+#approach, #story {
+    .content {
+        display: grid;
+        gap: space.calculate(10);
+        align-items: center;
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+
+        @include mq.md {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        @include mq.lg {
+            gap: space.calculate(18);
+        }
+    }
+}
+
+h2 {
+    @extend .title;
+    @include margin_mixin.in(14, bottom);
+
+    @include mq.sm {
+        @include margin_mixin.in(20, bottom);
+    }
+
+    text-align: center
+}
+
+#team {
+    .carousel__wrapper__item {
+        img {
+            display: block;
+            margin: 0 auto
+        }
+
+        figure {
+            margin: 0;;
+
+            .about {
+                @include text.text(lg);
+                @include margin_mixin.in(7, bottom);
+
+                font-weight: bold;
+                text-align: center;
+                color: rgba(229, 229, 229, 0.6);
+        
+                figcaption {
+                    @include margin_mixin.in(7, top);
+                    @include margin_mixin.in(3, bottom);
+                    @include margin_mixin.out(3, bottom);
+                    @include text.text(xl);
+                    @include colors.text('white');
+
+                    border-bottom: 1px solid map.get(vars.$colors, 'white');
+                    text-transform: uppercase;
+                }
+            }
+        
+            blockquote {
+                margin: 0;
+                position: relative;
+                padding: 20px calc(26px + .5rem) 0;
+            
+                &::before, &::after {
+                    position: absolute;
+                    display: block;
+                    content: '';
+                    background-image: url(/icons/quote.svg);
+                    background-size: 26px 20px;
+                    height: 20px;
+                    width: 26px;
+                }
+            
+                &::before {
+                    left: 0;
+                    top: 0
+                }
+            
+                &::after {
+                    bottom: 0;
+                    right: 0;
+                    transform: rotate(180deg);
+                }
+            }
+        }
+    }
+}

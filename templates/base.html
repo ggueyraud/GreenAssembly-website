@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr" style="overflow: hidden">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+
+    <title>{% block title %}{{ title }}{% endblock %} | GreenAssembly - Agence Digitale Verte</title>
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" type="image/png" href="/favicon.png" />
+    <link rel="stylesheet" href="/css/global.css" o-no-load />
+
+    <script src="/js/global.js" o-no-load async></script>
+
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <div
+        id="loading"
+        style="position: fixed; top: 0; right: 0; bottom: 0; left: 0; visibility: visible; background-color: #000F16; z-index: 9999; display: flex; justify-content: center; align-items: center"
+    >
+        <img
+            src="/img/logo.svg"
+            width="400"
+            height="120"
+            style="max-width: 80%"
+            alt="GreenAssembly Logo"
+            class="animation_bounce"
+        />
+    </div>
+
+    <ga-frame name="banner">
+        {% block banner %}{% endblock %}
+    </ga-frame>
+
+    <div class="relative container mx_auto px_6 sm_px_0">
+        <nav id="navbar">            
+            <a href="#menu-opened" id="open-mobile-menu">
+                <svg width="24px" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                    <path stroke="#000" stroke-width="6" fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path>
+                </svg>
+            </a>
+
+            <div id="menu">
+                <a
+                    o-follow
+                    o-preload-once
+                    href="/"
+                    class="order_1 mt_0"
+                >
+                    <div>Accueil</div>
+                </a>
+                <a
+                    o-follow
+                    o-preload-once
+                    href="/creation-site-web"
+                    class="order_2"
+                >
+                    <div>Créa. Site-Web</div>
+                </a>
+                <a
+                    o-follow
+                    o-preload-once
+                    href="/agence"
+                    class="order_3"
+                >
+                    <div>Agence</div>
+                </a>
+                <a
+                    o-follow
+                    o-preload-once
+                    href="/portfolio"
+                    class="order_4"
+                >
+                    <div>Portfolio</div>
+                </a>
+                <a
+                    o-follow
+                    o-preload-once
+                    href="/contact"
+                    class="order_5"
+                >
+                    <div>Contact</div>
+                </a>
+
+                <div id="socials" class="order_6">
+                    <a
+                        href="https://www.linkedin.com/company/greenassembly/"
+                        target="_blank"
+                        class="social"
+                        rel="noopener"
+                    >
+                        <svg class="icon icon--lg" height="32">
+                            <use xlink:href="/icons/socials.svg#linkedin"></use>
+                        </svg>
+                    </a>
+                    <a
+                        href="https://www.instagram.com/greenassembly.fr/"
+                        target="_blank"
+                        class="social"
+                        rel="noopener"
+                    >
+                        <svg class="icon icon--lg" height="32">
+                            <use xlink:href="/icons/socials.svg#instagram"></use>
+                        </svg>
+                    </a>
+                </div>
+
+                <button id="close-mobile-menu" type="button">
+                    <svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                        <path fill="#fff" d="M207.6 256l107.72-107.72c6.23-6.23 6.23-16.34 0-22.58l-25.03-25.03c-6.23-6.23-16.34-6.23-22.58 0L160 208.4 52.28 100.68c-6.23-6.23-16.34-6.23-22.58 0L4.68 125.7c-6.23 6.23-6.23 16.34 0 22.58L112.4 256 4.68 363.72c-6.23 6.23-6.23 16.34 0 22.58l25.03 25.03c6.23 6.23 16.34 6.23 22.58 0L160 303.6l107.72 107.72c6.23 6.23 16.34 6.23 22.58 0l25.03-25.03c6.23-6.23 6.23-16.34 0-22.58L207.6 256z"></path>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+    
+        <ga-frame name="main">
+            <main>
+                {% block content %}{% endblock %}
+            </main>
+        </ga-frame>
+    
+        <footer>
+            <div class="order_3 md_order_1 text_center xl_text_left md_col_span_2 xl_col_span_1">
+                <b class="uppercase pb_2">GreenAssembly</b>
+                <address>
+                    78 allée primavera<br />
+                    Centre UBIDOCA, 18764<br />
+                    74370 ANNECY<br />
+                    FRANCE
+                </address>
+            </div>
+
+            <address class="md_order_3 xl_text_left md_col_span_2 xl_col_span_1 font_bold text_center order_2">
+                TEL : <a href="tel:+33650308591">06•50•30•85•91</a>
+            </address>
+
+            <a
+                o-follow
+                o-preload-once
+                href="/"
+                class="order_1 md_order_2 xl_order_3 md_col_span_2 xl_col_span_1"
+            >
+                <img src="/img/logo.svg" width="400" height="120" alt="GreenAssembly Logo" />
+            </a>
+    
+            <div class="text_center order_4 md_col_span_3 xl_col_span_1">
+                <div class="uppercase pb_2 font_bold">Suivez-nous</div>
+    
+                <a href="https://www.linkedin.com/company/greenassembly/" target="_blank" class="social" rel="noopener">
+                    <svg class="icon icon--lg" height="32">
+                        <use xlink:href="/icons/socials.svg#linkedin"></use>
+                    </svg>
+                </a>
+                <a href="https://www.instagram.com/greenassembly.fr/" target="_blank" class="social ml_1" rel="noopener">
+                    <svg class="icon icon--lg" height="32">
+                        <use xlink:href="/icons/socials.svg#instagram"></use>
+                    </svg>
+                </a>
+            </div>
+    
+            <a
+                o-follow
+                o-preload-once
+                href="/mentions-legales"
+                class="uppercase font_bold order_5 text_center xl_text_left md_col_span_3 xl_col_span_1"
+            >
+                Mentions légales
+            </a>
+        </footer>
+    </div>
+</body>
+</html>

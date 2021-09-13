@@ -1,0 +1,129 @@
+@use "sass:map";
+@use '../abstracts/variables' as vars;
+@use '../abstracts/_mixins/media_query' as mq;
+@use '../abstracts/_mixins/text';
+@use '../abstracts/_mixins/colors';
+
+@each $name, $value in vars.$font_sizes {
+    .text_#{$name} {
+        font-size: $value;
+        line-height: map.get(vars.$line_heights, $name)
+    }
+}
+
+@each $name, $width in vars.$break-points {
+    @media (min-width: #{$width}) {
+        @each $fname, $value in vars.$font_sizes {
+            .#{$name}_text_#{$fname} {
+                @include text.text($fname)
+            }
+        }
+
+        .#{$name}_text_right {
+            text-align: right !important
+        }
+        .#{$name}_text_left {
+            text-align: left !important
+        }
+        .#{$name}_text_justify {
+            text-align: justify !important
+        }
+        .#{$name}_text_center {
+            text-align: center !important
+        }
+    }
+}
+
+@each $name, $color in vars.$colors {
+    .text_#{$name} {
+        color: #{$color}
+    }
+}
+
+%text_gradient {
+    background: -webkit-linear-gradient(right, #efff19 50%, #00ffb5);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.text_gradient {
+    @extend %text_gradient;
+}
+
+.text_right {
+    text-align: right
+}
+.text_left {
+    text-align: left
+}
+.text_justify {
+    text-align: justify
+}
+.text_center {
+    text-align: center
+}
+
+.font_bold {
+    font-weight: bold
+}
+
+.underline {
+    text-decoration: underline
+}
+.uppercase {
+    text-transform: uppercase
+}
+
+@each $name, $color in vars.$colors {
+    .text_outline_#{$name} {
+        -webkit-text-stroke: 2px #{$color};
+        color: transparent;
+        user-select: none;
+    }
+}
+
+.text_outline_gradient {
+    @include colors.text('black');
+
+    background: -webkit-linear-gradient(right, rgba(239, 255, 25, 1), rgba(0, 255, 181, 1));
+    background-clip: text;
+    -webkit-text-stroke: 3px transparent;
+    user-select: none;
+}
+
+.text_impactful {
+    line-height: 1.5 !important;
+
+    &--lg {
+        @include text.text(xl);
+        @include colors.text('gray');
+
+        @include mq.md {
+            @include text.text(2xl)
+        }
+
+        text-transform: uppercase;
+        font-weight: bold;
+
+        span, b {
+            @include text.text(xl);
+
+            @include mq.md {
+                @include text.text(4xl, true)
+            }
+        }
+    }
+
+    span, b {
+        @include text.text(lg);
+
+        @include mq.md {
+            @include text.text(xl)
+        }
+
+        text-transform: uppercase;
+        font-weight: bold;
+        word-wrap: break-word;
+        line-height: 1.25 !important
+    }
+}

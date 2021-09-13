@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block head %}
+    {% match description %}
+        {% when Some with (description) %}
+            <meta name="description" content="{{ description }}" />
+        {% when None %}
+    {% endmatch %}
+
+    <link rel="stylesheet" href="/css/pages/onepage.css" />
+
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Product",
+            "name": "Création de site OnePage",
+            "description": "Démarquez-vous avec un site OnePage à l’image de votre entreprise. Conseils et développement sur-mesure, éco-conception web, optez pour la performance.",
+            "offers": {
+                "@type": "Offer",
+                "price": "768",
+                "priceCurrency": "EUR"
+            },    
+            "image": "https://greenassembly.fr/img/onepage.jpg",
+            "manufacturer": {
+                "@type": "Organization",
+                "name": "GreenAssembly",
+                "logo": "https://greenassembly.fr/img/logo.svg",
+                "telephone": "+33650308591",
+                "email": "contact@greenassembly.fr",
+                "vatID": "20%",
+                "areaServed": {
+                  "@type": "GeoCircle",
+                  "geoMidpoint": {
+                    "@type": "GeoCoordinates",
+                    "postalCode": "74000",
+                    "latitude": "45.8899344",
+                    "longitude": "6.0933974"
+                  },
+                  "geoRadius": "45000"
+                }
+            },
+            "isSimilarTo": [
+                {
+                    "@type": "Product",
+                    "name": "Création de site Vitrine",
+                    "alternateName": "Site Vitrine",
+                    "description": "Gagnez en visibilité et attirez des contacts qualifiés avec un site vitrine éco-conçu, design et performant 100% personnalisé. Développement sur-mesure et SEO.",
+                    "image": "https://greenassembly.fr/img/showcase.jpg",
+                    "url": "https://greenassembly.fr/creation-site-web/vitrine"
+                },
+                {
+                    "@type": "Product",
+                    "name": "Création de site E-commerce",
+                    "alternateName": "Site E-commerce",
+                    "description": "Gagnez des parts de marché et vendez vos produits avec un site e-commerce éco-conçu - développé sur-mesure - unique - 100% sécurisé - optimisé SEO",
+                    "image": "https://greenassembly.fr/img/e_commerce.jpg",
+                    "url": "https://greenassembly.fr/creation-site-web/e-commerce"
+                }
+            ]
+        }
+    </script>
+{% endblock %}
+
+{% block banner %}
+    <header
+        id="banner"
+        style="--sm_webp_bg_img: url(/img/bg/sm_onepage.webp); --sm_bg_img: url(/img/bg/sm_onepage.jpg); --webp_bg_img: url(/img/bg/onepage.webp); --bg_img: url(/img/bg/onepage.jpg)"
+    >
+        <h1 class="container">Création de Site OnePage</h1>
+
+        <button id="scroll_down">
+            <svg xmlns="http://www.w3.org/2000/svg" class="animate-bounce icon" fill="none" viewBox="0 0 24 24" stroke="#fff">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+        </button>
+    </header>
+{% endblock %}
+
+{% block content %}
+    <section class="space_y_12 md_space_y_24 mt_12 md_mt_8">
+        <div>
+            <h2>L'essentiel pour vos clients sur <span>une page unique</span></h2>
+
+            <div class="grid grid_cols_1 md_grid_cols_2 gap_10 lg_gap_18 items_center">
+                <p class="text_impactful text_impactful--lg">
+                    <span class="text_white">Sobre</span> et <span class="text_white">ergonomique</span>, le site OnePage est <span class="text_success">idéal pour présenter</span> vos <span class="text_success">produits</span> et <span class="text_success">services</span> en <span class="text_white">un coup d’œil</span> 👁
+                </p>
+
+                <div>
+                    <p>
+                        Limité à une <b>seule page</b>, ce genre de <b>site-web</b> se doit de <span class="font_bold">marquer les esprits</span> avec une charte graphique à l’image de votre marque.<br /><br />
+                        Le contenu textuel, quant à lui, sera clair et explicite pour vos visiteurs qui doivent y trouver toutes les <span class="font_bold">informations essentielles pour eux</span>.<br /><br />
+                        <span class="underline">À savoir :</span>
+                        <ul class="list_disc">
+                            <li>Qui vous êtes</li>
+                            <li>Ce que vous faites</li>
+                            <li>Ce que vous proposez</li>
+                            <li>Où vous êtes et comment vous contacter</li>
+                        </ul>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h2>Qu’est-ce qu’un site OnePage et pourquoi en créer un ?</h2>
+
+            <p class="text_impactful">
+                À l’instar d’une <span class="text_success">carte de visite digitale</span>, le <b>site OnePage</b> vous permet d’avoir une <span class="text_white">présence en ligne à moindre coût</span>.<br /><br />
+                De par sa conception, il offre à l’internaute une <span class="text_white">navigation agréable</span> et très intuitive. Vos clients y <span class="text_white">découvrent votre histoire au fur et à mesure</span> qu’ils scrollent vers le bas de la page. Ce format est <span class="text_success">parfait pour du storytelling</span>.
+            </p>
+
+            <div class="grid grid_cols_1 md_grid_cols_2 gap_10 lg_gap_18 items_center py_16">
+                <div class="card justify_start">
+                    <h3 class="text_center">Les <span class="text_success">+</span> du site OnePage</h3>
+                    <p>
+                        Un site-web avec une seule page est très <span class="font_bold">rapide à prendre en main</span> et facile à gérer pour son utilisateur.<br /><br />
+                        Son design épuré permet de <span class="font_bold">faire passer votre message de manière simple et efficace</span>. Vos prospects et clients comprennent en quelques secondes ce que vous avez à leur proposer et comment ils peuvent vous contacter.<br /><br />
+                        Par ailleurs, avoir un site-web est rentable sur le long terme. En effet, votre site vous appartient et coûte donc moins cher que des campagnes publicitaires à répétition.<br /><br />
+                        Enfin, le fait de n’avoir qu’une seule et unique page <b>augmente vos chances de conversion</b>. Vos visiteurs ne sont pas tentés de cliquer sur une autre page comme sur les sites aux onglets multiples.
+                    </p>
+                </div>
+                <div class="card justify_start">
+                    <h3 class="text_center">Les <span class="text_danger">-</span> du site OnePage</h3>
+                    <p>
+                        Même en maximisant les données pour le SEO, le référencement naturel d’un site OnePage est moins performant que celui d’un site proposant plusieurs pages web.<br /><br />
+                        Doté d’une seule page, ce type de site ne possède en effet qu’une balise title, une URL unique et seulement une méta-description.<br /><br />
+                        Si votre objectif est de bien vous positionner dans les résultats de recherche Google, il sera alors plus judicieux pour vous d’opter pour la création d’un <a o-follow href="vitrine" class="text_success font_bold">site vitrine</a> personnalisé.<br /><br />
+                        Enfin, pour la vente de produits en ligne, un <a o-follow href="e-commerce" class="text_success font_bold">site e-commerce</a> original et de qualité sera la meilleure option pour vous.
+                    </p>
+                </div>
+            </div>
+
+            <div class="text_white text_2xl font_bold pb_4 uppercase">Le site OnePage est fait pour vous si :</div>
+            <ul class="list_check">
+                <li>Vous aimez la <b>sobriété</b> pour vos clients</li>
+                <li>Vous cherchez la <b>simplicité</b> dans la gestion de votre site</li>
+                <li>Vous souhaitez un <b>site-web dynamique et attractif</b></li>
+                <li>Le référencement naturel SEO n’est pas votre priorité</li>
+                <li>Vous avez un budget limité</li>
+            </ul>
+        </div>
+
+        <div>
+            <h2>Ce que nos experts en site OnePage font pour vous</h2>
+
+            <p>
+                <ul class="list_check pb_8">
+                    <li>Un site-web développé <b>sur-mesure</b>, <b class="text_success">éco-conçu</b> et <b>sécurisé</b></li>
+                    <li>Des <b>conseils personnalisés</b> (étude de vos besoins, mise en place d’un cahier des charges, étude ergonomique)</li>
+                    <li>Un développement <b>sur-mesure parfaitement sécurisé</b>, dans le <b>respect des normes d’éco-conception web</b></li>
+                    <li>La réalisation de <span class="font_bold">tests unitaires</span> pour valider et pérenniser le bon fonctionnement du site</li>
+                    <li>Une <span class="font_bold">livraison clé en main</span> suivie d’une <span class="font_bold">mini-formation</span> afin de vous rendre <span class="font_bold">autonome</span> dans l’administration de votre site-web</li>
+                    <li>Un accompagnement pour développer votre présence en ligne</li>
+                </ul>
+                Forts de notre expertise en matière d’éco-conception web, nous élaborons pour vous un site OnePage de grande qualité répondant à vos besoins réels et dans le respect de votre budget.<br /><br />
+                Ni plus, ni moins.                
+            </p>
+        </div>
+
+        <div>
+            <h2>Votre site OnePage <span>à partir de 768€ HT</span></h2>
+
+            <div class="grid grid_cols_1 md_grid_cols_2 gap_10 lg_gap_18 items_center">
+                <p class="text_impactful text_impactful--lg">
+                    Et parce que l’écologie est au cœur de nos actions, chez GreenAssembly <span class="text_white">nous plantons</span> avec <span class="text_white">EcoTree</span> un voire plusieurs <span class="text_success">arbres</span> <span class="text_white">pour chaque site OnePage réalisé pour nos clients</span>.<br /><br />
+                    Vous souhaitez en savoir plus sur la création de votre site OnePage sur-mesure ? <a o-follow href="/contact" class="text_success">Contactez-nous !</a>
+                </p>
+
+                <div>
+                    <div class="card">
+                        <div class="pb_6 sm_pb_10 text_4xl text_center font_bold pb_2">768€ HT</div>
+
+                        <p>
+                            Pour un site-web unique et à l’image de votre entreprise, découvrez notre formule site OnePage.<br /><br />
+                            Une offre sur-mesure qui comprend :
+    
+                            <ul class="list_check">
+                                <li>La création d'une page web</li>
+                                <li>Création et intégration d'une maquette qui vous ressemble</li>
+                                <li>Un design responsive qui s'adapte à tous les types d'écran</li>
+                                <li>Un formulaire de contact</li>
+                                <li>Une structure évolutive pour ajouter de nouvelles fonctionnalités si besoin</li>
+                            </ul>
+    
+                            <div class="read_more pt_6 sm_pt_10">
+                                <a o-follow href="/contact" class="text_center">
+                                    <span>J'ai un projet</span>
+                    
+                                    <img src="/favicon.svg" width="48" height="30" alt="GreenAssembly Leaf" />
+                                </a>
+                            </div>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
