@@ -1,6 +1,6 @@
 use crate::services::employees;
 use crate::utils::error_logger::ErrorLogger;
-use actix_web::{delete, get, patch, post, web, HttpResponse};
+use actix_web::{delete, patch, post, web, HttpResponse};
 use serde::Deserialize;
 use sqlx::postgres::PgPool;
 

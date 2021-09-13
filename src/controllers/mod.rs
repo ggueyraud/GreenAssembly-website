@@ -10,7 +10,6 @@ pub mod metrics;
 pub mod users;
 pub mod website;
 
-
 #[get("/")]
 pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
     if let Ok(page) = services::pages::get(&pool, "accueil").await {
