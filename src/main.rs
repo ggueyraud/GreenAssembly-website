@@ -1,19 +1,27 @@
 use actix_files::NamedFile;
-use actix_web::{App, Error, HttpRequest, HttpResponse, HttpServer, Result, get, guard, http::{
+use actix_web::{
+    get,
+    http::{
         header::{CACHE_CONTROL, EXPIRES},
         HeaderValue,
-    }, middleware::Compress, web};
-use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
-use std::path::Path;
+    },
+    middleware::Compress,
+    web, App, Error, HttpRequest, HttpResponse, HttpServer, Result,
+};
+use rustls::{
+    internal::pemfile::{certs, pkcs8_private_keys},
+    NoClientAuth, ServerConfig,
+};
+use std::{fs::File, io::BufReader, path::Path};
 use user_agent_parser::UserAgentParser;
 
 mod controllers;
 mod middlewares;
+mod routes;
 mod services;
 mod templates;
 mod tests;
 mod utils;
-mod routes;
 
 async fn create_pool() -> Result<sqlx::PgPool, sqlx::Error> {
     let pool: sqlx::PgPool = sqlx::pool::PoolOptions::new()
@@ -116,25 +124,29 @@ async fn main() -> std::io::Result<()> {
 
     let pool = create_pool().await.expect("Connection to database failed");
 
-    let mut builder = SslAcceptor::mozilla_modern(SslMethod::tls()).expect("SSL build");
-
-    builder
-        .set_private_key_file(
-            &std::env::var("PRIVATE_KEY_FILE")
-                .expect("PRIVATE_KEY_FILE not found in variables environment"),
-            SslFiletype::PEM,
-        )
-        .expect("private key file not found");
-    builder
-        .set_certificate_chain_file(
+    // TLS configuration
+    let mut config = ServerConfig::new(NoClientAuth::new());
+    let cert_file = &mut BufReader::new(
+        File::open(
             &std::env::var("CERTIFICATE_CHAIN_FILE")
                 .expect("CERTIFICATE_CHAIN_FILE not found in variables environment"),
         )
-        .expect("certificate chain file not found");
+        .unwrap(),
+    );
+    let key_file = &mut BufReader::new(
+        File::open(
+            &std::env::var("PRIVATE_KEY_FILE")
+                .expect("PRIVATE_KEY_FILE not found in variables environment"),
+        )
+        .unwrap(),
+    );
+    let cert_chain = certs(cert_file).unwrap();
+    let mut keys = pkcs8_private_keys(key_file).unwrap();
+    config.set_single_cert(cert_chain, keys.remove(0)).unwrap();
 
     // Redirect HTTP to HTTPS
     let http = HttpServer::new(move || {
-        App::new().wrap(utils::https::RedirectHTTPS::with_replacements(&[(
+        App::new().wrap(middlewares::https::RedirectHTTPS::with_replacements(&[(
             "8080".to_owned(),
             "8443".to_owned(),
         )]))
@@ -147,16 +159,16 @@ async fn main() -> std::io::Result<()> {
             .data(pool.clone())
             .data(UserAgentParser::from_path("regexes.yaml").expect("regexes.yaml not found"))
             .wrap(Compress::default())
-            .wrap(utils::www::RedirectWWW)
-            .wrap(utils::HSTS::HSTS)
+            .wrap(middlewares::www::RedirectWWW)
+            .wrap(middlewares::hsts::HSTS)
             .configure(routes::website::config)
             .configure(routes::config)
             .configure(routes::contact::config)
             .service(serve_upload_file)
             .service(serve_public_file)
     })
-    .bind_openssl(&format!("{}:{}", server_addr, HTTPS_PORT), builder)
-    .expect("Cannot bind openssl")
+    .bind_rustls(&format!("{}:{}", server_addr, HTTPS_PORT), config)
+    .expect("Cannot bind rustls")
     .run();
 
     println!(
