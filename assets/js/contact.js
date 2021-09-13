@@ -3,7 +3,7 @@ import chk from './components/checkbox';
 import Carousel from 'carousel';
 import { post } from './utils/http';
 
-const chks = chk('.checkbox', { checked: true });
+// const chks = chk('.checkbox', { checked: true });
 // chks[1].checked = false
 // console.log(chks)
 
@@ -222,6 +222,7 @@ const on_mount = () => {
             Object.assign(body, e.detail);
             
             if (body.budget) body.budget = parseFloat(body.budget) || null
+            if (body.found_by) body.found_by = body.found_by.value || null
     
             post('/contact', {
                 headers: {

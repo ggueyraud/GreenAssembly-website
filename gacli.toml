@@ -1,7 +1,7 @@
 [[purgecss]]
-css = "pages/global.css"
+css = "global.css"
 content = ["templates/base.html", ".build/production/js/global.js"]
-safelist = ["webp_support"]
+safelist = ["webp_support", "navbar show"]
 
 [[purgecss]]
 css = "pages/index.css"
@@ -20,6 +20,7 @@ content = ["webp_support", "templates/portfolio.html"]
 [[purgecss]]
 css = "pages/contact.css"
 content = ["webp_support", "templates/contact.html", ".build/production/js/contact.js"]
+safelist = ["carousel__pagination__item", "carousel__pagination__item--current", "carousel__pagination__item index", "carousel__pagination__item descr"]
 
 [[purgecss]]
 css = "pages/onepage.css"
@@ -36,3 +37,4 @@ content = ["templates/404.html"]
 [[purgecss]]
 css = "pages/website_creation.css"
 content = ["webp_support", "templates/website_creation.html", ".build/production/js/global.js", ".build/production/js/website_creation.js"]
+safelist = ["carousel__pagination__item", "carousel__pagination__item--current", "carousel__pagination__item index", "carousel__pagination__item descr"]

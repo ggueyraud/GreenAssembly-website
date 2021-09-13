@@ -17,7 +17,7 @@ const on_mount = () => {
 
 const on_destroy = () => {
     window.removeEventListener('onMount', on_mount)
-    window.removeEventListener('router:change', on_mount)
+    // window.removeEventListener('router:change', on_mount)
     window.removeEventListener('onDestroy', on_destroy)
 }
 
