@@ -1,26 +1,22 @@
-@import '../abstracts/_variables.scss';
+@use "sass:map";
+@use '../abstracts/_mixins/media_query' as mq;
 
 .container {
-    max-width: 640px
-}
+    max-width: 640px;
 
-@media (min-width: map-get($break-points, md)) {
-    .container {
+    @include mq.md {
         max-width: 700px
     }
-}
-@media (min-width: map-get($break-points, lg)) {
-    .container {
+
+    @include mq.lg {
         max-width: 947px
     }
-}
-@media (min-width: map-get($break-points, xl)) {
-    .container {
+
+    @include mq.xl {
         max-width: 1183px
     }
-}
-@media (min-width: map-get($break-points, xxl)) {
-    .container {
+
+    @include mq.xxl {
         max-width: 1420px
     }
 }

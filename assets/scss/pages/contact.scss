@@ -1,3 +1,10 @@
+@use "sass:map";
+@use '../abstracts/variables' as vars;
+@use '../abstracts/_mixins/margins' as margin_mixin;
+@use '../abstracts/_mixins/media_query' as mq;
+@use '../abstracts/_mixins/colors';
+@use '../abstracts/_functions/space';
+
 @import '../../../node_modules/carousel/src/index.scss';
 @import '../base/_display.scss';
 @import '../base/_float.scss';
@@ -11,17 +18,18 @@
 @import '../components/_stepper.scss';
 @import '../layout/_banner.scss';
 
-@media (min-width: map-get($break-points, sm)) {
-    form .container {
-        max-width: 65%;
-        margin: 0 auto;
+section {
+    @include margin_mixin.out(12, top);
+
+    @include mq.md {
+        @include margin_mixin.out(8, top);
     }
 }
 
-
 .carousel__pagination__item--current {
     &::before {
-        background-color: map-get($colors, 'white');
+        @include colors.bgc('white');
+
         border-radius: 50%;
         content: '';
         width: 10px;
@@ -30,32 +38,58 @@
 }
 
 .next_btn, .send_btn {
+    @include colors.text('white');
+
     transition-duration: 250ms;
     transition-timing-function: linear;
-    opacity: 0;
-    color: map-get($colors, 'white');
+    opacity: 0
 }
 
 .next_btn {
     transition-property: opacity;
 
     svg {
-        @extend .ml_2;
+        @include margin_mixin.out(2, left);
+
         vertical-align: middle;
     }
 }
 
 .send_btn {
-    border: 1px solid map-get($colors, 'white');
+    border: 1px solid map.get(vars.$colors, 'white');
     border-radius: .5rem;
     transition-property: background-color, opacity, color;
 
     &:hover {
-        color: map-get($colors, 'black');
-        background-color: map-get($colors, 'white');
+        @include colors.text('black');
+        @include colors.bgc('white')
     }
 }
 
 #services {
+    display: flex;
+    gap: space.calculate(4);
     flex-wrap: wrap;
+    justify-content: space-around
+}
+
+#success {
+    padding-top: space.calculate(16);
+    text-align: center;
+    display: none;
+
+    h2 {
+        @include margin_mixin.out(4, bottom)
+    }
+}
+
+@media (min-width: map.get(vars.$break-points, sm)) {
+    form .container {
+        max-width: 65%;
+        margin: 0 auto;
+    }
+
+    #success {
+        @include margin_mixin.in(32, top)
+    }
 }

@@ -1,3 +1,9 @@
+@use "sass:map";
+@use '../abstracts/variables' as vars;
+@use '../abstracts/_mixins/media_query' as mq;
+@use '../abstracts/_mixins/text';
+@use '../abstracts/_functions/space';
+
 @import '../base/_placement.scss';
 @import '../base/_animations.scss';
 @import '../base/_text.scss';
@@ -20,7 +26,19 @@ header#banner {
     background-image: var(--sm_bg_img);
 
     h1 {
-        @extend .text_5xl, .md_text_7xl, .lg_text_8xl, .xxl_text_9xl;
+        @include text.text(5xl);
+
+        @include mq.md {
+            @include text.text(7xl)
+        }
+
+        @include mq.lg {
+            @include text.text(8xl)
+        }
+
+        @include mq.xxl {
+            @include text.text(9xl)
+        }
 
         text-align: center;
         font-weight: bold;
@@ -28,13 +46,14 @@ header#banner {
     }
 
     #scroll_down {
-        @extend .animation_bounce, .bottom_2;
+        @extend .animation_bounce;
 
-        position: absolute
+        position: absolute;
+        bottom: space.calculate(2)
     }
 }
 
-@media (min-width: map-get($break-points, sm)) {
+@media (min-width: map.get(vars.$break-points, sm)) {
     .webp_support header#banner {
         background-image: var(--webp_bg_img);
     }

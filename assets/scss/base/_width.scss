@@ -1,5 +1,5 @@
 @use "sass:math";
-@import '../abstracts/_variables.scss';
+@use '../abstracts/variables' as vars;
 
 .w_auto {
     width: auto
@@ -52,7 +52,7 @@
     }
 }
 
-@each $name, $width in $break-points {
+@each $name, $width in vars.$break-points {
     @media (min-width: #{$width}) {
         .#{$name}_w_auto {
             width: auto

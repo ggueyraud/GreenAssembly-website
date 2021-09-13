@@ -1,10 +1,12 @@
-@import '../abstracts/_variables.scss';
+@use "sass:map";
+@use '../abstracts/variables' as vars;
+@use '../abstracts/_mixins/margins' as margin_mixin;
 
 .mx_auto {
     margin: 0 auto
 }
 
-@each $name, $width in $break-points {
+@each $name, $width in vars.$break-points {
     @media (min-width: #{$width}) {
         .#{$name}_mx_auto {
             margin: 0 auto
@@ -13,112 +15,72 @@
 }
 
 @for $i from 0 through 96 {
-    $value: ($i * .25) + rem;
-
     .m_#{$i} {
-        margin: $value
+        @include margin_mixin.out($i)
     }
     .my_#{$i} {
-        margin-top: $value;
-        margin-bottom: $value
+        @include margin_mixin.out($i, y)
     }
     .mx_#{$i} {
-        margin-right: $value;
-        margin-left: $value
+        @include margin_mixin.out($i, x)
     }
 
-    .mt_#{$i} {
-        margin-top: $value
+    @each $symbol, $value in vars.$borders {
+        .m#{$symbol}_#{$i} {
+            @include margin_mixin.out($i, $value)
+        }
     }
-    .mr_#{$i} {
-        margin-right: $value
-    }
-    .mb_#{$i} {
-        margin-bottom: $value
-    }
-    .ml_#{$i} {
-        margin-left: $value
+
+    @each $symbol, $value in vars.$borders {
+        .p#{$symbol}_#{$i} {
+            @include margin_mixin.in($i, $value)
+        }
     }
     
     .p_#{$i} {
-        padding: $value
+        @include margin_mixin.in($i)
     }
     .py_#{$i} {
-        padding-top: $value;
-        padding-bottom: $value
+        @include margin_mixin.in($i, y)
     }
     .px_#{$i} {
-        padding-right: $value;
-        padding-left: $value
-    }
-
-    .pt_#{$i} {
-        padding-top: $value
-    }
-    .pr_#{$i} {
-        padding-right: $value
-    }
-    .pb_#{$i} {
-        padding-bottom: $value
-    }
-    .pl_#{$i} {
-        padding-left: $value
+        @include margin_mixin.in($i, x)
     }
 }
 
-@each $name, $width in $break-points {
+@each $name, $width in vars.$break-points {
     @media (min-width: #{$width}) {
         @for $i from 0 through 96 {
-            $value: ($i * .25) + rem;
-
             .#{$name}_m_#{$i} {
-                margin: $value
+                @include margin_mixin.out($i)
             }
             .#{$name}_my_#{$i} {
-                margin-top: $value;
-                margin-bottom: $value
+                @include margin_mixin.out($i, y)
             }
             .#{$name}_mx_#{$i} {
-                margin-right: $value;
-                margin-left: $value
+                @include margin_mixin.out($i, x)
             }
-    
-            .#{$name}_mt_#{$i} {
-                margin-top: $value
-            }
-            .#{$name}_mr_#{$i} {
-                margin-right: $value
-            }
-            .#{$name}_mb_#{$i} {
-                margin-bottom: $value
-            }
-            .#{$name}_ml_#{$i} {
-                margin-left: $value
+
+            @each $symbol, $value in vars.$borders {
+                .#{$name}_m#{$symbol}_#{$i} {
+                    @include margin_mixin.out($i, $value)
+                }
             }
     
             .#{$name}_p_#{$i} {
-                padding: $value
+                @include margin_mixin.in($i)
             }
             .#{$name}_py_#{$i} {
-                padding-top: $value;
-                padding-bottom: $value
+                @include margin_mixin.in($i, y)
             }
             .#{$name}_px_#{$i} {
-                padding-right: $value;
-                padding-left: $value
+                @include margin_mixin.in($i, x)
             }
-        
-            .#{$name}_pt_#{$i} {
-                padding-top: $value
-            }
-            .#{$name}_pr_#{$i} {
-                padding-right: $value
-            }
-            .#{$name}_pb_#{$i} {
-                padding-bottom: $value
-            }
-            .#{$name}_pl_#{$i} {
-                padding-left: $value
+
+            @each $symbol, $value in vars.$borders {
+                .#{$name}_p#{$symbol}_#{$i} {
+                    @include margin_mixin.in($i, $value)
+                }
             }
         }
     }

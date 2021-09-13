@@ -1,28 +1,33 @@
+@use "sass:map";
+@use '../abstracts/variables' as vars;
+@use '../abstracts/_mixins/margins' as margin_mixin;
+@use '../abstracts/_mixins/text';
+@use '../abstracts/_mixins/colors';
+@use '../abstracts/_functions/space';
+
 @import '../base/_text.scss';
-@import '../base/_margins.scss';
 @import '../base/_display.scss';
 @import '../base/_zindex.scss';
 @import '../base/_overflow.scss';
 @import '../base/_opacity.scss';
 @import '../base/_borders.scss';
-@import '../abstracts/_variables.scss';
 
 #navbar {
-    @extend .top_3, .left_3;
-
     position: fixed;
     z-index: 20;
     transition: background-color .250s linear;
+    left: space.calculate(3);
+    top: space.calculate(3);
 
     a {
-        @extend .text_xl;
+        @include text.text(xl, true);
 
         position: relative;
         text-transform: uppercase;
         font-weight: bold;
 
         &::after {
-            border-right: 1px solid map-get($colors, 'white');
+            border-right: 1px solid map.get(vars.$colors, 'white');
             position: absolute;
             right: 0;
             width: 80%;
@@ -41,7 +46,7 @@
         transition: opacity .250s ease-in-out;
 
         > * {
-            @extend .mt_12;
+            @include margin_mixin.out(12, top);
 
             &:first-child {
                 margin-top: 0
@@ -50,13 +55,12 @@
     }
 
     #socials {
-        @extend .order_6;
-
         display: flex;
         flex-direction: row;
+        order: 6;
 
         a + a {
-            @extend .pl_4;
+            @include margin_mixin.in(4, left);
         }
     }
 
@@ -67,7 +71,7 @@
     }
 
     #close-mobile-menu {
-        @extend .p_3;
+        @include margin_mixin.in(3);
 
         line-height: 1;
         display: none;
@@ -81,7 +85,9 @@
     }
 
     &.show {
-        @extend .p_3, .pb_14;
+        @include margin_mixin.in(3);
+        @include margin_mixin.in(14, bottom);
+        @include colors.bgc('black');
 
         top: 0;
         right: 0;
@@ -91,10 +97,9 @@
         flex-direction: column;
         align-items: flex-start;
         overflow-y: scroll;
-        background-color: map-get($colors, 'black');
 
         #close-mobile-menu {
-            border: 1px solid map-get($colors, 'white');
+            border: 1px solid map.get(vars.$colors, 'white');
             display: block;
             border-radius: 50%;
         }
@@ -182,20 +187,20 @@
     }
 }
 
-@media (min-width: map-get($break-points, md)) {
+@media (min-width: map.get(vars.$break-points, md)) {
     #navbar {
         --margin-width: calc(((100vw - 700px) / 2) - 40px);
         left: calc(var(--margin-width) * (1 - 0.2))
     }
 }
 
-@media (min-width: map-get($break-points, lg)) {
+@media (min-width: map.get(vars.$break-points, lg)) {
     #navbar {
         --margin-width: calc(((100vw - 947px) / 2) - 40px);
     }
 }
 
-@media (min-width: map-get($break-points, xl)) {
+@media (min-width: map.get(vars.$break-points, xl)) {
     #navbar {
         --margin-width: calc(((100vw - 1183px) / 2) - 40px);
 
@@ -205,7 +210,7 @@
     }
 }
 
-@media (min-width: map-get($break-points, xxl)) {
+@media (min-width: map.get(vars.$break-points, xxl)) {
     #navbar {
         --margin-width: calc(((100vw - 1420px) / 2) - 40px);
     }

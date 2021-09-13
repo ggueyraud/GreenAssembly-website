@@ -1,6 +1,6 @@
-@import '../abstracts/_variables.scss';
+@use '../abstracts/variables' as vars;
 
-@each $name, $color in $colors {
+@each $name, $color in vars.$colors {
     .bg_#{$name} {
         background-color: $color
     }

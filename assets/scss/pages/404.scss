@@ -1,5 +1,8 @@
-@import '../abstracts/_variables.scss';
-@import '../base/_margins.scss';
+@use "sass:map";
+@use '../abstracts/variables' as vars;
+@use '../abstracts/_mixins/margins' as margin_mixin;
+@use '../abstracts/_mixins/media_query' as mq;
+
 @import '../base/_display.scss';
 @import '../base/_space.scss';
 @import '../base/_typography.scss';
@@ -12,8 +15,10 @@ section {
     text-align: center;
 
     a {
+        @include margin_mixin.out(4, top);
+
         span {
-            @extend .ml_1;
+            @include margin_mixin.out(1, left);
             text-decoration: underline
         }
 
@@ -26,11 +31,9 @@ section {
         @extend .title;
         margin: 0 auto !important;
         word-break: break-word;
-    }
-}
 
-@media (min-width: map-get($break-points, sm)) {
-    section h1 {
-        width: 80%
+        @include mq.sm {
+            width: 80%
+        }
     }
 }

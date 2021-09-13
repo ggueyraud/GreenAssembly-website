@@ -1,6 +1,13 @@
+@use "sass:map";
+@use '../abstracts/variables' as vars;
+@use '../abstracts/_mixins/margins' as margin_mixin;
+@use '../abstracts/_mixins/media_query' as mq;
+@use '../abstracts/_mixins/text';
+@use '../abstracts/_mixins/colors';
+@use '../abstracts/_functions/space';
+
 @import '../../../node_modules/carousel/src/index.scss';
 @import '../base/_animations.scss';
-@import '../base/_margins.scss';
 @import '../base/_text.scss';
 @import '../base/_typography.scss';
 @import '../base/_placement.scss';
@@ -10,9 +17,10 @@
 
 #engagements {
     .swiper-card {
-        @extend .py_4, .px_3;
+        @include margin_mixin.in(4, y);
+        @include margin_mixin.in(3, x);
+        @include colors.bgc('black');
 
-        background-color: map-get($colors, 'black');
         border-radius: 3rem;
         text-align: center;
 
@@ -32,9 +40,10 @@
         }
 
         h3 {
-            @extend .text_lg, .my_6;
+            @include margin_mixin.out(6, y);
+            @include text.text(lg);
+            @include colors.text('white');
 
-            color: map-get($colors, 'white');
             text-transform: uppercase;
             font-weight: bold;
             text-align: center
@@ -43,16 +52,16 @@
 }
 
 .read_more {
-    @extend .pt_4;
+    @include margin_mixin.in(4, top);
 
     text-align: right;
     width: 100%;
     display: block;
 
     a {
-        @extend .text_lg;
+        @include text.text(lg);
+        @include colors.text('white');
 
-        color: map-get($colors, 'white');
         display: inline-block;
 
         span {
@@ -87,9 +96,9 @@ header#home_banner {
     background-size: contain;
 
     #shape {
-        @extend .bottom_4;
+        @include colors.text('black');
 
-        color: map-get($colors, 'black');
+        bottom: space.calculate(4);
         width: 270px;
         height: 250px;
         align-items: center;
@@ -118,10 +127,10 @@ header#home_banner {
         }
 
         a {
-            @extend .mt_1;
+            @include margin_mixin.out(1, top);
 
             span {
-                @extend .mr_1;
+                @include margin_mixin.out(1, right);
 
                 text-decoration: underline;
             }
@@ -133,7 +142,7 @@ header#home_banner {
         }
     
         h1 {
-            @extend .px_2;
+            @include margin_mixin.in(2, x);
 
             line-height: 1.25;
             font-weight: bold;
@@ -142,34 +151,26 @@ header#home_banner {
     }
 }
 
-@media (min-width: map-get($break-points, sm)) {
-    .webp_support header#home_banner {
-        background-image: var(--webp_bg_img);
-    }
-
-    header#home_banner {
-        --bg_img: url(/img/bg/home.jpg);
-        background-image: var(--bg_img);
-    }
-}
-
 .prestation {    
     .content {
-        @extend .gap_4, .lg_gap_8;
-
         display: grid;
         grid-template-columns: repeat(1, minmax(0, 1fr));
-        align-items: center
+        align-items: center;
+        gap: space.calculate(4);
+
+        @include mq.lg {
+            gap: space.calculate(8)
+        }
     }
 
     h2 {
-        @extend .title, .md_pb_5;
+        @extend .title;
     
         text-align: center;
     }
 
     .preview {
-        @extend .mt_12;
+        @include margin_mixin.out(12, top);
 
         img {
             display: block;
@@ -182,7 +183,7 @@ header#home_banner {
     }
 
     .description {
-        @extend .mt_4
+        @include margin_mixin.out(4, top);
     }
 }
 
@@ -208,14 +209,23 @@ header#home_banner {
     }
 }
 
-@media (min-width: map-get($break-points, sm)) {
+@media (min-width: map.get(vars.$break-points, sm)) {
+    .webp_support header#home_banner {
+        background-image: var(--webp_bg_img);
+    }
+
+    header#home_banner {
+        --bg_img: url(/img/bg/home.jpg);
+        background-image: var(--bg_img);
+    }
+
     .swiper-card > img {
         width: 35% !important
     }
 
     .prestation {
         .preview {
-            margin-top: 1.5rem;
+            @include margin_mixin.out(6, top);
         }
 
         .description p {
@@ -235,18 +245,35 @@ header#home_banner {
     }
 }
 
-@media (min-width: map-get($break-points, sm)) and (orientation: landscape) {
+@media (max-width: map.get(vars.$break-points, sm)) and (orientation: landscape) {
     .swiper-card > img {
         width: 25% !important
     }
+
+    header#home_banner {
+        display: flex;
+        align-items: center;
+        background-image: url(/img/bg/home.webp) !important;
+        background-position: center bottom !important;
+        background-size: cover !important;
+
+        #shape {
+            right: 1rem;
+            bottom: auto
+        }
+    }
 }
 
-@media (min-width: map-get($break-points, md)) {
+@media (min-width: map.get(vars.$break-points, md)) {
     #engagements {
-        margin-top: 3rem;
+        @include margin_mixin.out(12, top)
     }
 
     .prestation {
+        h2 {
+            @include margin_mixin.in(5, bottom)
+        }
+
         .content {
             grid-template-columns: repeat(2, minmax(0, 1fr));
         }
@@ -272,13 +299,13 @@ header#home_banner {
     }
 }
 
-@media (min-width: map-get($break-points, md)) and (orientation: landscape) {
+@media (min-width: map.get(vars.$break-points, md)) and (orientation: landscape) {
     .swiper-card > img {
         width: 40% !important
     }
 }
 
-@media (min-width: map-get($break-points, xl)) {
+@media (min-width: map.get(vars.$break-points, xl)) {
     #engagements {
         margin-bottom: 0;
 
@@ -379,21 +406,6 @@ header#home_banner {
                 font-size: 2.25rem !important;
                 line-height: 2.5rem !important;
             }
-        }
-    }
-}
-
-@media (max-width: map-get($break-points, sm)) and (orientation: landscape) {
-    header#home_banner {
-        display: flex;
-        align-items: center;
-        background-image: url(/img/bg/home.webp) !important;
-        background-position: center bottom !important;
-        background-size: cover !important;
-
-        #shape {
-            right: 1rem;
-            bottom: auto
         }
     }
 }

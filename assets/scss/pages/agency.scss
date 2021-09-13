@@ -1,3 +1,11 @@
+@use "sass:map";
+@use '../abstracts/variables' as vars;
+@use '../abstracts/_mixins/margins' as margin_mixin;
+@use '../abstracts/_mixins/media_query' as mq;
+@use '../abstracts/_mixins/text';
+@use '../abstracts/_mixins/colors';
+@use '../abstracts/_functions/space';
+
 @import '../../../node_modules/carousel/src/index.scss';
 @import '../base/_text.scss';
 @import '../base/_margins.scss';
@@ -11,12 +19,29 @@
 
 #approach, #story {
     .content {
-        @extend .grid, .grid_cols_1, .md_grid_cols_2, .gap_10, .lg_gap_18, .items_center;
+        display: grid;
+        gap: space.calculate(10);
+        align-items: center;
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+
+        @include mq.md {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        @include mq.lg {
+            gap: space.calculate(18);
+        }
     }
 }
 
 h2 {
-    @extend .title, .pb_14, .sm_pb_20;
+    @extend .title;
+    @include margin_mixin.in(14, bottom);
+
+    @include mq.sm {
+        @include margin_mixin.in(20, bottom);
+    }
+
     text-align: center
 }
 
@@ -31,17 +56,21 @@ h2 {
             margin: 0;;
 
             .about {
-                @extend .text_lg, .pb_7;
+                @include text.text(lg);
+                @include margin_mixin.in(7, bottom);
 
                 font-weight: bold;
                 text-align: center;
                 color: rgba(229, 229, 229, 0.6);
         
                 figcaption {
-                    @extend .text_xl, .pt_7, .pb_3, .mb_3;
+                    @include margin_mixin.in(7, top);
+                    @include margin_mixin.in(3, bottom);
+                    @include margin_mixin.out(3, bottom);
+                    @include text.text(xl);
+                    @include colors.text('white');
 
-                    border-bottom: 1px solid map-get($colors, 'white');
-                    color: map-get($colors, 'white');
+                    border-bottom: 1px solid map.get(vars.$colors, 'white');
                     text-transform: uppercase;
                 }
             }

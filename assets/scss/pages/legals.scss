@@ -1,3 +1,6 @@
+@use '../abstracts/_mixins/margins' as margin_mixin;
+@use '../abstracts/_mixins/media_query' as mq;
+@import '../base/_typography.scss';
 @import '../base/_margins.scss';
 
 h2, h5 {
@@ -5,9 +8,15 @@ h2, h5 {
 }
 
 h2 {
-    @extend .py_8, .sm_pb_12;
+    @include margin_mixin.in(8, y);
+    text-transform: uppercase;
+
+    @include mq.sm {
+        @include margin_mixin.in(12, bottom)
+    }
 }
 
 h5 {
-    @extend .mt_2, .mb_1;
+    @include margin_mixin.out(2, top);
+    @include margin_mixin.out(1, bottom)
 }

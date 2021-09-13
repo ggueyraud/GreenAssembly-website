@@ -1,19 +1,22 @@
-@import '../abstracts/_variables.scss';
-@import '../base/_typography.scss';
-@import '../base/_margins.scss';
-@import '../base/_grid.scss';
-@import '../base/_placement.scss';
-@import '../base/_display.scss';
-@import '../base/_container.scss';
-@import '../base/_text.scss';
-@import '../base/_container.scss';
-@import '../components/_button.scss';
-@import '../components/_icon.scss';
-@import '../layout/_menu.scss';
-@import '../layout/_footer.scss';
-@import '../base/_background.scss';
-@import '../base/_overflow.scss';
-@import '../base/_animations.scss';
+@use "sass:map";
+@use 'abstracts/variables' as vars;
+@use 'abstracts/_mixins/colors';
+
+@import 'base/_typography.scss';
+@import 'base/_margins.scss';
+@import 'base/_grid.scss';
+@import 'base/_placement.scss';
+@import 'base/_display.scss';
+@import 'base/_container.scss';
+@import 'base/_text.scss';
+@import 'base/_container.scss';
+@import 'components/_button.scss';
+@import 'components/_icon.scss';
+@import 'layout/_menu.scss';
+@import 'layout/_footer.scss';
+@import 'base/_background.scss';
+@import 'base/_overflow.scss';
+@import 'base/_animations.scss';
 
 * {
     box-sizing: border-box
@@ -44,8 +47,9 @@ html {
     overflow-x: hidden;
 
     body {
-        color: map-get($colors, 'white');
-        background-color: map-get($colors, 'black');
+        @include colors.text('white');
+        @include colors.bgc('black');
+
         overflow-x: hidden;
         margin: 0;
         font-weight: 500;
@@ -60,11 +64,6 @@ a {
     color: inherit;
 }
 
-// @media (max-width: theme('screens.md')) and (orientation: landscape) {
-//     #navbar #menu {
-//         @apply pb-0 #{!important};
-//     }
-// }
 img, video {
     max-width: 100%;
     height: auto;
@@ -76,7 +75,7 @@ img, video {
     }
 }
 
-@each $name, $width in $break-points {
+@each $name, $width in vars.$break-points {
     @media (min-width: #{$width}) {
         @for $i from 1 through 12 {
             .#{$name}_order_#{$i} {

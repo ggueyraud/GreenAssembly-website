@@ -1,3 +1,10 @@
+@use "sass:map";
+@use '../abstracts/variables' as vars;
+@use '../abstracts/_mixins/margins' as margin_mixin;
+@use '../abstracts/_mixins/media_query' as mq;
+@use '../abstracts/_mixins/text';
+@use '../abstracts/_mixins/colors';
+
 @import '../base/_typography.scss';
 @import '../base/_text.scss';
 @import '../base/_space.scss';
@@ -11,7 +18,7 @@ header#banner {
     padding-bottom: 5rem;
 }
 
-@media (max-width: map-get($break-points, sm)) and (min-height: 600px) {
+@media (max-width: map.get(vars.$break-points, sm)) and (min-height: 600px) {
     header#banner {
         padding-bottom: 8rem;
     }
@@ -31,9 +38,9 @@ header#banner {
     width: 100%;
 
     a {
-        @extend .text_xl;
+        @include text.text(xl);
+        @include colors.text('white');
 
-        color: map-get($colors, 'white');
         display: inline-block;
 
         span {
@@ -51,7 +58,12 @@ h1 {
 }
 
 h2 {
-    @extend .title, .pb_12, .sm_pb_20;
+    @include margin_mixin.in(12, bottom);
+    @extend .title;
+
+    @include mq.sm {
+        @include margin_mixin.in(20, bottom);
+    }
 
     line-height: 1.25 !important;
     width: 100%;
@@ -60,7 +72,7 @@ h2 {
     word-wrap: break-word;    
     
     span {
-        @extend .text_gradient
+        @extend %text_gradient;
     }
 }
 
@@ -71,11 +83,11 @@ ul {
 
         li {
             & + li {
-                @extend .pt_3
+                @include margin_mixin.in(3, top)
             }
     
             &:before {
-                @extend .pr_3;
+                @include margin_mixin.in(3, right);
                 content: '✅';
             }
         }

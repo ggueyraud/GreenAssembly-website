@@ -1,27 +1,21 @@
-@import '../abstracts/_variables.scss';
+@use "sass:map";
+@use '../abstracts/variables' as vars;
+@use '../abstracts/_mixins/media_query' as mq;
+@use '../abstracts/_mixins/text';
+@use '../abstracts/_mixins/colors';
 
-@each $name, $value in $font_sizes {
+@each $name, $value in vars.$font_sizes {
     .text_#{$name} {
         font-size: $value;
-        line-height: map-get($line_heights, $name)
+        line-height: map.get(vars.$line_heights, $name)
     }
 }
 
-@function is-important($important){
-    @return #{if($important, '!important', '')};
-  }
-
-@mixin textxl($index, $important: false) {
-    line-height: ($index * 0.888888889) + rem is-important($important);
-    font-size: ($index * 0.888888889) + rem is-important($important)
-}
-
-@each $name, $width in $break-points {
+@each $name, $width in vars.$break-points {
     @media (min-width: #{$width}) {
-        @each $fname, $value in $font_sizes {
+        @each $fname, $value in vars.$font_sizes {
             .#{$name}_text_#{$fname} {
-                font-size: $value;
-                line-height: map-get($line_heights, $fname)
+                @include text.text($fname)
             }
         }
 
@@ -40,16 +34,20 @@
     }
 }
 
-@each $name, $color in $colors {
+@each $name, $color in vars.$colors {
     .text_#{$name} {
         color: #{$color}
     }
 }
 
-.text_gradient {
+%text_gradient {
     background: -webkit-linear-gradient(right, #efff19 50%, #00ffb5);
     background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+.text_gradient {
+    @extend %text_gradient;
 }
 
 .text_right {
@@ -76,7 +74,7 @@
     text-transform: uppercase
 }
 
-@each $name, $color in $colors {
+@each $name, $color in vars.$colors {
     .text_outline_#{$name} {
         -webkit-text-stroke: 2px #{$color};
         color: transparent;
@@ -85,7 +83,8 @@
 }
 
 .text_outline_gradient {
-    color: map-get($colors, 'black');
+    @include colors.text('black');
+
     background: -webkit-linear-gradient(right, rgba(239, 255, 25, 1), rgba(0, 255, 181, 1));
     background-clip: text;
     -webkit-text-stroke: 3px transparent;
@@ -96,19 +95,32 @@
     line-height: 1.5 !important;
 
     &--lg {
-        @extend .text_xl, .md_text_2xl;
+        @include text.text(xl);
+        @include colors.text('gray');
+
+        @include mq.md {
+            @include text.text(2xl)
+        }
 
         text-transform: uppercase;
         font-weight: bold;
-        color: map-get($colors, 'gray');
 
         span, b {
-            @extend .text_xl, .md_text_4xl
+            @include text.text(xl);
+
+            @include mq.md {
+                @include text.text(4xl, true)
+            }
         }
     }
 
     span, b {
-        @extend .text_lg, .md_text_xl;
+        @include text.text(lg);
+
+        @include mq.md {
+            @include text.text(xl)
+        }
+
         text-transform: uppercase;
         font-weight: bold;
         word-wrap: break-word;

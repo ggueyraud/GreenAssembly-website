@@ -1,37 +1,53 @@
-@import '../abstracts/_variables.scss';
+@use '../abstracts/variables' as vars;
 
-@each $name, $color in $colors {
+@mixin border_style($style) {
+    border-style: $style
+}
+
+@mixin border_color($color) {
+    border-color: $color
+}
+
+@mixin border_width($width, $direction) {
+    @if $direction {
+        border-#{$direction}-width: $width
+    } @else {
+        border-width: $width
+    }
+}
+
+@each $name, $color in vars.$colors {
     .border_#{$name} {
-        border-color: $color
+        @include border_color($color)
     }
 }
 
 @for $i from 0 through 8 {
     $value: $i + px;
 
-    @each $name, $prop in $borders {
+    @each $name, $direction in vars.$borders {
         .border_#{$name}_#{$i} {
-            border-#{$prop}-width: $value
+            @include border_width($value, $direction)
         }
     }
 
     .border_#{$i} {
-        border-width: $value
+        @include border_width($value, null)
     }
 }
 
 .border_solid {
-    border-style: solid
+    @include border_style(solid)
 }
 .border_dashed {
-    border-style: dashed
+    @include border_style(dashed)
 }
 .border_dotted {
-    border-style: dotted
+    @include border_style(dotted)
 }
 .border_double {
-    border-style: double
+    @include border_style(double)
 }
 .border_none {
-    border-style: none
+    @include border_style(none)
 }

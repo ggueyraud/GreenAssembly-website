@@ -1,4 +1,4 @@
-@import '../abstracts/_variables.scss';
+@use '../abstracts/variables';
 
 @for $i from 0 through 10 {
     .opacity_#{$i * 10} {

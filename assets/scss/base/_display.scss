@@ -1,4 +1,5 @@
-@import '../abstracts/_variables.scss';
+@use '../abstracts/variables' as vars;
+@use '../abstracts/_functions/space';
 
 .absolute {
     position: absolute
@@ -75,14 +76,12 @@
 }
 
 @for $i from 0 through 96 {
-    $value: ($i * .25) + rem;
-
     .gap_#{$i} {
-        gap: $value
+        gap: space.calculate($i)
     }
 }
 
-@each $name, $width in $break-points {
+@each $name, $width in vars.$break-points {
     @media (min-width: #{$width}) {
         .#{$name}_absolute {
             position: absolute
@@ -140,10 +139,8 @@
         }
 
         @for $i from 0 through 96 {
-            $value: ($i * .25) + rem;
-
             .#{$name}_gap_#{$i} {
-                gap: $value !important
+                gap: space.calculate($i) !important
             }
         }
     }

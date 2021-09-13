@@ -1,6 +1,10 @@
+@use "sass:map";
+@use '../abstracts/variables' as vars;
+@use '../abstracts/_mixins/margins' as margin_mixin;
+@use '../abstracts/_mixins/text';
+@use '../abstracts/_mixins/colors';
+
 @import '../../../node_modules/carousel/src/index.scss';
-@import '../abstracts/_variables.scss';
-@import '../base/_margins.scss';
 @import '../base/_space.scss';
 @import '../base/_text.scss';
 @import '../base/_display.scss';
@@ -10,13 +14,15 @@
 @import '../layout/_banner.scss';
 
 .carousel__pagination__item--current {
-    background-color: map-get($colors, success) !important;
-    border-color: map-get($colors, success) !important;
+    @include colors.bgc(success, true);
+
+    border-color: map.get(vars.$colors, success) !important;
 
     svg {
+        @include colors.text('black');
+
         height: 1.15rem;
         width: auto;
-        color: map-get($colors, 'black')
     }
 }
 
@@ -31,7 +37,8 @@ h1 {
 }
 
 h2 {
-    @extend .title, .pb_12, .sm_pb_20;
+    @include margin_mixin.in(12, bottom);
+    @extend .title;
 
     line-height: 1.25 !important;
     width: 100%;
@@ -40,20 +47,22 @@ h2 {
     word-wrap: break-word;
     
     span {
-        @extend .text_gradient
+        @extend %text_gradient;
     }
 }
 
 ul {
     list-style: none;
     padding-left: 0;
+
     li {
         &+li {
-            @extend .pt_3
+            @include margin_mixin.in(3, top);
         }
 
         &:before {
-            @extend .pr_3;
+            @include margin_mixin.in(3, right);
+
             content: '✅';
         }
     }
@@ -74,9 +83,9 @@ ul {
     width: 100%;
 
     a {
-        @extend .text_xl;
+        @include text.text(xl);
+        @include colors.text('white');
 
-        color: map-get($colors, 'white');
         display: inline-block;
 
         span {
@@ -92,24 +101,25 @@ ul {
 #formules {
     .carousel__wrapper {
         position: relative;
+
         &__item {
             display: grid;
             grid-template-columns: repeat(1, minmax(0, 1fr));
             
             h3 {
-                @extend .text_gradient, .text_3xl, .sm_text_4xl, .md_text_5xl, .py_8;
+                @include margin_mixin.in(8, y);
+                @include text.text(3xl);
+                @extend %text_gradient;
         
                 word-wrap: break-word;
                 line-height: 1.25 !important
             }
         
             p {
-                @extend .mb_6, .sm_mb_12;
+                @include margin_mixin.out(6, bottom);
             }
     
             .infos {
-                @extend .lg_py_8, .lg_pt_36;
-    
                 order: 2;
             }
     
@@ -121,10 +131,24 @@ ul {
     }
 }
 
-@media (min-width: map-get($break-points, sm)) {
+@media (min-width: map.get(vars.$break-points, sm)) {
+    h2 {
+        @include margin_mixin.in(20, bottom)
+    }
+
+    #formules .carousel__wrapper__item {
+        p {
+            @include margin_mixin.out(12, bottom);
+        }
+
+        h3 {
+            @include text.text(4xl)
+        }
+    }
+
     .carousel.stepper .carousel__pagination {
-        margin-top: 3rem;
-        margin-bottom: 8rem;
+        @include margin_mixin.out(12, top);
+        @include margin_mixin.out(32, bottom);
 
         &__item {
             --spacing: 7.5rem;
@@ -141,15 +165,15 @@ ul {
             .index, .descr {
                 position: absolute;
                 z-index: 1;
-                
             }
 
             .descr {
+                @include colors.text('white');
+
                 display: inline-block;
                 text-align: center;
                 top: calc(100% + 0.75rem);
                 width: 140px;
-                color: map-get($colors, 'white');
         
                 & > * {
                     line-height: 1.15
@@ -164,7 +188,18 @@ ul {
     }
 }
 
-@media (min-width: map-get($break-points, md)) {
+@media (min-width: map.get(vars.$break-points, md)) {
+    #formules .carousel__wrapper__item {
+        h3 {
+            @include text.text(5xl);
+        }
+
+        .infos {
+            @include margin_mixin.in(36, top);
+            @include margin_mixin.in(8, y);
+        }
+    }
+
     .carousel.stepper .carousel__wrapper__item {
         --spacing: 9rem;
 
@@ -173,7 +208,8 @@ ul {
         }
     }
 }
-@media (min-width: map-get($break-points, lg)) {
+
+@media (min-width: map.get(vars.$break-points, lg)) {
     .carousel.stepper .carousel__wrapper__item {
         --spacing: 12rem
     }
@@ -197,10 +233,10 @@ ul {
                 position: absolute;
                 top: 1rem;
                 white-space: nowrap;
-                width: 100%;
             }
 
             .infos {
+                @include margin_mixin.in(36, top);
                 order: 1 !important
             }
             .preview {
@@ -212,13 +248,9 @@ ul {
         }
     }
 }
-@media (min-width: map-get($break-points, xl)) {
+
+@media (min-width: map.get(vars.$break-points, xl)) {
     .carousel.stepper .carousel__wrapper__item {
         --spacing: 16rem
     }
 }
-// @media (min-width: map-get($break-points, xxl)) {
-//     #formules .swiper-wrapper {
-//         margin-bottom: calc(1.5rem + 28px) !important
-//     }
-// }

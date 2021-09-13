@@ -1,4 +1,4 @@
-@import '../abstracts/_variables.scss';
+@use '../abstracts/variables' as vars;
 
 .overflow_auto {
     overflow: auto
@@ -37,7 +37,7 @@
     overflow-y: scroll
 }
 
-@each $name, $width in $break-points {
+@each $name, $width in vars.$break-points {
     @media (min-width: #{$width}) {
         .#{$name}:overflow_auto {
             overflow: auto

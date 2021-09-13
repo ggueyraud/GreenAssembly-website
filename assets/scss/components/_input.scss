@@ -1,13 +1,16 @@
-@import '../abstracts/_variables.scss';
-@import '../base/_margins.scss';
+@use "sass:map";
+@use '../abstracts/variables' as vars;
+@use '../abstracts/_mixins/margins' as margin_mixin;
+@use '../abstracts/_mixins/colors';
 
 label {
     display: inline-block
 }
 
 input, textarea, select {
-    border: 1px solid map-get($colors, 'white');
-    color: map-get($colors, 'white');
+    @include colors.text('white');
+
+    border: 1px solid map.get(vars.$colors, 'white');
     font-size: 100%;
     background-color: transparent;
     display: block;
@@ -17,7 +20,8 @@ input, textarea, select {
 }
 
 input, textarea {
-    @extend .py_2, .px_3;
+    @include margin_mixin.in(2, y);
+    @include margin_mixin.in(3, x);
 
     transition: border 200ms ease-out;
 
@@ -27,20 +31,22 @@ input, textarea {
 }
 
 select {
-    @extend .pr_10, .py_2, .pl_4;
+    @include margin_mixin.in(2, y);
+    @include margin_mixin.in(10, right);
+    @include margin_mixin.in(4, left);
 
     background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3e%3cpath fill='%23E5E5E5' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right .75rem center/8px 10px;
     outline: none;
     appearance: none;
 
     option, option:hover {
-        background-color: map-get($colors, 'black');
-        color: map-get($colors, 'white');
+        @include colors.bgc('black');
+        @include colors.text('white')
     }
 }
 
 .fv_error {
-    color: map-get($colors, warning);
+    @include colors.text(warning);
     line-height: 1;
     transition-duration: 200ms;
     transition-timing-function: ease-in-out;
@@ -49,7 +55,7 @@ select {
     opacity: 0;
 
     &.active {
-        @extend .mt_1;
+        @include margin_mixin.out(1, top);
 
         font-size: inherit;
         opacity: 100;
@@ -58,8 +64,10 @@ select {
 }
 
 label.checkbox {
-    @extend .px_6, .py_2;
-    color: map-get($colors, 'black');
+    @include margin_mixin.in(6, x);
+    @include margin_mixin.in(2, y);
+    @include colors.text('black');
+
     position: relative;
     cursor: pointer;
     text-align: center;
@@ -82,7 +90,7 @@ label.checkbox {
         z-index: -1;
 
         &:checked {
-            background-color: map-get($colors, success) !important;
+            @include colors.bgc(success, true)
         }
     }
 }
