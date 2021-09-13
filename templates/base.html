@@ -25,10 +25,11 @@
             height="120"
             style="max-width: 80%"
             alt="GreenAssembly Logo"
+            class="animation_bounce"
         />
     </div>
 
-    <ga-frame id="banner">
+    <ga-frame name="banner">
         {% block banner %}{% endblock %}
     </ga-frame>
 
@@ -113,7 +114,7 @@
             </div>
         </nav>
     
-        <ga-frame id="main">
+        <ga-frame name="main">
             <main>
                 {% block content %}{% endblock %}
             </main>
