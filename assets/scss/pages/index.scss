@@ -322,17 +322,10 @@ header#home_banner {
             :nth-child(even) {
                 .swiper-card {
                     &::before {
-                        bottom: 0;
-                        left: 0;
+                        bottom: -60px;
+                            left: -50px;
                         top: auto !important;
                         right: auto !important;
-                    }
-            
-                    &:hover {
-                        &::before {
-                            bottom: -60px;
-                            left: -50px;
-                        }
                     }
                 }
             }
@@ -344,11 +337,6 @@ header#home_banner {
                 flex-direction: column;
                 justify-content: center;
                 margin: 33px;
-    
-                p {
-                    opacity: 0;
-                    transition: opacity 0.3s ease-in-out;
-                }
 
                 img {
                     width: 50%
@@ -373,8 +361,8 @@ header#home_banner {
     
                 &::before {
                     position: absolute;
-                    top: 0;
-                    right: 0;
+                    top: -60px;
+                    right: -50px;
                     width: 120px;
                     height: 120px;
                     z-index: -1;
@@ -391,7 +379,6 @@ header#home_banner {
                     left: 0;
                     width: 100%;
                     height: 100%;
-                    opacity: 0;
                     border-radius: 3rem;
                     content: '';
                     box-shadow: 1px 1px 12px 4px #01FFB5;
