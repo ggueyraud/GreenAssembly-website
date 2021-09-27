@@ -160,7 +160,45 @@ async fn main() -> std::io::Result<()> {
             .data(UserAgentParser::from_path("regexes.yaml").expect("regexes.yaml not found"))
             .wrap(Compress::default())
             .wrap(middlewares::www::RedirectWWW)
-            .wrap(middlewares::hsts::HSTS)
+            .wrap_fn(|req, srv| {
+                use actix_service::Service;
+                use actix_web::http::{header, HeaderValue};
+
+                let fut = srv.call(req);
+
+                async {
+                    let mut res = fut.await?;
+                    let headers = res.headers_mut();
+
+                    headers.insert(
+                        header::STRICT_TRANSPORT_SECURITY,
+                        HeaderValue::from_static("max-age=31536000; includeSubDomains; preload"),
+                    );
+
+                    #[cfg(not(debug_assertions))]
+                    headers.insert(
+                        header::CONTENT_SECURITY_POLICY,
+                        HeaderValue::from_static("script-src 'self'")
+                    );
+
+                    headers.insert(
+                        header::X_FRAME_OPTIONS,
+                        HeaderValue::from_static("deny")
+                    );
+
+                    headers.insert(
+                        header::X_CONTENT_TYPE_OPTIONS,
+                        HeaderValue::from_static("nosniff")
+                    );
+
+                    headers.insert(
+                        header::X_XSS_PROTECTION,
+                        HeaderValue::from_static("1; mode=block")
+                    );
+
+                    Ok(res)
+                }
+            })
             .configure(routes::website::config)
             .configure(routes::config)
             .configure(routes::contact::config)
