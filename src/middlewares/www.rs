@@ -43,13 +43,21 @@ where
     }
 
     fn call(&mut self, req: ServiceRequest) -> Self::Future {
+        let path = req.path().to_string();
+        let host = req.connection_info().host().to_string();
         let uri = req.uri().to_string();
 
-        if uri.contains("www") {
+        println!("Uri {}", uri);
+        println!("scheme: {}", req.connection_info().scheme());
+        println!("host: {}", req.connection_info().host());
+        println!("path: {}", req.path());
+
+        if req.connection_info().host() == "www.greenassembly.fr" {
+            println!("Redirect to : {}", format!("https://greenassembly.fr{}", path));
             Either::Right(ok(req.into_response(
                 HttpResponse::MovedPermanently()
-                    .header(http::header::LOCATION, uri.replace("www.", ""))
-                    .header(http::header::REFERER, uri)
+                    .header(http::header::LOCATION, format!("https://greenassembly.fr{}", path))
+                    .header(http::header::REFERER, format!("https://{}{}", host, path))
                     .finish()
                     .into_body(),
             )))
