@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "carousel": "../Carousel",
-    "router": "../Router"
+    "router": "../Router",
+    "style-box": "../style-box"
   },
   "browserslist": [
     "> 1%",

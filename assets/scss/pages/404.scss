@@ -1,11 +1,11 @@
-@use "sass:map";
-@use '../abstracts/variables' as vars;
-@use '../abstracts/_mixins/margins' as margin_mixin;
-@use '../abstracts/_mixins/media_query' as mq;
+@use 'style-box/abstracts/mixins/breakpoints';
+@use 'style-box/abstracts/mixins/margin' as margin_mixin;
 
-@import '../base/_display.scss';
-@import '../base/_space.scss';
+@use '../abstracts/variables' as vars;
+
+@import 'style-box/base/space';
 @import '../base/_typography.scss';
+@import 'style-box/base/display';
 
 section {
     height: 100vh;
@@ -32,7 +32,7 @@ section {
         margin: 0 auto !important;
         word-break: break-word;
 
-        @include mq.sm {
+        @include breakpoints.sm {
             width: 80%
         }
     }

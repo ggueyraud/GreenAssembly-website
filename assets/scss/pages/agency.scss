@@ -1,35 +1,37 @@
-@use "sass:map";
 @use '../abstracts/variables' as vars;
-@use '../abstracts/_mixins/margins' as margin_mixin;
-@use '../abstracts/_mixins/media_query' as mq;
 @use '../abstracts/_mixins/text';
-@use '../abstracts/_mixins/colors';
-@use '../abstracts/_functions/space';
 
-@import '../../../node_modules/carousel/src/index.scss';
-@import '../base/_text.scss';
-@import '../base/_margins.scss';
+@use 'style-box/abstracts/functions/utilities';
+@use 'style-box/abstracts/mixins/breakpoints';
+@use 'style-box/abstracts/mixins/margin' as margin_mixin;
+
+@import 'style-box/base/grid';
+@import 'style-box/base/borders';
+@import 'style-box/base/margin';
+@import 'style-box/base/typography';
 @import '../base/_typography.scss';
-@import '../base/_width.scss';
-@import '../base/_space.scss';
-@import '../base/_grid.scss';
-@import '../base/_display.scss';
-@import '../base/_borders.scss';
+@import 'style-box/base/width';
+@import 'style-box/base/text';
+@import 'style-box/base/space';
+@import 'style-box/base/display';
+
+@import 'carousel/src/index.scss';
 @import '../layout/_banner.scss';
+
 
 #approach, #story {
     .content {
         display: grid;
-        gap: space.calculate(10);
+        gap: utilities.space(10);
         align-items: center;
         grid-template-columns: repeat(1, minmax(0, 1fr));
 
-        @include mq.md {
+        @include breakpoints.md {
             grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
-        @include mq.lg {
-            gap: space.calculate(18);
+        @include breakpoints.lg {
+            gap: utilities.space(18);
         }
     }
 }
@@ -38,7 +40,7 @@ h2 {
     @extend .title;
     @include margin_mixin.in(14, bottom);
 
-    @include mq.sm {
+    @include breakpoints.sm {
         @include margin_mixin.in(20, bottom);
     }
 
@@ -68,9 +70,9 @@ h2 {
                     @include margin_mixin.in(3, bottom);
                     @include margin_mixin.out(3, bottom);
                     @include text.text(xl);
-                    @include colors.text('white');
 
-                    border-bottom: 1px solid map.get(vars.$colors, 'white');
+                    color: utilities.color('white');
+                    border-bottom: 1px solid utilities.color('white');
                     text-transform: uppercase;
                 }
             }

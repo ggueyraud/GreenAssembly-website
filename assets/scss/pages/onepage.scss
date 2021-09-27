@@ -1,15 +1,16 @@
 @use "sass:map";
 @use '../abstracts/variables' as vars;
-@use '../abstracts/_mixins/margins' as margin_mixin;
-@use '../abstracts/_mixins/media_query' as mq;
+@use 'style-box/abstracts/mixins/margin' as margin_mixin;
+@use 'style-box/abstracts/mixins/breakpoints';
 @use '../abstracts/_mixins/text';
-@use '../abstracts/_mixins/colors';
+@use 'style-box/abstracts/functions/utilities';
+
+@import 'style-box/base/display';
+@import 'style-box/base/grid';
+@import 'style-box/base/text';
+@import 'style-box/base/space';
 
 @import '../base/_typography.scss';
-@import '../base/_text.scss';
-@import '../base/_space.scss';
-@import '../base/_display.scss';
-@import '../base/_grid.scss';
 @import '../components/_card.scss';
 @import '../layout/_banner.scss';
 
@@ -38,9 +39,9 @@ header#banner {
     width: 100%;
 
     a {
-        @include text.text(xl);
-        @include colors.text('white');
+        @include text.text(2xl);
 
+        color: utilities.color('white');
         display: inline-block;
 
         span {
@@ -61,7 +62,7 @@ h2 {
     @include margin_mixin.in(12, bottom);
     @extend .title;
 
-    @include mq.sm {
+    @include breakpoints.sm {
         @include margin_mixin.in(20, bottom);
     }
 

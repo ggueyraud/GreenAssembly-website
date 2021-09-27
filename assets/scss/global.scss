@@ -1,22 +1,21 @@
-@use "sass:map";
 @use 'abstracts/variables' as vars;
-@use 'abstracts/_mixins/colors';
+@use 'style-box/abstracts/functions/utilities';
 
-@import 'base/_typography.scss';
-@import 'base/_margins.scss';
-@import 'base/_grid.scss';
-@import 'base/_placement.scss';
-@import 'base/_display.scss';
-@import 'base/_container.scss';
-@import 'base/_text.scss';
-@import 'base/_container.scss';
+@import 'style-box/base/_container.scss';
+@import 'style-box/base/animations';
+@import 'style-box/base/background';
+@import 'style-box/base/display';
+@import 'style-box/base/grid';
+@import 'style-box/base/margin';
+@import 'style-box/base/typography';
+
+// @import 'base/_placement.scss';
+@import 'style-box/base/_text.scss';
 @import 'components/_button.scss';
 @import 'components/_icon.scss';
 @import 'layout/_menu.scss';
 @import 'layout/_footer.scss';
-@import 'base/_background.scss';
-@import 'base/_overflow.scss';
-@import 'base/_animations.scss';
+@import 'style-box/base/_overflow.scss';
 
 * {
     box-sizing: border-box
@@ -47,9 +46,8 @@ html {
     overflow-x: hidden;
 
     body {
-        @include colors.text('white');
-        @include colors.bgc('black');
-
+        color: utilities.color('white');
+        background-color: utilities.color('black');
         overflow-x: hidden;
         margin: 0;
         font-weight: 500;

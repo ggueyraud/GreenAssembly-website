@@ -1,23 +1,15 @@
 @use "sass:map";
 @use '../abstracts/variables' as vars;
-@use '../abstracts/_mixins/margins' as margin_mixin;
+@use 'style-box/abstracts/mixins/margin' as margin_mixin;
+@use 'style-box/abstracts/functions/utilities';
 @use '../abstracts/_mixins/text';
-@use '../abstracts/_mixins/colors';
-@use '../abstracts/_functions/space';
-
-@import '../base/_text.scss';
-@import '../base/_display.scss';
-@import '../base/_zindex.scss';
-@import '../base/_overflow.scss';
-@import '../base/_opacity.scss';
-@import '../base/_borders.scss';
 
 #navbar {
     position: fixed;
     z-index: 20;
     transition: background-color .250s linear;
-    left: space.calculate(3);
-    top: space.calculate(3);
+    left: utilities.space(3);
+    top: utilities.space(3);
 
     a {
         @include text.text(xl, true);
@@ -27,7 +19,7 @@
         font-weight: bold;
 
         &::after {
-            border-right: 1px solid map.get(vars.$colors, 'white');
+            border-right: 1px solid utilities.color('white');
             position: absolute;
             right: 0;
             width: 80%;
@@ -87,8 +79,8 @@
     &.show {
         @include margin_mixin.in(3);
         @include margin_mixin.in(14, bottom);
-        @include colors.bgc('black');
 
+        background-color: utilities.color('black');
         top: 0;
         right: 0;
         bottom: 0;
@@ -99,7 +91,7 @@
         overflow-y: scroll;
 
         #close-mobile-menu {
-            border: 1px solid map.get(vars.$colors, 'white');
+            border: 1px solid utilities.color('white');
             display: block;
             border-radius: 50%;
         }

@@ -1,26 +1,25 @@
 @use "sass:map";
 @use '../abstracts/variables' as vars;
-@use '../abstracts/_mixins/margins' as margin_mixin;
-@use '../abstracts/_mixins/text';
-@use '../abstracts/_mixins/colors';
 
-@import '../../../node_modules/carousel/src/index.scss';
-@import '../base/_space.scss';
-@import '../base/_text.scss';
-@import '../base/_display.scss';
+@use 'style-box/abstracts/mixins/text';
+@use 'style-box/abstracts/mixins/margin' as margin_mixin;
+@use 'style-box/abstracts/functions/utilities';
+@import 'style-box/base/display';
+@import 'style-box/base/space';
+@import 'style-box/base/text';
+
+@import 'carousel/src/index.scss';
 @import '../base/_typography.scss';
 @import '../components/_card.scss';
 @import '../components/_stepper.scss';
 @import '../layout/_banner.scss';
 
 .carousel__pagination__item--current {
-    @include colors.bgc(success, true);
-
-    border-color: map.get(vars.$colors, success) !important;
+    background-color: utilities.color(success) !important;
+    border-color: utilities.color(success) !important;
 
     svg {
-        @include colors.text('black');
-
+        color: utilities.color('black');
         height: 1.15rem;
         width: auto;
     }
@@ -83,9 +82,9 @@ ul {
     width: 100%;
 
     a {
-        @include text.text(xl);
-        @include colors.text('white');
+        @include text.text(2xl);
 
+        color: utilities.color('white');
         display: inline-block;
 
         span {
@@ -168,8 +167,7 @@ ul {
             }
 
             .descr {
-                @include colors.text('white');
-
+                color: utilities.color('white');
                 display: inline-block;
                 text-align: center;
                 top: calc(100% + 0.75rem);

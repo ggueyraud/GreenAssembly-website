@@ -1,26 +1,26 @@
 @use "sass:map";
 @use '../abstracts/variables' as vars;
-@use '../abstracts/_mixins/margins' as margin_mixin;
-@use '../abstracts/_mixins/media_query' as mq;
+@use 'style-box/abstracts/mixins/margin' as margin_mixin;
+@use 'style-box/abstracts/mixins/breakpoints';
+@use 'style-box/abstracts/functions/utilities';
 @use '../abstracts/_mixins/text';
-@use '../abstracts/_mixins/colors';
-@use '../abstracts/_functions/space';
 
-@import '../../../node_modules/carousel/src/index.scss';
-@import '../base/_animations.scss';
-@import '../base/_text.scss';
+@import 'carousel/src/index.scss';
+@import 'style-box/base/animations';
+@import 'style-box/base/background';
+@import 'style-box/base/display';
+@import 'style-box/base/_text.scss';
+@import 'style-box/base/_typography.scss';
 @import '../base/_typography.scss';
-@import '../base/_placement.scss';
-@import '../base/_background.scss';
-@import '../base/_display.scss';
-@import '../base/_space.scss';
+// @import 'style-box/base/_placement.scss';
+@import 'style-box/base/_space.scss';
 
 #engagements {
     .swiper-card {
         @include margin_mixin.in(4, y);
         @include margin_mixin.in(3, x);
-        @include colors.bgc('black');
 
+        background-color: utilities.color('black');
         border-radius: 3rem;
         text-align: center;
 
@@ -42,8 +42,8 @@
         h3 {
             @include margin_mixin.out(6, y);
             @include text.text(lg);
-            @include colors.text('white');
 
+            color: utilities.color('white');
             text-transform: uppercase;
             font-weight: bold;
             text-align: center
@@ -54,14 +54,13 @@
 .read_more {
     @include margin_mixin.in(4, top);
 
-    text-align: right;
     width: 100%;
     display: block;
 
     a {
-        @include text.text(lg);
-        @include colors.text('white');
+        @include text.text(2xl);
 
+        color: utilities.color('white');
         display: inline-block;
 
         span {
@@ -71,6 +70,14 @@
         img {
             vertical-align: middle;
         }
+    }
+}
+
+section .read_more {
+    text-align: right;
+
+    a {
+        @include text.text(lg, true);
     }
 }
 
@@ -96,15 +103,14 @@ header#home_banner {
     background-size: contain;
 
     #shape {
-        @include colors.text('black');
-
-        bottom: space.calculate(4);
+        position: absolute;
+        display: flex;
+        color: utilities.color('black');
+        bottom: utilities.space(4);
         width: 270px;
         height: 250px;
         align-items: center;
-        position: absolute;
         text-align: center;
-        display: flex;
         flex-direction: column;
         justify-content: center;
 
@@ -156,10 +162,10 @@ header#home_banner {
         display: grid;
         grid-template-columns: repeat(1, minmax(0, 1fr));
         align-items: center;
-        gap: space.calculate(4);
+        gap: utilities.space(4);
 
-        @include mq.lg {
-            gap: space.calculate(8)
+        @include breakpoints.lg {
+            gap: utilities.space(8)
         }
     }
 

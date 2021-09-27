@@ -1,14 +1,14 @@
-@use "sass:map";
 @use '../abstracts/variables' as vars;
-@use '../abstracts/_mixins/margins' as margin_mixin;
-@use '../abstracts/_mixins/media_query' as mq;
+@use 'style-box/abstracts/mixins/margin' as margin_mixin;
+@use 'style-box/abstracts/mixins/breakpoints';
+@use 'style-box/abstracts/functions/utilities';
 @use '../abstracts/_mixins/text';
 
 .card {
     @include margin_mixin.in(6, y);
     @include margin_mixin.in(4, x);
 
-    @include mq.sm {
+    @include breakpoints.sm {
         @include margin_mixin.in(10, y);
         @include margin_mixin.in(6, x);
     
@@ -17,7 +17,7 @@
         }
     }
 
-    box-shadow: 1px 1px 12px 4px map.get(vars.$colors, success);
+    box-shadow: 1px 1px 12px 4px utilities.color(success);
     border-radius: 4rem;
     display: flex;
     justify-content: center;

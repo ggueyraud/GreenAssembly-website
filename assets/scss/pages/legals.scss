@@ -1,7 +1,7 @@
-@use '../abstracts/_mixins/margins' as margin_mixin;
-@use '../abstracts/_mixins/media_query' as mq;
+@use 'style-box/abstracts/mixins/margin' as margin_mixin;
+@use 'style-box/abstracts/mixins/breakpoints';
 @import '../base/_typography.scss';
-@import '../base/_margins.scss';
+@import 'style-box/base/margin';
 
 h2, h5 {
     font-weight: bold
@@ -11,7 +11,7 @@ h2 {
     @include margin_mixin.in(8, y);
     text-transform: uppercase;
 
-    @include mq.sm {
+    @include breakpoints.sm {
         @include margin_mixin.in(12, bottom)
     }
 }

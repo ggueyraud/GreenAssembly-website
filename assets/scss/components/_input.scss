@@ -1,16 +1,14 @@
-@use "sass:map";
 @use '../abstracts/variables' as vars;
-@use '../abstracts/_mixins/margins' as margin_mixin;
-@use '../abstracts/_mixins/colors';
+@use 'style-box/abstracts/mixins/margin' as margin_mixin;
+@use 'style-box/abstracts/functions/utilities';
 
 label {
     display: inline-block
 }
 
 input, textarea, select {
-    @include colors.text('white');
-
-    border: 1px solid map.get(vars.$colors, 'white');
+    color: utilities.color('white');
+    border: 1px solid utilities.color('white');
     font-size: 100%;
     background-color: transparent;
     display: block;
@@ -40,13 +38,13 @@ select {
     appearance: none;
 
     option, option:hover {
-        @include colors.bgc('black');
-        @include colors.text('white')
+        background-color: utilities.color('black');
+        color: utilities.color('white')
     }
 }
 
 .fv_error {
-    @include colors.text(warning);
+    color: utilities.color(warning);
     line-height: 1;
     transition-duration: 200ms;
     transition-timing-function: ease-in-out;
@@ -66,9 +64,9 @@ select {
 label.checkbox {
     @include margin_mixin.in(6, x);
     @include margin_mixin.in(2, y);
-    @include colors.text('black');
 
     position: relative;
+    color: utilities.color('black');
     cursor: pointer;
     text-align: center;
     outline: none;
@@ -90,7 +88,7 @@ label.checkbox {
         z-index: -1;
 
         &:checked {
-            @include colors.bgc(success, true)
+            background-color: utilities.color(success) !important
         }
     }
 }

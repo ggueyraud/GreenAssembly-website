@@ -1,12 +1,10 @@
 @use "sass:map";
 @use '../abstracts/variables' as vars;
-@use '../abstracts/_mixins/media_query' as mq;
+@use 'style-box/abstracts/mixins/breakpoints';
 @use '../abstracts/_mixins/text';
-@use '../abstracts/_functions/space';
+@use 'style-box/abstracts/functions/utilities';
 
-@import '../base/_placement.scss';
-@import '../base/_animations.scss';
-@import '../base/_text.scss';
+@import 'style-box/base/animations';
 
 .webp_support header#banner {
     background-image: var(--sm_webp_bg_img);
@@ -28,15 +26,15 @@ header#banner {
     h1 {
         @include text.text(5xl);
 
-        @include mq.md {
+        @include breakpoints.md {
             @include text.text(7xl)
         }
 
-        @include mq.lg {
+        @include breakpoints.lg {
             @include text.text(8xl)
         }
 
-        @include mq.xxl {
+        @include breakpoints.xxl {
             @include text.text(9xl)
         }
 
@@ -49,7 +47,7 @@ header#banner {
         @extend .animation_bounce;
 
         position: absolute;
-        bottom: space.calculate(2)
+        bottom: utilities.space(2)
     }
 }
 

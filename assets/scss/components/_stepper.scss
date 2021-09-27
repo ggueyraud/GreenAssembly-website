@@ -1,11 +1,8 @@
 @use "sass:map";
 @use '../abstracts/variables' as vars;
-@use '../abstracts/_mixins/margins' as margin_mixin;
+@use 'style-box/abstracts/mixins/margin' as margin_mixin;
+@use 'style-box/abstracts/functions/utilities';
 @use '../abstracts/_mixins/text';
-@use '../abstracts/_mixins/colors';
-
-@import '../base/_display.scss';
-@import '../base/_typography.scss';
 
 .carousel.stepper {
     .label {
@@ -23,7 +20,7 @@
             font-weight: bold;
         }
 
-        .descr > * { display: inline}
+        .descr > * { display: inline }
     }
 
     .carousel__pagination {
@@ -32,19 +29,18 @@
         position: relative;
 
         &__item {
-            @include colors.bg('black');
-
             --spacing: 2.5rem;
+            background-color: utilities.color('black');
             position: relative;
             display: flex;
-            border: solid 2px map.get(vars.$colors, 'white');
+            border: solid 2px utilities.color('white');
             justify-content: center;
             align-items: center;
             height: 2rem;
             width: 2rem;
 
             &--current {
-                border-color: map.get(vars.$colors, success);
+                border-color: utilities.color(success);
 
                 .index {
                     @extend %text_gradient;
@@ -65,8 +61,8 @@
 
             .index {
                 @include text.text(lg);
-                @include colors.text(success);
 
+                color: utilities.color(success);
                 font-weight: bold;
                 text-transform: uppercase;
                 white-space: nowrap;
@@ -79,17 +75,17 @@
             }
 
             &--past {
-                @include colors.bgc(success);
+                background-color: utilities.color(success);
+                border-color: utilities.color(success);
+
                 &::after {
                     border-bottom-style: solid;
-                    border-bottom-color: map.get(vars.$colors, success);
+                    border-bottom-color: utilities.color(success);
                 }
 
-                border-color: map.get(vars.$colors, success);
 
                 svg {
-                    @include colors.text('black');
-
+                    color: utilities.color('black');
                     height: 1.15rem;
                     width: auto;
                 }
@@ -98,7 +94,7 @@
             &:not(:last-child)::after {
                 position: absolute;
                 width: calc(100% + var(--spacing));
-                border-bottom: map.get(vars.$colors, 'white') 2px dashed;
+                border-bottom: utilities.color('white') 2px dashed;
                 z-index: -1;
                 content: '';
                 left: 0
@@ -117,7 +113,7 @@
                 }
 
                 &::before {
-                    @include colors.bgc('white');
+                    background-color: utilities.color('white');
                     opacity: 0;
                     border-radius: 50%;
                     content: '';
@@ -166,7 +162,7 @@
                 }
     
                 .descr {
-                    @include colors.text('white');
+                    color: utilities.color('white');
                     display: inline-block;
                     text-align: center;
                     top: calc(100% + 0.75rem);

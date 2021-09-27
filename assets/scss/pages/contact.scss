@@ -1,17 +1,17 @@
 @use "sass:map";
 @use '../abstracts/variables' as vars;
-@use '../abstracts/_mixins/margins' as margin_mixin;
-@use '../abstracts/_mixins/media_query' as mq;
-@use '../abstracts/_mixins/colors';
-@use '../abstracts/_functions/space';
+@use 'style-box/abstracts/mixins/breakpoints';
+@use 'style-box/abstracts/functions/utilities';
 
-@import '../../../node_modules/carousel/src/index.scss';
-@import '../base/_display.scss';
-@import '../base/_float.scss';
-@import '../base/_width.scss';
-@import '../base/_text.scss';
-@import '../base/_opacity.scss';
-@import '../base/_borders.scss';
+@use 'style-box/abstracts/mixins/margin' as margin_mixin;
+@import 'carousel/src/index.scss';
+@import 'style-box/base/float';
+@import 'style-box/base/display';
+@import 'style-box/base/borders';
+@import 'style-box/base/opacity';
+@import 'style-box/base/width';
+@import 'style-box/base/text';
+
 @import '../components/_icon.scss';
 @import '../components/_input.scss';
 @import '../components/_button.scss';
@@ -21,15 +21,14 @@
 section {
     @include margin_mixin.out(12, top);
 
-    @include mq.md {
+    @include breakpoints.md {
         @include margin_mixin.out(8, top);
     }
 }
 
 .carousel__pagination__item--current {
     &::before {
-        @include colors.bgc('white');
-
+        background-color: utilities.color('white');
         border-radius: 50%;
         content: '';
         width: 10px;
@@ -38,8 +37,7 @@ section {
 }
 
 .next_btn, .send_btn {
-    @include colors.text('white');
-
+    color: utilities.color('white');
     transition-duration: 250ms;
     transition-timing-function: linear;
     opacity: 0
@@ -56,25 +54,25 @@ section {
 }
 
 .send_btn {
-    border: 1px solid map.get(vars.$colors, 'white');
+    border: 1px solid utilities.color('white');
     border-radius: .5rem;
     transition-property: background-color, opacity, color;
 
     &:hover {
-        @include colors.text('black');
-        @include colors.bgc('white')
+        color: utilities.color('black');
+        background-color: utilities.color('white')
     }
 }
 
 #services {
     display: flex;
-    gap: space.calculate(4);
+    gap: utilities.space(4);
     flex-wrap: wrap;
     justify-content: space-around
 }
 
 #success {
-    padding-top: space.calculate(16);
+    padding-top: utilities.space(16);
     text-align: center;
     display: none;
 
