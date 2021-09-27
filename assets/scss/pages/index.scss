@@ -81,8 +81,12 @@ section .read_more {
     }
 }
 
-.webp_support header#home_banner {
+.webp_supportted header#home_banner {
     background-image: var(--sm_webp_bg_img);
+}
+
+.no_webp header#home_banner {
+    background-image: var(--sm_bg_img);
 }
 
 header#home_banner {
@@ -216,14 +220,17 @@ header#home_banner {
 }
 
 @media (min-width: map.get(vars.$break-points, sm)) {
-    .webp_support header#home_banner {
+    .webp_supportted header#home_banner {
         background-image: var(--webp_bg_img);
     }
 
-    header#home_banner {
-        --bg_img: url(/img/bg/home.jpg);
+    .no_webp header#home_banner {
         background-image: var(--bg_img);
     }
+
+    // header#home_banner {
+    //     --bg_img: url(/img/bg/home.jpg);
+    // }
 
     .swiper-card > img {
         width: 35% !important
