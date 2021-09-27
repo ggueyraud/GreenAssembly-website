@@ -3,6 +3,12 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block head %}
+    {% match description %}
+        {% when Some with (description) %}
+            <meta name="description" content="{{ description }}" />
+        {% when None %}
+    {% endmatch %}
+
     <link rel="stylesheet" href="/css/pages/legals.css" />
 {% endblock %}
 

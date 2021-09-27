@@ -104,9 +104,10 @@ async fn legals(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
         #[template(path = "legals.html")]
         struct Legals {
             title: String,
+            description: Option<String>,
         }
 
-        let page = Legals { title: page.title };
+        let page = Legals { title: page.title, description: page.description };
 
         if let Ok(content) = page.render() {
             return HttpResponse::Ok().content_type("text/html").body(content);
