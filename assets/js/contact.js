@@ -168,14 +168,24 @@ const on_mount = () => {
     const company_label = document.querySelector('[for="company"]');
     const company_input = document.querySelector('[name="company"]');
     // const resume_label = document.querySelector('[for=resume]');
-    // const resume_input = document.querySelector('[name=resume]');  
-    
-    document
-        .querySelector('[name="message"]')
+    // const resume_input = document.querySelector('[name=resume]');
+
+    const message_input = document.querySelector('[name="message"]');
+
+    message_input
+        .addEventListener('keydown', e => {
+            if (e.keyCode !== 13) {
+                document.querySelector('#message_caracters_counter').innerHTML = e.target.value.length
+            }
+        });
+    // Set message auto height
+    message_input
         .addEventListener('input', e => {
-            document.querySelector('#message_caracters_counter').innerHTML = e.target.value.length
-        })
-    
+            e.target.style.height = "5px";
+            e.target.style.height = (e.target.scrollHeight)+"px";
+            carousel.calculate_height();
+        });
+
     const personal_informations_form = new Form(document.querySelector('[name="informations"]'))
         .on('valid', e => {
             e.target.querySelector('[type=submit]').classList.add('opacity_100');

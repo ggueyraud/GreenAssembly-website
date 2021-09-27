@@ -91,3 +91,7 @@ section {
         @include margin_mixin.in(32, top)
     }
 }
+
+textarea {
+    min-height: 80px
+}
