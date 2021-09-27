@@ -8,7 +8,7 @@ INSERT INTO pages (title, identifier, description, is_seo) VALUES
 ('Agence', 'agence', 'Démarquez-vous sur le web avec un site éco-conçu sur mesure – Une identité visuelle unique et singulière – Des vidéos Motion Design créatives et originales.', true),
 ('Contact', 'contact', 'Notre agence web à Annecy est spécialisée dans la conception de sites internet sur-mesure, la création d''identité visuelle et le montage de vidéos Motion Design.', true),
 ('Création de site E-commerce', 'creation_site_e_commerce', 'Gagnez des parts de marché et vendez vos produits avec un site e-commerce éco-conçu - développé sur-mesure - unique - 100% sécurisé - optimisé SEO', true),
-('Mentions légales', 'mentions_legales', null, true),
+('Mentions légales', 'mentions_legales', 'Mentions légales de l''agence digitale verte GreenAssembly', true),
 ('Création de site OnePage', 'creation_site_onepage', 'Démarquez-vous avec un site OnePage à l''image de votre entreprise. Conseils et développement sur-mesure, éco-conception web, optez pour la performance.', true),
 ('Portfolio', 'portfolio', 'Site e-commerce, site vitrine, identité visuelle, motion design. Découvrez les projets originaux GreenAssembly – Agence digitale spécialisée éco-conception web.', true),
 ('Création de site Vitrine', 'creation_site_vitrine', 'Gagnez en visibilité et attirez des contacts qualifiés avec un site vitrine éco-conçu, design et performant 100% personnalisé. Développement sur-mesure et SEO.', true),
