@@ -1,5 +1,5 @@
-import Form from './components/form';
-import chk from './components/checkbox';
+import Form, { Required, StringLength, Regex } from './components/form';
+// import chk from './components/checkbox';
 import Carousel from 'carousel';
 import { post } from './utils/http';
 
@@ -136,6 +136,7 @@ class StepperPagination {
 
 const on_mount = () => {
     const body = {};
+    const server_error = document.querySelector('#error');
 
     const carousel_el = document.querySelector('.carousel');
     let carousel = new Carousel(carousel_el, {
@@ -143,23 +144,25 @@ const on_mount = () => {
         arrow_navigation: false
     });
     carousel.use([StepperPagination]);
-    carousel.on('change', (index) => {
-        if (index === 0) {
-            document
-                .querySelector('[name=why_for]:checked')
-                .checked = false
+    carousel.on('change', (index, prev_index) => {
+        // If user move to any step hide server error if displayed
+        if (!server_error.classList.contains('hidden')) {
+            server_error.classList.add('hidden');
         }
 
-        if (index === 0 || index === 1) {
-            document.querySelector('#error').classList.add('hidden');
+        // Reset why_for form
+        if (index === 0) {
+            document
+                .querySelector('[name=reason]:checked')
+                .checked = false
         }
         
+        // Change step name
         const label = carousel_el.querySelector(`.label`);
         label.querySelector('.index').innerHTML = `Étape ${index + 1}`;
         const descr = label.querySelector('.descr');
         descr.innerHTML = carousel.childrens[index].dataset.description;
     });
-    
 
     const budget_label = document.querySelector('[for="budget"]');
     const budget_input = document.querySelector('[name="budget"]');
@@ -167,15 +170,14 @@ const on_mount = () => {
     const services = document.querySelector('#services');
     const company_label = document.querySelector('[for="company"]');
     const company_input = document.querySelector('[name="company"]');
-    // const resume_label = document.querySelector('[for=resume]');
-    // const resume_input = document.querySelector('[name=resume]');
 
     const message_input = document.querySelector('[name="message"]');
+    const message_caracters_counter = document.querySelector('#message_caracters_counter');
 
     message_input
         .addEventListener('keydown', e => {
             if (e.keyCode !== 13) {
-                document.querySelector('#message_caracters_counter').innerHTML = e.target.value.length
+                message_caracters_counter.innerHTML = e.target.value.length
             }
         });
     // Set message auto height
@@ -186,34 +188,54 @@ const on_mount = () => {
             carousel.calculate_height();
         });
 
-    const personal_informations_form = new Form(document.querySelector('[name="informations"]'))
-        .on('valid', e => {
-            e.target.querySelector('[type=submit]').classList.add('opacity_100');
-        })
+    const required_validator = new Required();
+    const string_length_validator = new StringLength(2, 120);
+
+    const personal_informations_form = new Form(document.querySelector('[name=informations]'), {
+        fields: {
+            lastname: {
+                validators: [required_validator, string_length_validator]
+            },
+            firstname: {
+                validators: [required_validator, string_length_validator]
+            },
+            company: {
+                validators: [required_validator, string_length_validator]
+            },
+            email: {
+                validators: [
+                    required_validator,
+                    new Regex(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, `L'email saisit n'a pas un format valide`)
+                ]
+            },
+            phone: {
+                validators: [new Regex(/^((\+)33|0|0033)[1-9](\d{2}){4}$/, 'Mauvais format de numéro saisi')]
+            }
+        }
+    })
         .on('invalid', e => {
             carousel.calculate_height();
             e.target.querySelector('[type=submit]').classList.remove('opacity_100');
         })
+        .on('valid', e => {
+            e.target.querySelector('[type=submit]').classList.add('opacity_100');
+        })
         .on('send', e => {
             e.preventDefault();
-    
             Object.assign(body, e.detail);
-    
             carousel.next();
         });
-    const project_form = new Form(document.querySelector('[name="project"]'), {
+
+        console.log(document.querySelector('#services'))
+
+    const project_form = new Form(document.querySelector('[name=project]'), {
         fields: {
-            services: {
-                validators: {
-                    notEmpty: 'Sélectionnez au moins une prestation',
-                    container: document.querySelector('#services')
-                }
+            'services[]': {
+                validators: [required_validator],
+                container: document.querySelector('#services')
             },
             message: {
-                validators: {
-                    notEmpty: 'Ce champ est obligatoire',
-                    stringLength: 'Le message doit faire entre 30 et 500 caractères',
-                }
+                validators: [required_validator, new StringLength(30, 500, 'Le message doit faire entre 30 et 500 caractères')]
             },
             found_by: {},
             budget: {}
@@ -252,50 +274,62 @@ const on_mount = () => {
                     carousel.calculate_height()
                 })
         });
-    
-    // Contact-for forms
-    new Form(document.querySelector('[name="why-for"]'), {
+
+    new Form(document.querySelector('[name=why_for]'), {
         fields: {
-            why_for: {
-                validators: {
-                    notEmpty: 'Sélectionnez une __'
-                }
+            'reason[]': {
+                validators: [new Required('Sélectionnez une raison')]
             }
         }
     })
         .on('valid', e => {
-            document.querySelector('[name=project]').dataset.description = document.querySelector('[name=why_for]:checked').value === 'simple_discussion'
+            // Update step title
+            document.querySelector('[name=project]').dataset.description = e.detail.reason === 'simple_discussion'
                 ? 'Message'
                 : 'Informations sur votre projet';
-            const message_label = document.querySelector('label[for="message"]');
+
+            // Fix for webkit engine
             setTimeout(() => document.querySelector('[name="lastname"]').focus({ preventScroll: true }), 300);
-    
-            if (e.detail.why_for === 'new_project') {
+
+            const message_label = document.querySelector('label[for="message"]');
+            if (e.detail.reason === 'new_project') {
                 body.new_project = true;
+
+                if (company_label.classList.contains('hidden')) {
+                    company_label.classList.remove('hidden');
+                    company_input.classList.remove('hidden');
+
+                    services.style.removeProperty('display');
+                    services_label.style.removeProperty('display');
+
+                    personal_informations_form.add_field(company_input, {
+                        validators: [required_validator, string_length_validator]
+                    });
+                    project_form.add_field('services[]', {
+                        validators: [required_validator]
+                    })
+                    // project_form
+                }
     
                 message_label.innerHTML = 'Description *';
             } else {
                 body.new_project = false;
-    
+
                 personal_informations_form.remove_field('company');
-                project_form.remove_field('services');
+                project_form.remove_field('services[]');
     
                 company_label.classList.add('hidden');
                 company_input.classList.add('hidden');
+
                 message_label.innerHTML = 'Message *';
+
                 budget_label.classList.add('hidden');
                 budget_input.classList.add('hidden');
-                // services.classList.add('hidden');
-                // services_label.classList.add('hidden');
+
                 services.style.setProperty('display', 'none', 'important');
                 services_label.style.setProperty('display', 'none', 'important');
-
-                // if (e.detail.why_for === 'internship') {
-                //     resume_label.classList.remove('hidden');
-                //     resume_input.classList.remove('hidden');
-                // }
             }
-    
+
             carousel.next();
         });
 }

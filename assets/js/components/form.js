@@ -1,337 +1,429 @@
-const validators = {
-    not_empty: value => value.length === 0 ? false : true,
-    string_length: (value, range = {}) => {
-        let valid = true
-        if (range.min !== -1 && value.length < range.min) valid = false
-        if (range.max !== -1 && value.length > range.max) valid = false
-        
-        return valid
-    },
-    less_than: (value, max) => value.length > max,
-    greater_than: (value, min) => value.length < min
+/** Abstract class representing a form validator */
+export class Validator {
+    /**
+     * @param {String} message Error message
+     */
+    constructor(message) {
+        // Prevent instanciate it self
+        if (this.constructor === Validator) {
+            throw new TypeError('Abstract class "Validator" cannot be instantiated directly');
+        }
+
+        this.message = message;
+    }
+
+    /**
+     * Check if a field matching with Validator logic
+     * @param {Field} field The field to check
+     */
+    validate(field) {
+        throw 'Cannot call parent method';
+    }
+
+    update_error(field) {
+        if (field.error_handling_disabled) {
+            return;
+        }
+
+        let error_element = null;
+
+        if (field instanceof GroupField) {
+            if (field.container) {
+                error_element = field.container.nextElementSibling;
+            }
+        } else {
+            error_element = field.element.nextElementSibling;
+        }
+
+        if (field.is_valid) {
+            if (error_element && error_element.classList && error_element.classList.contains('fv_error')) {
+                error_element.classList.remove('active');
+
+                if (!(field instanceof GroupField && field.container)) {
+                    field.element.classList.remove('border_warning');
+                }
+            }
+        } else {
+            // If no error exist, create it
+            if (!error_element || (error_element && !error_element.classList.contains('fv_error'))) {
+                error_element = document.createElement('div');
+                error_element.classList.add('fv_error');
+
+                console.log(field instanceof GroupField, field.container)
+
+                if (field instanceof GroupField && field.container) {
+                    field.container.insertAdjacentElement('afterend', error_element)
+                } else {
+                    field.element.insertAdjacentElement('afterend', error_element);
+                    field.element.classList.add('border_warning');
+                }
+            }
+
+            if (!(field instanceof GroupField && field.container)) {
+                field.element.classList.add('border_warning');
+            }
+
+            error_element.innerHTML = this.message;
+            error_element.classList.add('active');
+        }
+    }
+}
+
+/**
+ * Validator which check if a Field has it's value length between a range
+ */
+export class StringLength extends Validator {
+    constructor(min, max, message = `La valeur doit être comprise entre ${min} et ${max}`) {
+        super(message);
+
+        this.min = min;
+        this.max = max;
+    }
+
+    validate(field) {
+        let is_valid = true;
+
+        const test_length = length => {
+            if (length < this.min || length > this.max) {
+                is_valid = false;
+            }
+        }
+
+        if (field instanceof GroupField) {
+            for (const ipt of field.element) {
+                if (!test_length(ipt.value.length)) {
+                    break;
+                }
+            }
+        } else {
+            const length = field.element.value.length;
+
+            test_length(length)
+        }
+
+        field.is_valid = is_valid;
+        super.update_error(field);
+        return is_valid
+    }
+}
+
+/**
+ * Validator which check if Field has it's value validate by regex
+ */
+export class Regex extends Validator {
+    constructor(regex, message) {
+        super(message);
+
+        this.regex = new RegExp(regex);
+    }
+
+    validate(field) {
+        let is_valid = true;
+
+        if (field.value) {
+            is_valid = this.regex.test(field.element.value);
+        }
+
+        field.is_valid = is_valid;
+        super.update_error(field);
+        return is_valid
+    }
+}
+
+/**
+ * Validator which check if Field has a value
+ */
+export class Required extends Validator {
+    constructor(message = 'Ce champ ne peut être vide') {
+        super(message);
+    }
+
+    validate(field) {
+        let is_valid = false;
+
+        if (field instanceof GroupField) {
+            for (const input of field.element) {
+                if (input.checked) {
+                    is_valid = true;
+                    break;
+                }
+            }
+        } else if (field.element.value.length !== 0) {
+            is_valid = true;
+        }
+
+        field.is_valid = is_valid;
+        super.update_error(field);
+        return is_valid
+    }
 }
 
 class Field {
-    constructor(elements, validators) {
+    constructor(element, validators = []) {
+        this.element = element;
         this.validators = validators;
-        this.elements = elements;
+        this.type = this.element.type;
+        this.is_valid = false;
+        this.error_handling_disabled = false;
     }
 
-    get_value() {
-        let values = [];
+    get value() {
+        return this.element.value
+    }
 
-        this.elements.forEach(el => {
-            const { type } = el;
+    get name() {
+        return this.element.name
+    }
+}
 
-            if (type === 'checkbox' || type === 'radio') {
-                if (el.checked) values.push(el.value);
-            } else {
+class GroupField extends Field {
+    constructor(elements, validators = [], container = null) {
+        super(elements, validators);
+
+        this.container = container;
+        this.type = this.element[0].type;
+    }
+
+    get value() {
+        if (this.type === 'radio') {
+            // console.log(this.element)
+            return [...this.element].find(element => element.checked === true).value
+        } else {
+            let values = [];
+    
+            this.element.forEach(el => {
                 values.push(el.value);
-            }
-        })
-
-        return values.length === 1 && this.elements[0].type !== 'checkbox' ? values[0] : values;
+            });
+    
+            return values;
+        }
     }
 
-    validate(display_error = true) {
-        if (Object.keys(this.validators).length === 0) return true;
-
-        let error = null;
-
-        for (const validator_name in this.validators) {
-            const type = this.elements[0].type;
-
-            if ((type === 'checkbox' || type === 'radio') && validator_name === 'notEmpty') {
-                let at_least_one_checked = false;
-
-                this.elements.forEach(el => {
-                    if (el.checked === true) {
-                        at_least_one_checked = true;
-                    }
-                });
-
-                if (!at_least_one_checked) {
-                    error = this.validators[validator_name];
-                }
-            } else if (type === 'text' || type === 'email' || type === 'textarea') {
-                this.elements.forEach(el => {
-                    const { value, minLength, maxLength, name, required } = el;
-
-                    if (value.length > 0 && validator_name === 'stringLength') {
-                        if (!validators.string_length(value, {
-                            min: minLength,
-                            max: maxLength
-                        })) {
-                            error = this.validators[validator_name];
-                        }
-                    } else if (required === true && validator_name === 'notEmpty') {
-                        if (!validators.not_empty(value)) {
-                            error = this.validators[validator_name];
-                        }
-                    }
-                })
-            }
-        }
-
-        if (display_error) {
-            this.update_error(error);
-        }
-
-        return error === null;
-    }
-
-    update_error(error) {
-        let last = this.elements.length === 0
-            ? this.elements[0]
-            : this.elements[this.elements.length - 1];
-        let next_el = this.validators.container
-            ? this.validators.container.nextSibling
-            : last.nextElementSibling;
-
-        if (error) {
-            if (!next_el || (next_el && !next_el.classList.contains('fv_error'))) {
-                next_el = document.createElement('div');
-                next_el.classList.add('fv_error');
-
-                if (this.validators.container) {
-                    this.validators.container.insertAdjacentElement('afterend', next_el);
-                } else {
-                    last.insertAdjacentElement('afterend', next_el);
-                }
-            }
-            
-            next_el.innerHTML = error;
-            next_el.classList.add('active');
-            last.classList.add('border_warning');
-        } else {
-            if (next_el && next_el.classList && next_el.classList.contains('fv_error')) {
-                // next_el.remove();
-                next_el.classList.remove('active');
-                last.classList.remove('border_warning');
-            }
-        }
+    get name() {
+        return this.element[0].name
     }
 }
 
-const input_event = (form, fields, current_field) => {
-    let is_form_valid = true;
-    let detail = {}
+const check_form = fv => {
+    // if (this.check_timeout) {
+    //     clearTimeout(this.check_timeout);
+    // }
 
-    if (current_field.validate()) {
-        if (Object.keys(fields).length == 1) {
-            detail[current_field.elements[0].name] = current_field.get_value();
-        } else {
-            for (const f_name in fields) {
-                const f = fields[f_name];
-
-                if (f !== current_field) {
-                    if (!f.validate(false)) {
-                        is_form_valid = false;
-                        return;
-                    }
-
-                    detail[current_field.elements[0].name] = f.get_value();
-                }
-            }
-        }
-    } else {
-        is_form_valid = false;
-    }
-
-    if (is_form_valid) {
-        form.dispatchEvent(new CustomEvent('valid', {
-            detail
-        }));
-    } else {
-        form.dispatchEvent(new CustomEvent('invalid', {
-            detail
-        }));
-    }
+    // this.check_timeout = setTimeout(() => {
+        fv.check(false)
+    // }, 50);
 }
 
-export default class {
+function input_event(fv, field) {
+    for (const validator of field.validators) {
+        if (!validator.validate(field)) {
+            fv.form.dispatchEvent(new CustomEvent('invalid'));
+
+            break;
+        }
+    }
+
+    check_form(fv);
+}
+
+const get_detail = fields => {
+    let detail = {};
+    
+    // Extract fields value
+    fields.forEach(field => {
+        detail[field.name] = field.value;
+    });
+
+    return detail;
+}
+
+export default class FormValidation {
     constructor(form, options = {}) {
-        this.el = form;
-        this.fields = {};
+        this.form = form;
+        this.fields = new Map();
+        this.check_timeout = null;
 
         if (options.fields) {
-            for (const field_name in options.fields) {
-                let field = new Field(
-                    form.querySelectorAll(`[name="${field_name}"]`),
-                    options.fields[field_name].validators || {}
-                );
+            for (const [key, value] of Object.entries(options.fields)) {
+                const validators = value.validators;
 
-                this.fields[field_name] = field;
+                // If it's a group of inputs
+                if (key.endsWith('[]')) {
+                    this.fields.set(key, new GroupField(
+                        form.querySelectorAll(`[name=${key.substr(0, key.length - 2)}]`),
+                        validators,
+                        value.container
+                    ));
+                // Overwise it's a simple input
+                } else {
+                    this.fields.set(key, new Field(
+                        form.querySelector(`[name=${key}]`),
+                        validators
+                    ));
+                }
             }
-        } else {
-            const fields = form.querySelectorAll('input, textarea, select');
-
-            fields.forEach(native_field => {
-                let validators = {};
-                let { minLength, maxLength, required, dataset } = native_field;
-
-                if ((minLength !== -1 || maxLength !== -1)) {
-                    validators.stringLength = dataset['fvString_lengthMessage'] || `Cannot be under ${minLength} characters`;
-                }
-
-                if (required === true) {
-                    validators.notEmpty = dataset['fvNot_emptyMessage'] || 'Cannot be empty';
-                }
-
-                let field = new Field(
-                    [native_field],
-                    validators
-                );
-
-                this.fields[native_field.name] = field;
-            })
         }
-    
-        this.handle_fields()
 
-        const submit = form.querySelector('[type="submit"]');
+        const t = this;
 
-        if (submit) {
-            submit.addEventListener('click', e => {
+        // Attach for each fields input event
+        this.fields.forEach(field => {
+            if (field instanceof GroupField) {
+                field.element.forEach(el => {
+                    el.addEventListener('input', () => {
+                        input_event(t, field)
+                    });
+                });
+            } else {
+                field.element.addEventListener('input', () => {
+                    input_event(t, field)
+                });
+            }
+        });
+
+        const submit_btn = form.querySelector('button[type=submit]');
+
+        if (submit_btn) {
+            submit_btn.addEventListener('click', e => {
                 e.preventDefault();
-        
-                let valid = true;
-                let detail = {};
-
-                for (const field_name in this.fields) {
-                    const field = this.fields[field_name];
-
-                    if (!field.validate(false)) {
-                        valid = false;
-                        return
-                    }
-        
-                    detail[field.elements[0].name] = field.get_value() || null;
+    
+                if (this.check(true)) {
+                    form.dispatchEvent(new CustomEvent('send', { detail: get_detail(this.fields) }));
                 }
-        
-                if (valid) {
-                    form.dispatchEvent(new CustomEvent('send', {
-                        detail
-                    }))
-                }
-            })
+            });
         }
     }
 
-    handle_fields() {
-        for (const field_name in this.fields) {
-            const field = this.fields[field_name];
+    is_valid(handle_errors = false) {
+        let is_valid = true;
 
-            field.elements.forEach(el => {
-                el.addEventListener('input', () => {
-                    input_event(this.el, this.fields, field)
-                })
-            })
+        [...this.fields]
+            .filter(([_, value]) => value.is_valid === false)
+            .forEach(([_, value]) => {
+                // Temporarily deactivates display management errors
+                if (!handle_errors) {
+                    value.error_handling_disabled = true;
+                }
+
+                for (const validator of value.validators) {
+                    if (!validator.validate(value)) {
+                        if (!handle_errors) {
+                            value.error_handling_disabled = false;
+                        }
+
+                        is_valid = false;
+                        break;
+                    }
+                }
+
+                if (!handle_errors) {
+                    value.error_handling_disabled = false;
+                }
+            });
+
+        return is_valid;
+    }
+
+    check(handle_errors = false) {
+        if (this.is_valid(handle_errors)) {
+            this.form.dispatchEvent(new CustomEvent('valid', { detail: get_detail(this.fields) }));
+
+            return true
         }
 
-        // this.fields.forEach(custom_field => {
-        //     custom_field.elements.forEach(el => {
-        //         el.addEventListener('input', () => {
-        //             let is_form_valid = true;
-        //             let detail = {}
+        this.form.dispatchEvent(new CustomEvent('invalid'));
 
-        //             if (custom_field.validate()) {
-        //                 if (this.fields.length == 1) {
-        //                     detail[custom_field.elements[0].name] = custom_field.get_value();
-        //                 } else {
-        //                     this.fields.forEach(f => {
-        //                         if (f !== custom_field) {
-        //                             if (!f.validate(false)) {
-        //                                 is_form_valid = false;
-        //                                 return;
-        //                             }
-    
-        //                             detail[custom_field.elements[0].name] = custom_field.get_value();
-        //                         }
-        //                     })
-        //                 }
-        //             } else {
-        //                 is_form_valid = false;
-        //             }
-
-        //             if (is_form_valid) {
-        //                 this.el.dispatchEvent(new CustomEvent('valid', {
-        //                     detail
-        //                 }));
-        //             } else {
-        //                 this.el.dispatchEvent(new CustomEvent('invalid', {
-        //                     detail
-        //                 }));
-        //             }
-        //         })
-        //     })
-        // })
+        return false
     }
 
     on(event_name, callback) {
-        this.el.addEventListener(event_name, callback)
+        this.form.addEventListener(event_name, callback)
 
         return this
     }
 
-    add_field(field) {
+    /**
+     * Add a field to be handle by the form
+     * @param {string|HTMLElement} field String selector of input or HTMLElement
+     * @param {Object} options Options of the field
+     */
+    add_field(field, options = {}) {
         const type = typeof field;
         let native_field = null;
 
         if (type === 'object' && field instanceof HTMLElement) {
             native_field = field;
         } else if (type === 'string') {
-            const f = this.el.querySelector(`[name="${field}"]`);
+            if (field.endsWith('[]')) {
+                this.fields.set(field, new GroupField(
+                    this.form.querySelectorAll(`[name=${field.substr(0, field.length - 2)}]`),
+                    options.validators,
+                    options.container
+                ))
 
-            if (f) {
-                native_field = f;
+                return;
+            }
+            
+            const input = this.form.querySelector(`[name="${field}"]`);
+
+            if (input) {
+                native_field = input;
             }
         } else {
-            throw 'Incorrect field specified';
+            throw new TypeError('Incorrect field specified');
         }
 
-        let validators = {};
-        let { minLength, maxLength, required, dataset } = native_field;
-
-        if ((minLength !== -1 || maxLength !== -1)) {
-            validators.stringLength = dataset['fvString_lengthMessage'] || `Cannot be under ${minLength} characters`;
-        }
-
-        if (required === true) {
-            validators.notEmpty = dataset['fvNot_emptyMessage'] || 'Cannot be empty';
-        }
-
-        this.fields[native_field.name] = new Field(
-            [native_field],
-            validators
-        );
+        let new_field = new Field(native_field, options.validators);
+        this.fields.set(native_field.name, new_field);
+        native_field.addEventListener('input', () => {
+            input_event(this, new_field)
+        });
     }
 
-    remove_field(field_name) {
-        const field = this.fields[field_name];
-
-        if (field) {
-            field.elements.forEach(el => {
-                // TODO : make sure element is input or textarea
-                el.value = '';
-                el.removeEventListener('input', input_event);
-            });
-            delete this.fields[field_name];
+    /**
+     * Remove field from form validation
+     * @param {string|HTMLElement} field 
+     */
+    remove_field(field) {
+        if (!this.fields.has(
+            field instanceof HTMLElement
+                ? field.name
+                : field
+        )) {
+            return;
         }
-    //     this.fields.forEach((field, index) => {
-    //         if (field.name === field_name) {
-    //             field.removeEventListener('input', input_event);
 
-    //             let error = field.nextElementSibling;
+        const type = typeof field;
+        let internal_field = null;
 
-    //             if (error && error.classList.contains('fv_error')) {
-    //                 error.remove();
-    //                 field.classList.remove('border-yellow-500');
-    //             }
+        if (type === 'object' && field instanceof HTMLElement) {
+            internal_field = this.fields.get(field.name);
+        } else if (type === 'string') {
+            internal_field = this.fields.get(field);
+        } else {
+            throw new TypeError('Incorrect field specified');
+        }
 
-    //             this.fields.splice(index, 1);
-    //             return;
-    //         }
-    //     })
+        // TODO : finish implementation
+        if (internal_field instanceof GroupField) {
+            internal_field.element.forEach(el => {
+                el.removeEventListener('input', input_event)
+            });
+
+            // If field displayed an error remove it
+            if (internal_field.is_valid === false) {
+                if (internal_field.container) {
+                    const error = internal_field.container.nextElementSibling;
+
+                    if (error && error.classList && error.classList.contains('fv_error')) {
+                        error.remove()
+                    }
+                }
+            }
+        } else {
+            internal_field.element.removeEventListener('input', input_event);
+        }
+
+        this.fields.delete(field);
     }
 }
