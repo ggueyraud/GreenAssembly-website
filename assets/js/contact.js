@@ -1,4 +1,4 @@
-import Form, { Required, StringLength, Regex } from './components/form';
+import Form, { Required, StringLength, Regex } from 'formvalidation';
 // import chk from './components/checkbox';
 import Carousel from 'carousel';
 import { post } from './utils/http';
