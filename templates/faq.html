@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block head %}
+    {% match description %}
+        {% when Some with (description) %}
+            <meta name="description" content="{{ description }}" />
+        {% when None %}
+    {% endmatch %}
+
+    <link rel="stylesheet" href="/css/pages/faq.css" />
+{% endblock %}
+
+{% block banner %}
+    <header id="banner">
+        <h1>FAQ</h1>
+        <h2>Titre</h2>
+    </header>
+{% endblock %}
+
+{% block content %}
+    <div id="intro">
+        <section>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</section>
+        <section>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</section>
+    </div>
+    <div class="questions">
+        <div class="question-category">
+            <h3 class="faq-title">Titre</h3>
+            <div class="sections">
+                <section>
+                    <div class="question">La question un peu plus longue que la largeur de l'écran donne quoi concrètement?</div>
+                    <div class="unroll-button" onclick="unroll_question(this)"></div>
+                    <div class="response">
+                        Réponse
+                    </div>
+                </section>
+                <section>
+                    <div class="question">La question 2 ?</div>
+                    <div class="unroll-button" onclick="unroll_question(this)"></div>
+                    <div class="response">
+                        Réponse 2
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <div class="questions">
+        <div class="question-category">
+            <h3 class="faq-title">Titre</h3>
+            <div class="sections">
+                <section>
+                    <div class="question">La question un peu plus longue que la largeur de l'écran donne quoi concrètement?</div>
+                    <div class="unroll-button" onclick="unroll_question(this)"></div>
+                    <div class="response">
+                        Réponse
+                    </div>
+                </section>
+                <section>
+                    <div class="question">La question 2 ?</div>
+                    <div class="unroll-button" onclick="unroll_question(this)"></div>
+                    <div class="response">
+                        Réponse 2
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function unroll_question(target) {
+            target.classList.toggle('active');
+        }
+    </script>
+{% endblock %}

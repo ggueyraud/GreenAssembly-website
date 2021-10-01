@@ -9,6 +9,7 @@ pub fn config(cfg: &mut web::ServiceConfig) {
         .service(controllers::agency)
         .service(controllers::portfolio)
         .service(controllers::legals)
+        .service(controllers::faq)
         .service(controllers::sitemap)
         .service(controllers::robots);
 }

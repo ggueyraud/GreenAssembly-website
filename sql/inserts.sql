@@ -12,4 +12,5 @@ INSERT INTO pages (title, identifier, description, is_seo) VALUES
 ('Création de site OnePage', 'creation_site_onepage', 'Démarquez-vous avec un site OnePage à l''image de votre entreprise. Conseils et développement sur-mesure, éco-conception web, optez pour la performance.', true),
 ('Portfolio', 'portfolio', 'Site e-commerce, site vitrine, identité visuelle, motion design. Découvrez les projets originaux GreenAssembly – Agence digitale spécialisée éco-conception web.', true),
 ('Création de site Vitrine', 'creation_site_vitrine', 'Gagnez en visibilité et attirez des contacts qualifiés avec un site vitrine éco-conçu, design et performant 100% personnalisé. Développement sur-mesure et SEO.', true),
-('Création de site-web', 'creation_site_web', 'Démarquez-vous avec un site sur-mesure à votre image. Refonte ou création de site vitrine et e-commerce, faites le choix de la performance et de la singularité.', true);
+('Création de site-web', 'creation_site_web', 'Démarquez-vous avec un site sur-mesure à votre image. Refonte ou création de site vitrine et e-commerce, faites le choix de la performance et de la singularité.', true),
+('FAQ', 'faq', 'Description à remplir', true);
