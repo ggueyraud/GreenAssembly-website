@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block head %}
+    {% match description %}
+        {% when Some with (description) %}
+            <meta name="description" content="{{ description }}" />
+        {% when None %}
+    {% endmatch %}
+
+    <link rel="stylesheet" href="/css/pages/blog/view_article.css" />
+{% endblock %}
+
+{% block banner %}
+    <header id="banner">
+        <h1>{{ title }}</h1>
+        <img src="{{ image_path }}" alt="">
+    </header>
+{% endblock %}
+
+{% block content %}
+    Article content
+{% endblock %}
