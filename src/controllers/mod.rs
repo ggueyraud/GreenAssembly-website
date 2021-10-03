@@ -117,6 +117,28 @@ async fn legals(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
     HttpResponse::InternalServerError().finish()
 }
 
+#[get("/faq")]
+async fn faq(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
+    if let Ok(page) = services::pages::get(&pool, "faq").await {
+        crate::controllers::metrics::add(&req, &pool, page.id).await;
+
+        #[derive(Template)]
+        #[template(path = "faq.html")]
+        struct Legals {
+            title: String,
+            description: Option<String>,
+        }
+
+        let page = Legals { title: page.title, description: page.description };
+
+        if let Ok(content) = page.render() {
+            return HttpResponse::Ok().content_type("text/html").body(content);
+        }
+    }
+
+    HttpResponse::InternalServerError().finish()
+}
+
 #[get("/sitemap.xml")]
 pub async fn sitemap() -> HttpResponse {
     HttpResponse::Ok()

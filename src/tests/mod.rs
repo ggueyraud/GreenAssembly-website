@@ -69,6 +69,21 @@ mod tests {
     }
 
     #[actix_rt::test]
+    async fn integration_test_faq() {
+        dotenv().ok();
+
+        let pool = create_pool().await.unwrap();
+        let mut app =
+            test::init_service(App::new().data(pool.clone()).service(controllers::faq)).await;
+        let resp = test::TestRequest::get()
+            .uri("/faq")
+            .send_request(&mut app)
+            .await;
+
+        assert!(resp.status().is_success());
+    }
+
+    #[actix_rt::test]
     async fn integration_test_sitemap() {
         dotenv().ok();
 

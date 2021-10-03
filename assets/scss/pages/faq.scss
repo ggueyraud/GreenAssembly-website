@@ -1,0 +1,126 @@
+@use 'style-box/abstracts/mixins/breakpoints';
+@import '../layout/_banner.scss';
+@import '../base/typography';
+@import 'style-box/base/_text.scss';
+
+
+header#banner {
+    height: auto;
+    flex-direction: column;
+    margin-bottom: 2rem;
+
+    h1 {
+        margin: 2rem 0;
+    }
+    h2 {
+        @extend .title;
+    }
+
+    @include breakpoints.xl {
+        margin-top: 3rem;
+        margin-bottom: 6rem;
+
+        h1 {
+            margin: 4rem 0;
+        }
+    }
+}
+
+#intro {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    line-height: 1.2rem;
+
+    @include breakpoints.xl {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 20%;
+
+        width: 90%;
+        margin: auto;
+    }
+}
+.questions {
+    .question-category {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 3rem;
+
+        section {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            grid-template-rows: auto 1fr;
+
+            padding: 1rem 0;
+            border-bottom: 1px solid #efefef;
+            
+            .question {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                
+                font-weight: 600;
+            }
+            .response {
+                height: 0;
+                margin-top: 1rem;
+                transform: scale3d(1, 0, 1);
+
+                transition: transform 0.2s ease-in-out,
+                            height 0.25s ease-in-out;
+            }
+            
+            .unroll-button::before {
+                @extend .text_success;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+
+                content: '+';
+                width: 40px;
+                height: 40px;
+                font-size: 4rem;
+                overflow: hidden;
+                cursor: pointer;
+            }
+            .unroll-button.active::before {
+                content: '-';
+                font-size: 5rem;
+            }
+            .unroll-button.active + .response {
+                height: 100%;
+                transform: scale3d(1, 1, 1);
+                transition: transform 75ms 0.2s ease-in-out,
+                            height 0.25s ease-in-out;
+            }
+        }
+
+        section:last-child {
+            border: 0;
+        }
+
+        .faq-title {
+            @extend .text_success;
+
+            @include breakpoints.xl {
+                font-size: 2.25rem;
+            }
+        }
+
+        @include breakpoints.xl {
+            display: grid;
+            grid-template-columns: 0.75fr 2.25fr;
+
+            width: 75%;
+            margin-top: 8rem;
+            margin-left: 10%;
+
+            .question {
+                font-size: 1.2em;
+            }
+        }
+    }
+}
