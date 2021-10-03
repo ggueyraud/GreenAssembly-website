@@ -3,6 +3,7 @@ use actix_web::web;
 
 pub mod contact;
 pub mod website;
+pub mod blog;
 
 pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.service(controllers::index)

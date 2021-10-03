@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block head %}
+    {% match description %}
+        {% when Some with (description) %}
+            <meta name="description" content="{{ description }}" />
+        {% when None %}
+    {% endmatch %}
+
+    <link rel="stylesheet" href="/css/pages/blog/index.css" />
+{% endblock %}
+
+{% block banner %}
+    <header id="banner">
+        <h1>Blog</h1>
+        <h2>La <span class="banner__green-word">green</span> actu</h2>
+    </header>
+{% endblock %}
+
+{% block content %}
+    <div id="intro">
+        <section>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</section>
+        <section>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</section>
+    
+
+        <div class="read_more">
+            <a o-follow href="#">
+                <span>Lire plus</span>
+
+                <img src="/favicon.svg" width="48" height="30" alt="GreenAssembly Leaf" />
+            </a>
+        </div>
+    </div>
+    <div class="filters">
+        <div class="filters__filter filters__filter--active" onclick="change_filter(this, 'Tout')">Tout</div>
+        <div class="filters__filter" onclick="change_filter(this, 'Filtre 1')">Filtre 1</div>
+        <div class="filters__filter" onclick="change_filter(this, 'Filtre 2')">Filtre 2</div>
+        <div class="filters__filter" onclick="change_filter(this, 'Filtre 3')">Filtre 3</div>
+    </div>
+    <div class="articles">
+        <article>
+            <img src="/img/showcase.jpg" class="article__image" alt="Article illustration">
+            <h3 class="article__title">
+                Titre de l'article
+            </h3>
+            <div class="article__date">00/00/2021</div>
+            <div class="article__tags">
+                <div class="tag" style="background-color: cyan;">Tag 1</div>
+                <div class="tag" style="background-color: orange;">Tag 2</div>
+                <div class="tag" style="background-color: palegreen;">Tag 3</div>
+            </div>
+            <div class="article__content">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </div>
+            <div class="read_more">
+                <a o-follow href="/blog/ID_OU_TITRE">
+                    <span>Lire plus</span>
+    
+                    <img src="/favicon.svg" width="48" height="30" alt="GreenAssembly Leaf" />
+                </a>
+            </div>
+        </article>
+        <article>
+            <img src="/img/showcase.jpg" class="article__image" alt="Article illustration">
+            <h3 class="article__title">
+                Titre de l'article
+            </h3>
+            <div class="article__date">00/00/2021</div>
+            <div class="article__tags">
+                <div class="tag" style="background-color: cyan;">Tag 1</div>
+                <div class="tag" style="background-color: orange;">Tag 2</div>
+                <div class="tag" style="background-color: palegreen;">Tag 3</div>
+            </div>
+            <div class="article__content">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </div>
+            <div class="read_more">
+                <a o-follow href="/blog/ID_OU_TITRE">
+                    <span>Lire plus</span>
+    
+                    <img src="/favicon.svg" width="48" height="30" alt="GreenAssembly Leaf" />
+                </a>
+            </div>
+        </article>
+        <article>
+            <img src="/img/showcase.jpg" class="article__image" alt="Article illustration">
+            <h3 class="article__title">
+                Titre de l'article
+            </h3>
+            <div class="article__date">00/00/2021</div>
+            <div class="article__tags">
+                <div class="tag" style="background-color: cyan;">Tag 1</div>
+                <div class="tag" style="background-color: orange;">Tag 2</div>
+                <div class="tag" style="background-color: palegreen;">Tag 3</div>
+            </div>
+            <div class="article__content">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </div>
+            <div class="read_more">
+                <a o-follow href="/blog/ID_OU_TITRE">
+                    <span>Lire plus</span>
+    
+                    <img src="/favicon.svg" width="48" height="30" alt="GreenAssembly Leaf" />
+                </a>
+            </div>
+        </article>
+        <article>
+            <img src="/img/showcase.jpg" class="article__image" alt="Article illustration">
+            <h3 class="article__title">
+                Titre de l'article
+            </h3>
+            <div class="article__date">00/00/2021</div>
+            <div class="article__tags">
+                <div class="tag" style="background-color: cyan;">Tag 1</div>
+                <div class="tag" style="background-color: orange;">Tag 2</div>
+                <div class="tag" style="background-color: palegreen;">Tag 3</div>
+            </div>
+            <div class="article__content">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </div>
+            <div class="read_more">
+                <a o-follow href="/blog/ID_OU_TITRE">
+                    <span>Lire plus</span>
+    
+                    <img src="/favicon.svg" width="48" height="30" alt="GreenAssembly Leaf" />
+                </a>
+            </div>
+        </article>
+    </div>
+    <script type="text/javascript">
+        function change_filter(target, filter) {
+            let precedent_filter = document.querySelector('.filters__filter--active');
+            if(precedent_filter) {
+                precedent_filter.classList.remove('filters__filter--active');
+            }
+            target.classList.add('filters__filter--active');
+            
+            // Do some stuff here to update the articles list
+        }
+    </script>
+{% endblock %}

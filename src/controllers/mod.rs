@@ -9,6 +9,7 @@ pub mod employees;
 pub mod metrics;
 pub mod users;
 pub mod website;
+pub mod blog;
 
 #[get("/")]
 pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
