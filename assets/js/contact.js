@@ -270,7 +270,7 @@ const on_mount = () => {
                     }
                 })
                 .catch(() => {
-                    document.querySelector('#error').classList.remove('hidden');
+                    server_error.classList.remove('hidden');
                     carousel.calculate_height()
                 })
         });
