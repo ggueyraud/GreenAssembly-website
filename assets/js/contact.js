@@ -265,7 +265,7 @@ const on_mount = () => {
             })
                 .then(res => {
                     if (res.ok) {
-                        document.querySelector("#success").classList.remove('hidden');
+                        document.querySelector("#success").style.setProperty('display', 'block');
                         document.querySelector('.stepper').classList.add('hidden');
                     }
                 })
