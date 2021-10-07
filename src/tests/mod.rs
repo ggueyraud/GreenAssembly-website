@@ -84,6 +84,35 @@ mod tests {
     }
 
     #[actix_rt::test]
+    async fn integration_test_blog() {
+        dotenv().ok();
+
+        let pool = create_pool().await.unwrap();
+        let mut app =
+            test::init_service(App::new().data(pool.clone()).service(controllers::blog::index)).await;
+        let resp = test::TestRequest::get()
+            .uri("/blog")
+            .send_request(&mut app)
+            .await;
+
+        assert!(resp.status().is_success());
+    }
+    #[actix_rt::test]
+    async fn integration_test_blog_get_article() {
+        dotenv().ok();
+
+        let pool = create_pool().await.unwrap();
+        let mut app =
+            test::init_service(App::new().data(pool.clone()).service(controllers::blog::get_article)).await;
+        let resp = test::TestRequest::get()
+            .uri("/blog/articles/testes-1")
+            .send_request(&mut app)
+            .await;
+
+        assert!(resp.status().is_success());
+    }
+
+    #[actix_rt::test]
     async fn integration_test_sitemap() {
         dotenv().ok();
 
