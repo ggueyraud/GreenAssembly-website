@@ -178,22 +178,19 @@ async fn main() -> std::io::Result<()> {
                     #[cfg(not(debug_assertions))]
                     headers.insert(
                         header::CONTENT_SECURITY_POLICY,
-                        HeaderValue::from_static("script-src 'self'")
+                        HeaderValue::from_static("script-src 'self'"),
                     );
 
-                    headers.insert(
-                        header::X_FRAME_OPTIONS,
-                        HeaderValue::from_static("deny")
-                    );
+                    headers.insert(header::X_FRAME_OPTIONS, HeaderValue::from_static("deny"));
 
                     headers.insert(
                         header::X_CONTENT_TYPE_OPTIONS,
-                        HeaderValue::from_static("nosniff")
+                        HeaderValue::from_static("nosniff"),
                     );
 
                     headers.insert(
                         header::X_XSS_PROTECTION,
-                        HeaderValue::from_static("1; mode=block")
+                        HeaderValue::from_static("1; mode=block"),
                     );
 
                     Ok(res)
@@ -202,7 +199,7 @@ async fn main() -> std::io::Result<()> {
             .configure(routes::website::config)
             .configure(routes::config)
             .configure(routes::contact::config)
-            .configure(routes::blog::config)
+            // .configure(routes::blog::config)
             .service(serve_upload_file)
             .service(serve_public_file)
     })

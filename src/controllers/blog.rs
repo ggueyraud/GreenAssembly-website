@@ -29,7 +29,11 @@ pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
     HttpResponse::InternalServerError().finish()
 }
 #[get("/articles/{name}-{id}")]
-pub async fn get_article(req: HttpRequest, pool: web::Data<PgPool>, path: web::Path<(String, i32)>) -> HttpResponse {
+pub async fn get_article(
+    req: HttpRequest,
+    pool: web::Data<PgPool>,
+    path: web::Path<(String, i32)>,
+) -> HttpResponse {
     let (article_name, article_id) = path.into_inner();
 
     // data get by the bdd

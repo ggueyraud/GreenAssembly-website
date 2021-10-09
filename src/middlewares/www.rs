@@ -50,7 +50,10 @@ where
         if req.connection_info().host() == "www.greenassembly.fr" {
             Either::Right(ok(req.into_response(
                 HttpResponse::MovedPermanently()
-                    .header(http::header::LOCATION, format!("https://greenassembly.fr{}", path))
+                    .header(
+                        http::header::LOCATION,
+                        format!("https://greenassembly.fr{}", path),
+                    )
                     .header(http::header::REFERER, format!("https://{}{}", host, path))
                     .finish()
                     .into_body(),
