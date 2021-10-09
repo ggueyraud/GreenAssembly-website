@@ -8,6 +8,7 @@
 @import 'style-box/base/grid';
 @import 'style-box/base/margin';
 @import 'style-box/base/typography';
+@import 'style-box/base/space';
 
 // @import 'base/_placement.scss';
 @import 'style-box/base/_text.scss';
@@ -58,7 +59,7 @@ html {
 }
 
 a {
-    text-decoration: none;
+    // text-decoration: none;
     color: inherit;
 }
 
