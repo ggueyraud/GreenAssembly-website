@@ -67,7 +67,7 @@ CREATE TABLE faq_answers (
         REFERENCES faq_categories (id)
         ON DELETE CASCADE,
     question VARCHAR(120) NOT NULL,
-    answer TEXT NOT NULL
-    "order" SMALLINT NOT NULL,
-    UNIQUE (id, "order")
+    answer TEXT NOT NULL,
+    "order" SMALLINT NOT NULL
+    -- UNIQUE (category_id, "order")
 );

@@ -37,6 +37,11 @@ css = "pages/404.css"
 content = ["templates/404.html"]
 
 [[purgecss]]
+css = "pages/faq.css"
+content = ["templates/faq.html"]
+safelist = ["aria-expanded"]
+
+[[purgecss]]
 css = "pages/website_creation.css"
 content = ["webp_supportted", "templates/website_creation.html", ".build/production/js/global.js", ".build/production/js/website_creation.js"]
 safelist = ["carousel__pagination__item", "carousel__pagination__item--current", "carousel__pagination__item index", "carousel__pagination__item descr"]

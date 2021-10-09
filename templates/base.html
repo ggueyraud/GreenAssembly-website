@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" style="overflow: hidden">
+<html lang="fr" style="overflow: hidden" {% block html %}{% endblock %}>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
@@ -61,7 +61,7 @@
                 <a
                     o-follow
                     o-preload-once
-                    href="/agence"
+                    href="/agence-digitale-verte"
                     class="order_3"
                 >
                     <div>Agence</div>
@@ -148,15 +148,26 @@
                     </svg>
                 </a>
             </div>
+
+            <div class="order_5 text_center md_col_span_3 space_x_4">
+                <a
+                    o-follow
+                    o-preload-once
+                    href="/faq"
+                    class="uppercase font_bold"
+                >
+                    FAQ
+                </a>
+                <a
+                    o-follow
+                    o-preload-once
+                    href="/mentions-legales"
+                    class="uppercase font_bold"
+                >
+                    Mentions légales
+                </a>
+            </div>
     
-            <a
-                o-follow
-                o-preload-once
-                href="/mentions-legales"
-                class="uppercase font_bold order_5 text_center md_col_span_3"
-            >
-                Mentions légales
-            </a>
         </footer>
     </div>
 </body>

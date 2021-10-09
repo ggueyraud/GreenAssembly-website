@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block html %} itemscope itemtype="https://schema.org/FAQPage"{% endblock %}
+
 {% block title %}{{ title }}{% endblock %}
 
 {% block head %}
@@ -10,63 +12,62 @@
     {% endmatch %}
 
     <link rel="stylesheet" href="/css/pages/faq.css" />
+
+    <script src="/js/faq.js" async></script>
+    {#<script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+                {% for category in categories %}
+                    {% for question in category.questions %}
+                        {
+                            "@type": "Question",
+                            "name": "{{ question.question }}",
+                            "acceptedAnswer": {
+                                "@type": "Answer",
+                                "text": "{{ question.answer|safe }}"
+                            }
+                        },
+                    {% endfor %}
+                {% endfor %}
+            ]
+        }
+    </script>
+    #}
 {% endblock %}
 
 {% block banner %}
     <header id="banner">
         <h1>FAQ</h1>
-        <h2>Titre</h2>
     </header>
 {% endblock %}
 
 {% block content %}
-    <div id="intro">
-        <section>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</section>
-        <section>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</section>
-    </div>
-    <div class="questions">
-        <div class="questions-category">
-            <h3 class="questions-category__title">Titre</h3>
-            <div class="question-category__sections">
-                <section class="question-wrapper">
-                    <div class="question-wrapper__question">La question 1 ?</div>
-                    <div class="question-wrapper__unroll-button" onclick="unroll_question(this)"></div>
-                    <div class="question-wrapper__response">
-                        Réponse 1
+    <p>
+        Vous avez des questions pour la réalisation de votre projet ? Nous avons synthétisé <span class="font_bold">pour vous</span> les réponses aux questions fréquemment posées par nos clients à notre <b>agence digitale verte</b> spécialisée en <b>création de site internet</b>, <b>identité visuelle</b> et <b>motion design</b> !<br /><br />
+        En cas de questions complémentaires n'hésitez pas à nous le faire savoir en nous appelant au <a href="tel:+33650308591">06•50•30•85•91</a> ou en nous <a o-follow o-preload-once href="/contact">écrivant un message</a> !
+    </p>
+
+    {% for category in categories %}
+        <section class="category">
+            <header>
+                <h3>{{ category.name }}</h3>
+            </header>
+
+            {% for question in category.questions %}
+                <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                    <header role="button" aria-expanded="false">
+                        <h4 itemprop="name">{{ question.question }}</h4>
+                    </header>
+
+                    <div class="answer" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                        <div itemprop="text">
+                            {{ question.answer|safe }}
+                        </div>
                     </div>
-                </section>
-                <section class="question-wrapper">
-                    <div class="question-wrapper__question">La question 2 ?</div>
-                    <div class="question-wrapper__unroll-button" onclick="unroll_question(this)"></div>
-                    <div class="question-wrapper__response">
-                        Réponse 2
-                    </div>
-                </section>
-            </div>
-        </div>
-        <div class="questions-category">
-            <h3 class="questions-category__title">Titre</h3>
-            <div class="question-category__sections">
-                <section class="question-wrapper">
-                    <div class="question-wrapper__question">La question 1 ?</div>
-                    <div class="question-wrapper__unroll-button" onclick="unroll_question(this)"></div>
-                    <div class="question-wrapper__response">
-                        Réponse 1
-                    </div>
-                </section>
-                <section class="question-wrapper">
-                    <div class="question-wrapper__question">La question 2 ?</div>
-                    <div class="question-wrapper__unroll-button" onclick="unroll_question(this)"></div>
-                    <div class="question-wrapper__response">
-                        Réponse 2
-                    </div>
-                </section>
-            </div>
-        </div>
-    </div>
-    <script type="text/javascript">
-        function unroll_question(target) {
-            target.classList.toggle('active');
-        }
-    </script>
+                </article>
+            {% endfor %}
+        </section>
+    {% endfor %}
 {% endblock %}
