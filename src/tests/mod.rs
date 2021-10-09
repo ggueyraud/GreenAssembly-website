@@ -27,7 +27,7 @@ mod tests {
         let mut app =
             test::init_service(App::new().data(pool.clone()).service(controllers::agency)).await;
         let resp = test::TestRequest::get()
-            .uri("/agence")
+            .uri("/agence-digitale-verte")
             .send_request(&mut app)
             .await;
 
@@ -88,8 +88,12 @@ mod tests {
         dotenv().ok();
 
         let pool = create_pool().await.unwrap();
-        let mut app =
-            test::init_service(App::new().data(pool.clone()).service(controllers::blog::index)).await;
+        let mut app = test::init_service(
+            App::new()
+                .data(pool.clone())
+                .service(controllers::blog::index),
+        )
+        .await;
         let resp = test::TestRequest::get()
             .uri("/blog")
             .send_request(&mut app)
@@ -102,8 +106,12 @@ mod tests {
         dotenv().ok();
 
         let pool = create_pool().await.unwrap();
-        let mut app =
-            test::init_service(App::new().data(pool.clone()).service(controllers::blog::get_article)).await;
+        let mut app = test::init_service(
+            App::new()
+                .data(pool.clone())
+                .service(controllers::blog::get_article),
+        )
+        .await;
         let resp = test::TestRequest::get()
             .uri("/blog/articles/testes-1")
             .send_request(&mut app)

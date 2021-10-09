@@ -4,12 +4,12 @@ use actix_web::{get, web, HttpRequest, HttpResponse};
 use askama::Template;
 
 use sqlx::PgPool;
+pub mod blog;
 pub mod contact;
 pub mod employees;
 pub mod metrics;
 pub mod users;
 pub mod website;
-pub mod blog;
 
 #[get("/")]
 pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
@@ -36,7 +36,7 @@ pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
     HttpResponse::InternalServerError().finish()
 }
 
-#[get("/agence")]
+#[get("/agence-digitale-verte")]
 async fn agency(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
     match futures::join!(
         services::pages::get(&pool, "agence"),
@@ -108,7 +108,10 @@ async fn legals(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
             description: Option<String>,
         }
 
-        let page = Legals { title: page.title, description: page.description };
+        let page = Legals {
+            title: page.title,
+            description: page.description,
+        };
 
         if let Ok(content) = page.render() {
             return HttpResponse::Ok().content_type("text/html").body(content);
@@ -123,14 +126,39 @@ async fn faq(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
     if let Ok(page) = services::pages::get(&pool, "faq").await {
         crate::controllers::metrics::add(&req, &pool, page.id).await;
 
-        #[derive(Template)]
-        #[template(path = "faq.html")]
-        struct Legals {
-            title: String,
-            description: Option<String>,
+        struct Category {
+            id: i16,
+            name: String,
+            questions: Vec<services::faq::Answer>,
         }
 
-        let page = Legals { title: page.title, description: page.description };
+        let mut categories = services::faq::categories::get_all(&pool)
+            .await
+            .iter_mut()
+            .map(|category| Category {
+                id: category.id,
+                name: category.name.clone(),
+                questions: vec![],
+            })
+            .collect::<Vec<_>>();
+
+        for category in &mut categories {
+            category.questions = services::faq::answers::get_all(&pool, category.id).await;
+        }
+
+        #[derive(Template)]
+        #[template(path = "faq.html")]
+        struct FAQ {
+            title: String,
+            description: Option<String>,
+            categories: Vec<Category>,
+        }
+
+        let page = FAQ {
+            title: page.title,
+            description: page.description,
+            categories,
+        };
 
         if let Ok(content) = page.render() {
             return HttpResponse::Ok().content_type("text/html").body(content);
