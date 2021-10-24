@@ -11,7 +11,7 @@ pub fn config(cfg: &mut web::ServiceConfig) {
         .route(
             "/agence",
             web::get().to(|| {
-                HttpResponse::PermanentRedirect()
+                HttpResponse::MovedPermanently()
                     .header("Location", "/agence-digitale-verte")
                     .finish()
             }),
