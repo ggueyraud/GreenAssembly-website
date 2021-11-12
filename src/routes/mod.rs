@@ -1,5 +1,5 @@
 use crate::controllers;
-use actix_web::{web, HttpResponse};
+use actix_web::web;
 
 pub mod blog;
 pub mod contact;
@@ -8,14 +8,14 @@ pub mod website;
 pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.service(controllers::index)
         // Redirection old agency route to new route
-        .route(
-            "/agence",
-            web::get().to(|| {
-                HttpResponse::MovedPermanently()
-                    .header("Location", "/agence-digitale-verte")
-                    .finish()
-            }),
-        )
+        // .route(
+        //     "/agence",
+        //     web::get().to(|| {
+        //         HttpResponse::MovedPermanently()
+        //             .header("Location", "/agence-digitale-verte")
+        //             .finish()
+        //     }),
+        // )
         .service(controllers::agency)
         .service(controllers::portfolio)
         .service(controllers::legals)

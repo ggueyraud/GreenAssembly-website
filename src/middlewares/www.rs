@@ -43,9 +43,14 @@ where
     }
 
     fn call(&mut self, req: ServiceRequest) -> Self::Future {
-        let path = req.path().to_string();
+        let mut path = req.path().to_string();
         let host = req.connection_info().host().to_string();
         let uri = req.uri().to_string();
+
+        match path.as_str() {
+            "/agence" => path = String::from("/agence-digitale-verte"),
+            _ => ()
+        };
 
         if req.connection_info().host() == "www.greenassembly.fr" {
             Either::Right(ok(req.into_response(
