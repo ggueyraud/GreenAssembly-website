@@ -73,7 +73,7 @@
             <div class="carousel">
                 <div class="carousel__wrapper">
                     {% for employee in employees %}
-                        <div class="carousel__wrapper__item">
+                        <div itemscope itemtype="https://schema.org/Person" class="carousel__wrapper__item">
                             {{ employee|safe }}
                         </div>
                     {% endfor %}
