@@ -6,14 +6,15 @@
         alt="{{ fullname }}"
         width="350"
         height="350"
+        itemprop="image"
     />
 </picture>
 
 <figure>
     <div class="about">
-        <figcaption>{{ fullname }}</figcaption>
+        <figcaption itemprop="name">{{ fullname }}</figcaption>
 
-        {{ position_held }}
+        <span itemprop="jobTitle">{{ position_held }}</span>
     </div>
 
     {% match description %}
