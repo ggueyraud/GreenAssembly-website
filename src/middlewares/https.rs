@@ -57,22 +57,37 @@ where
     }
 
     fn call(&mut self, req: ServiceRequest) -> Self::Future {
-        if req.connection_info().scheme() == "https" {
-            Either::Left(self.service.call(req))
-        } else {
-            let host = req.connection_info().host().to_owned();
-            let uri = req.uri().to_owned();
-            let mut url = format!("https://{}{}", host, uri);
-            for (s1, s2) in self.replacements.iter() {
-                url = url.replace(s1, s2);
+        let path = req.path().to_string();
+        let host = req.connection_info().host().to_string();
+        let uri = req.uri().to_owned();
+
+        match path.as_str() {
+            "/agence" => {
+                Either::Right(ok(req.into_response(
+                    HttpResponse::MovedPermanently()
+                        .header(http::header::LOCATION, "https://greenassembly.fr/agence-digitale-verte")
+                        .header(http::header::REFERER, format!("http://{}{}", host, uri))
+                        .finish()
+                        .into_body(),
+                )))
+            },
+            _ => {
+                if req.connection_info().scheme() == "https" {
+                    Either::Left(self.service.call(req))
+                } else {
+                    let mut url = format!("https://{}{}", host, uri);
+                    for (s1, s2) in self.replacements.iter() {
+                        url = url.replace(s1, s2);
+                    }
+                    Either::Right(ok(req.into_response(
+                        HttpResponse::MovedPermanently()
+                            .header(http::header::LOCATION, url)
+                            .header(http::header::REFERER, format!("http://{}{}", host, uri))
+                            .finish()
+                            .into_body(),
+                    )))
+                }
             }
-            Either::Right(ok(req.into_response(
-                HttpResponse::MovedPermanently()
-                    .header(http::header::LOCATION, url)
-                    .header(http::header::REFERER, format!("http://{}{}", host, uri))
-                    .finish()
-                    .into_body(),
-            )))
         }
     }
 }

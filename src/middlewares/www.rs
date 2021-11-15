@@ -45,7 +45,6 @@ where
     fn call(&mut self, req: ServiceRequest) -> Self::Future {
         let mut path = req.path().to_string();
         let host = req.connection_info().host().to_string();
-        let uri = req.uri().to_string();
 
         match path.as_str() {
             "/agence" => path = String::from("/agence-digitale-verte"),
