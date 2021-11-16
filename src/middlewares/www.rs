@@ -43,27 +43,36 @@ where
     }
 
     fn call(&mut self, req: ServiceRequest) -> Self::Future {
-        let mut path = req.path().to_string();
+        let path = req.path().to_string();
         let host = req.connection_info().host().to_string();
+        let uri = req.uri().to_owned();
 
         match path.as_str() {
-            "/agence" => path = String::from("/agence-digitale-verte"),
-            _ => ()
-        };
-
-        if req.connection_info().host() == "www.greenassembly.fr" {
-            Either::Right(ok(req.into_response(
-                HttpResponse::MovedPermanently()
-                    .header(
-                        http::header::LOCATION,
-                        format!("https://greenassembly.fr{}", path),
-                    )
-                    .header(http::header::REFERER, format!("https://{}{}", host, path))
-                    .finish()
-                    .into_body(),
-            )))
-        } else {
-            Either::Left(self.service.call(req))
+            "/agence" => {
+                Either::Right(ok(req.into_response(
+                    HttpResponse::MovedPermanently()
+                        .header(http::header::LOCATION, "https://greenassembly.fr/agence-digitale-verte")
+                        .header(http::header::REFERER, format!("http://{}{}", host, uri))
+                        .finish()
+                        .into_body(),
+                )))
+            }
+            _ =>  {
+                if req.connection_info().host() == "www.greenassembly.fr" {
+                    Either::Right(ok(req.into_response(
+                        HttpResponse::MovedPermanently()
+                            .header(
+                                http::header::LOCATION,
+                                format!("https://greenassembly.fr{}", path),
+                            )
+                            .header(http::header::REFERER, format!("https://{}{}", host, path))
+                            .finish()
+                            .into_body(),
+                    )))
+                } else {
+                    Either::Left(self.service.call(req))
+                }
+            }
         }
     }
 }
