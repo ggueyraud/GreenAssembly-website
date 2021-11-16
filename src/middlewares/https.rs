@@ -61,17 +61,22 @@ where
         let host = req.connection_info().host().to_string();
         let uri = req.uri().to_owned();
 
+        println!("Path: {}", path);
+
         match path.as_str() {
             "/agence" => {
+                println!("Ok");
                 Either::Right(ok(req.into_response(
                     HttpResponse::MovedPermanently()
-                        .header(http::header::LOCATION, "https://greenassembly.fr/agence-digitale-verte")
+                         .header(http::header::LOCATION, "https://greenassembly.fr/agence-digitale-verte")
+                        //.header(http::header::LOCATION, "https://localhost:8443/agence-digitale-verte")
                         .header(http::header::REFERER, format!("http://{}{}", host, uri))
                         .finish()
                         .into_body(),
                 )))
             },
             _ => {
+                println!("Pas ok");
                 if req.connection_info().scheme() == "https" {
                     Either::Left(self.service.call(req))
                 } else {

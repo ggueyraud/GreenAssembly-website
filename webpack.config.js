@@ -18,7 +18,6 @@ module.exports = {
         path: path.resolve(__dirname, 'dist')
     },
     experiments: {
-        syncWebAssembly: true,
-        asset: true
+        syncWebAssembly: true
     }
 }
