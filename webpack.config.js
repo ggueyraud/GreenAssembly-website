@@ -7,6 +7,7 @@ module.exports = {
         contact: './assets/js/contact.js',
         carousel: './assets/js/carousel.js',
         website_creation: './assets/js/website_creation.js',
+        motion_home_player: './assets/js/motion_home_player.js',
         faq: './assets/js/faq.js'
     },
     watch: process.env.NODE_ENV === 'development',
