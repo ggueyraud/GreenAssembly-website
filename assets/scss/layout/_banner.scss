@@ -51,6 +51,10 @@ header#banner {
         position: absolute;
         bottom: utilities.space(2)
     }
+
+    @media (min-height: 700px) and (orientation: landscape) {
+        height: calc(100vh - 80px)
+    }
 }
 
 @media (min-width: map.get(vars.$break-points, sm)) {

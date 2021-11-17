@@ -2,6 +2,7 @@ import LazyLoader from './utils/lazy_loader';
 import Router from 'router';
 
 const loader = document.querySelector('#loading');
+let navbar = null;
 
 // Check webp support
 (() => {
@@ -12,10 +13,31 @@ const loader = document.querySelector('#loading');
     img.src = 'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
 })()
 
+const handle_navbar = () => {
+    navbar.querySelector('.active').classList.remove('active');
+    const new_active = navbar.querySelector(`[href="${location.pathname}"]`);
+
+    switch (location.pathname) {
+        case '/':
+        case '/creation-site-web':
+        case '/agence-digitale-verte':
+        case '/portfolio':
+        case '/contact':
+            new_active.classList.add('active');
+        break;
+        case '/creation-site-web/onepage':
+        case '/creation-site-web/vitrine':
+        case '/creation-site-web/e-commerce':
+            navbar.querySelector('[href="/creation-site-web"]').classList.add('active');
+        break;
+    }
+}
+
 window.addEventListener('router:change', () => {
     LazyLoader();
     Object.assign(loader.style, { transition: 'visibility 100ms ease-out, opacity 100ms ease-out', visibility: 'hidden', opacity: 0 })
-    document.documentElement.style.overflow = 'auto'
+    document.documentElement.style.overflow = 'auto';
+    handle_navbar()
 
     setTimeout(() => {
         loader.style.transition = null;
@@ -35,6 +57,9 @@ window.addEventListener('router:change', () => {
 
 document.addEventListener('readystatechange', e => {
     if (e.target.readyState === 'complete') {
+        navbar = document.querySelector('#navbar');
+        handle_navbar();
+
         LazyLoader();
 
         loader.style.visibility = 'hidden';
@@ -60,7 +85,6 @@ document.addEventListener('readystatechange', e => {
             });
         }
         
-        const navbar = document.querySelector('#navbar');
         const html = document.querySelector('html');
 
         const close_mobile_menu = () => {
@@ -114,3 +138,16 @@ document.addEventListener('readystatechange', e => {
         });
     }
 });
+
+// const on_mount = () => {
+//     console.log(location.pathname)
+
+//     switch (location.pathname) {
+//         case '/':
+
+//         break;
+//     }
+// }
+
+// window.addEventListener('onMount', on_mount)
+// window.addEventListener('onDestroy', () => window.removeEventListener('onMount', on_mount))

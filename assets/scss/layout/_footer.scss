@@ -9,26 +9,35 @@
 @import 'style-box/base/_width.scss';
 
 footer {
-    // @extend .container;
     @include margin_mixin.in(10, top);
     @include margin_mixin.in(8, bottom);
     @include grid.cols(1);
 
-    color: utilities.color('white');
+    background-color: #fff;
+    color: utilities.color('black');
     gap: utilities.space(8);
     display: grid;
     margin: 0 auto;
+    @include margin_mixin.out(10, top);
     align-items: center;
 
     @include breakpoints.sm {
         @include margin_mixin.in(12, y);
+        @include margin_mixin.out(12, top);
     }
 
     @include breakpoints.md {
-        @include margin_mixin.in(32, y);
+        @include margin_mixin.in(10, y);
         @include grid.rows(2);
         @include grid.cols(3);
-        row-gap: 0
+        @include margin_mixin.out(10, top);
+        row-gap: 0;
+    }
+    
+    @include breakpoints.lg {
+        img {
+            width: 80%
+        }
     }
 
     img {

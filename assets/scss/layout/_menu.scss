@@ -8,8 +8,9 @@
     position: fixed;
     z-index: 20;
     transition: background-color .250s linear;
-    left: utilities.space(3);
-    top: utilities.space(3);
+    background-color: utilities.color('black');
+    top: 0;
+    left: 0;
 
     a {
         @include text.text(xl, true);
@@ -25,6 +26,11 @@
             right: 0;
             width: 80%;
             content: '';
+        }
+
+        &.active {
+            color: utilities.color('success');
+            font-weight: bold !important
         }
     }
 
@@ -81,7 +87,6 @@
         @include margin_mixin.in(3);
         @include margin_mixin.in(14, bottom);
 
-        background-color: utilities.color('black');
         top: 0;
         right: 0;
         bottom: 0;
@@ -109,10 +114,12 @@
 
     @media (min-height: 700px) and (orientation: landscape) {
         top: 0;
-        height: 100vh;
+        height: 80px;
+        width: 100%;
         display: flex;
         align-items: center;
         transition: none;
+        box-shadow: 1px 1px 4px 1px rgba(0, 255, 181, 0.3);
 
         #open-mobile-menu {
             display: none;
@@ -120,11 +127,15 @@
     
         #menu {
             position: relative;
-            display: block !important;
+            display: flex;
+            flex-direction: row;
             opacity: 100;
+            gap: 1.5rem;
             width: auto;
             visibility: visible;
             transition: none;
+            justify-content: flex-start;
+            padding: 0 1.5rem;
 
             > * {
                 margin-top: 0 !important;
@@ -132,7 +143,8 @@
         }
     
         #socials {
-            flex-direction: column !important;
+            margin-left: auto;
+            gap: 1rem;
 
             > * {
                 margin-right: 0;
@@ -154,7 +166,7 @@
             display: block;
             overflow: hidden;
             font-weight: 400 !important;
-            width: 40px;
+            // width: 40px;
             line-height: 40px !important;
             padding: 20px 0;
             margin: 10px 0 0;
@@ -162,49 +174,6 @@
             &.social {
                 text-align: center;
             }
-    
-            div {
-                display: inline-block;
-                white-space: nowrap;
-                vertical-align: top;
-                transform: translate(0,100%) rotate(-90deg);
-                transform-origin: 0 0;
-                
-                &:after {
-                    content: "";
-                    float: left;
-                    margin-top: 100%;
-                }
-            }
         }
-    }
-}
-
-@media (min-width: map.get(vars.$break-points, md)) {
-    #navbar {
-        --margin-width: calc(((100vw - 700px) / 2) - 40px);
-        left: calc(var(--margin-width) * (1 - 0.2))
-    }
-}
-
-@media (min-width: map.get(vars.$break-points, lg)) {
-    #navbar {
-        --margin-width: calc(((100vw - 947px) / 2) - 40px);
-    }
-}
-
-@media (min-width: map.get(vars.$break-points, xl)) {
-    #navbar {
-        --margin-width: calc(((100vw - 1183px) / 2) - 40px);
-
-        a {
-            font-size: 1rem
-        }
-    }
-}
-
-@media (min-width: map.get(vars.$break-points, xxl)) {
-    #navbar {
-        --margin-width: calc(((100vw - 1420px) / 2) - 40px);
     }
 }
