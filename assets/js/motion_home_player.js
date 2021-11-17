@@ -1,3 +1,5 @@
+let mouseover_tick = false;
+
 function init() {
     const video = document.getElementById('motion_home_video');
     const actions = document.getElementById('motion_home_actions');
@@ -27,8 +29,16 @@ function init() {
         actions.addEventListener('touchend', () => {
             actions.classList.remove('video-actions--hide');
         }, false);
-        actions.addEventListener('mouseenter', () => {
-            actions.classList.remove('video-actions--hide');
+        actions.addEventListener('mouseover', () => {
+            if(!mouseover_tick) {
+                setTimeout(() => {
+                    actions.classList.remove('video-actions--hide');
+                    console.log('ok')
+                    mouseover_tick = false;
+                }, 250);
+            }
+
+            mouseover_tick = true;
         }, false);
     });
 }
