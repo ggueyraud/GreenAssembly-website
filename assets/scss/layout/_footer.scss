@@ -9,7 +9,7 @@
 @import 'style-box/base/_width.scss';
 
 footer {
-    @extend .container;
+    // @extend .container;
     @include margin_mixin.in(10, top);
     @include margin_mixin.in(8, bottom);
     @include grid.cols(1);
@@ -36,5 +36,9 @@ footer {
 
         margin: 0 auto;
         display: block
+    }
+
+    a {
+        text-decoration: none;
     }
 }

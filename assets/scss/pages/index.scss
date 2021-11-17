@@ -57,32 +57,27 @@
 }
 
 .read_more {
-    @include margin_mixin.in(4, top);
+    @include margin_mixin.in(8, top);
+    text-align: center;
 
     width: 100%;
     display: block;
 
     a {
         @include text.text(2xl);
-
+        background: -webkit-linear-gradient(right, #f05c33, #cb337a);
+        display: inline-flex;
+        gap: .75rem;
+        padding: 0.75rem 1.25rem;
+        text-transform: uppercase;
+        text-decoration: none;
+        border-radius: 32px;
         color: utilities.color('white');
-        display: inline-block;
-
-        span {
-            text-decoration: underline;
-        }
+        @include text.text(lg, true);
 
         img {
-            vertical-align: middle;
+            filter: brightness(255);
         }
-    }
-}
-
-section .read_more {
-    text-align: right;
-
-    a {
-        @include text.text(lg, true);
     }
 }
 
