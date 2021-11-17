@@ -56,32 +56,6 @@
     }
 }
 
-.read_more {
-    @include margin_mixin.out(16, top);
-    text-align: center;
-
-    width: 100%;
-    display: block;
-
-    a {
-        @include text.text(2xl);
-        background: -webkit-linear-gradient(right, #fd6742, #fe006e);
-        display: inline-flex;
-        gap: .75rem;
-        padding: 0.75rem 1.25rem;
-        text-transform: uppercase;
-        text-decoration: none;
-        font-weight: bold;
-        border-radius: 32px;
-        color: #fff;
-        @include text.text(lg, true);
-
-        img {
-            filter: brightness(255);
-        }
-    }
-}
-
 .webp_supportted header#home_banner {
     background-image: var(--sm_webp_bg_img);
 }

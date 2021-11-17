@@ -28,31 +28,6 @@ header#banner {
 
 .card {
     justify-content: start;
-
-    .read_more {
-        justify-content: center
-    }
-}
-
-.read_more {
-    display: flex;
-    justify-content: flex-end;
-    width: 100%;
-
-    a {
-        @include text.text(2xl);
-
-        color: utilities.color('white');
-        display: inline-block;
-
-        span {
-            text-decoration: underline;
-        }
-
-        img {
-            vertical-align: middle;
-        }
-    }
 }
 
 h1 {

@@ -1,5 +1,7 @@
 @use 'abstracts/variables' as vars;
 @use 'style-box/abstracts/functions/utilities';
+@use 'style-box/abstracts/mixins/margin' as margin_mixin;
+@use 'abstracts/_mixins/text';
 
 @import 'style-box/base/_container.scss';
 @import 'style-box/base/animations';
@@ -96,5 +98,31 @@ ul {
     &.list_disc {
         list-style-type: disc;
         list-style-position: inside;
+    }
+}
+
+.read_more {
+    @include margin_mixin.out(16, top);
+    text-align: center;
+
+    width: 100%;
+    display: block;
+
+    a {
+        @include text.text(2xl);
+        background: -webkit-linear-gradient(right, #fd6742, #fe006e);
+        display: inline-flex;
+        gap: .75rem;
+        padding: 0.75rem 1.25rem;
+        text-transform: uppercase;
+        text-decoration: none;
+        font-weight: bold;
+        border-radius: 32px;
+        color: #fff;
+        @include text.text(lg, true);
+
+        img {
+            filter: brightness(255);
+        }
     }
 }

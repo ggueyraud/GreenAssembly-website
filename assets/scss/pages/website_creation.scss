@@ -76,27 +76,6 @@ ul {
     }
 }
 
-.read_more {
-    display: flex;
-    justify-content: flex-end;
-    width: 100%;
-
-    a {
-        @include text.text(2xl);
-
-        color: utilities.color('white');
-        display: inline-block;
-
-        span {
-            text-decoration: underline;
-        }
-
-        img {
-            vertical-align: middle;
-        }
-    }
-}
-
 #formules {
     .carousel__wrapper {
         position: relative;
@@ -219,10 +198,6 @@ ul {
     }
 
     #formules {
-        .read_more {
-            justify-content: flex-start !important;
-        }
-
         .carousel__wrapper__item {
             grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
             gap: 1rem;
