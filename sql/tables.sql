@@ -52,16 +52,6 @@ CREATE TABLE metrics (
     end_date TIMESTAMP WITH TIME ZONE
 );
 
-DROP TABLE IF EXISTS metric_tokens CASCADE;
-CREATE TABLE metric_tokens (
-    token uuid NOT NULL DEFAULT gen_random_uuid(),
-    metric_id INT NOT NULL
-        REFERENCES metrics (id)
-        ON DELETE CASCADE,
-    "date" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    UNIQUE (token)
-);
-
 -- TODO : create hook to check if all fields are null, if true remove insert
 
 DROP TABLE IF EXISTS ips_banned CASCADE;
