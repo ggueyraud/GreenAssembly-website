@@ -24,15 +24,22 @@ DROP TABLE IF EXISTS pages CASCADE;
 CREATE TABLE pages (
     id SMALLINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     title VARCHAR(255) NOT NULL,
-    identifier VARCHAR(255) UNIQUE NOT NULL,
+    path VARCHAR(255) UNIQUE NOT NULL,
     description VARCHAR(320),
     is_seo BOOLEAN NOT NULL DEFAULT FALSE,
     is_visible BOOLEAN NOT NULL DEFAULT FALSE
 );
 
+DROP TABLE IF EXISTS metric_sessions CASCADE;
+CREATE TABLE metric_sessions (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    ip VARCHAR(60),
+    valid_until_date TIMESTAMP WITH TIME ZONE DEFAULT NOW() + interval '30 minutes'
+);
+
 DROP TABLE IF EXISTS metrics CASCADE;
 CREATE TABLE metrics (
-    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     page_id SMALLINT NOT NULL
         REFERENCES pages (id)
         ON DELETE CASCADE,
@@ -41,8 +48,20 @@ CREATE TABLE metrics (
     os VARCHAR(20),
     device_type VARCHAR(20),
     referer VARCHAR(255),
-    "date" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+    "date" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    end_date TIMESTAMP WITH TIME ZONE
 );
+
+DROP TABLE IF EXISTS metric_tokens CASCADE;
+CREATE TABLE metric_tokens (
+    token uuid NOT NULL DEFAULT gen_random_uuid(),
+    metric_id INT NOT NULL
+        REFERENCES metrics (id)
+        ON DELETE CASCADE,
+    "date" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    UNIQUE (token)
+);
+
 -- TODO : create hook to check if all fields are null, if true remove insert
 
 DROP TABLE IF EXISTS ips_banned CASCADE;

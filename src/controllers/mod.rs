@@ -13,19 +13,25 @@ pub mod website;
 
 #[get("/")]
 pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) = services::pages::get(&pool, "accueil").await {
-        crate::controllers::metrics::add(&req, &pool, page.id).await;
+    if let Ok(page) = services::pages::get(&pool, "/").await {
+        let mut token: Option<String> = None;
+
+        if let Ok(Some(id)) = crate::controllers::metrics::add(&req, &pool, page.id).await {
+            token = Some(id.to_string());
+        }
 
         #[derive(Template)]
         #[template(path = "index.html")]
         struct Index {
             title: String,
             description: Option<String>,
+            metrics_token: Option<String>
         }
 
         let page = Index {
             title: page.title,
             description: page.description,
+            metrics_token: token
         };
 
         if let Ok(content) = page.render() {
@@ -39,11 +45,15 @@ pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
 #[get("/agence-digitale-verte")]
 async fn agency(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
     match futures::join!(
-        services::pages::get(&pool, "agence"),
+        services::pages::get(&pool, "/agence-digitale-verte"),
         services::employees::get_all(&pool)
     ) {
         (Ok(page), Ok(employees)) => {
-            crate::controllers::metrics::add(&req, &pool, page.id).await;
+            let mut token: Option<String> = None;
+
+            if let Ok(Some(id)) = crate::controllers::metrics::add(&req, &pool, page.id).await {
+                token = Some(id.to_string());
+            }
 
             #[derive(Template)]
             #[template(path = "agency.html")]
@@ -51,6 +61,7 @@ async fn agency(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
                 title: String,
                 description: Option<String>,
                 employees: Vec<Employee>,
+                metrics_token: Option<String>
             }
 
             let page = Agency {
@@ -60,6 +71,7 @@ async fn agency(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
                     .iter()
                     .map(|employee| Employee::from((*employee).clone()))
                     .collect::<Vec<Employee>>(),
+                metrics_token: token
             };
 
             match page.render() {
@@ -73,19 +85,25 @@ async fn agency(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
 
 #[get("/portfolio")]
 async fn portfolio(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) = services::pages::get(&pool, "portfolio").await {
-        crate::controllers::metrics::add(&req, &pool, page.id).await;
+    if let Ok(page) = services::pages::get(&pool, "/portfolio").await {
+        let mut token: Option<String> = None;
+
+        if let Ok(Some(id)) = crate::controllers::metrics::add(&req, &pool, page.id).await {
+            token = Some(id.to_string());
+        }
 
         #[derive(Template)]
         #[template(path = "portfolio.html")]
         struct Portfolio {
             title: String,
             description: Option<String>,
+            metrics_token: Option<String>
         }
 
         let page = Portfolio {
             title: page.title,
             description: page.description,
+            metrics_token: token
         };
 
         if let Ok(content) = page.render() {
@@ -98,19 +116,25 @@ async fn portfolio(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
 
 #[get("/mentions-legales")]
 async fn legals(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) = services::pages::get(&pool, "mentions_legales").await {
-        crate::controllers::metrics::add(&req, &pool, page.id).await;
+    if let Ok(page) = services::pages::get(&pool, "/mentions_legales").await {
+        let mut token: Option<String> = None;
+
+        if let Ok(Some(id)) = crate::controllers::metrics::add(&req, &pool, page.id).await {
+            token = Some(id.to_string());
+        }
 
         #[derive(Template)]
         #[template(path = "legals.html")]
         struct Legals {
             title: String,
             description: Option<String>,
+            metrics_token: Option<String>
         }
 
         let page = Legals {
             title: page.title,
             description: page.description,
+            metrics_token: token
         };
 
         if let Ok(content) = page.render() {
@@ -123,8 +147,12 @@ async fn legals(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
 
 #[get("/faq")]
 async fn faq(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) = services::pages::get(&pool, "faq").await {
-        crate::controllers::metrics::add(&req, &pool, page.id).await;
+    if let Ok(page) = services::pages::get(&pool, "/faq").await {
+        let mut token: Option<String> = None;
+
+        if let Ok(Some(id)) = crate::controllers::metrics::add(&req, &pool, page.id).await {
+            token = Some(id.to_string());
+        }
 
         struct Category {
             id: i16,
@@ -152,12 +180,14 @@ async fn faq(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
             title: String,
             description: Option<String>,
             categories: Vec<Category>,
+            metrics_token: Option<String>
         }
 
         let page = FAQ {
             title: page.title,
             description: page.description,
             categories,
+            metrics_token: token
         };
 
         if let Ok(content) = page.render() {

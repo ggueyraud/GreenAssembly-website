@@ -12,6 +12,7 @@ actix-web = { version = "3.3.2", features = ["rustls"] }
 actix-service = "1"
 actix-multipart = "0.3.0"
 actix-rt = "2.2.0"
+actix-cors = "0.5.4"
 askama = { version = "0.10.5", features = ["serde-json"] }
 env_logger = "0.9.0"
 dotenv = "0.15.0"
@@ -24,7 +25,7 @@ rust-argon2 = "0.8.3"
 lettre_email = "0.9"
 serde = { version = "1.0.126", features = ["derive"] }
 serde_json = "1.0.67"
-sqlx = { version = "0.5.7", features = ["macros", "postgres", "chrono", "runtime-async-std-native-tls"] }
+sqlx = { version = "0.5.7", features = ["macros", "postgres", "chrono", "runtime-async-std-native-tls", "uuid"] }
 chrono = { version = "0.4.19", features = ["serde"] }
 regex = "1.5.4"
 rustls = "0.18.1"

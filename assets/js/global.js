@@ -1,8 +1,23 @@
 import LazyLoader from './utils/lazy_loader';
 import Router from 'router';
+import { get } from './utils/http';
 
-const loader = document.querySelector('#loading');
+let loader = null;
 let navbar = null;
+
+const send_metrics = () => {
+    if (!navigator.sendBeacon) return;
+    
+    const vid = localStorage.getItem('VID');
+
+    if (vid !== null) {
+        navigator.sendBeacon('/metrics/log', new URLSearchParams({
+            token: vid
+        }));
+
+        localStorage.setItem('VID', '');
+    }
+}
 
 // Check webp support
 (() => {
@@ -34,10 +49,15 @@ const handle_navbar = () => {
 }
 
 window.addEventListener('router:change', () => {
+    send_metrics();
     LazyLoader();
     Object.assign(loader.style, { transition: 'visibility 100ms ease-out, opacity 100ms ease-out', visibility: 'hidden', opacity: 0 })
     document.documentElement.style.overflow = 'auto';
-    handle_navbar()
+    handle_navbar();
+
+    get(`/metrics/token?path=${location.pathname}`)
+        .then(res => res.text())
+        .then(token => localStorage.setItem('VID', token))
 
     setTimeout(() => {
         loader.style.transition = null;
@@ -57,11 +77,13 @@ window.addEventListener('router:change', () => {
 
 document.addEventListener('readystatechange', e => {
     if (e.target.readyState === 'complete') {
+        loader = document.querySelector('#loading');
         navbar = document.querySelector('#navbar');
         handle_navbar();
 
         LazyLoader();
 
+        console.log(loader)
         loader.style.visibility = 'hidden';
         loader.style.opacity = '0';
         document.documentElement.style.overflow = 'auto';
@@ -139,15 +161,4 @@ document.addEventListener('readystatechange', e => {
     }
 });
 
-// const on_mount = () => {
-//     console.log(location.pathname)
-
-//     switch (location.pathname) {
-//         case '/':
-
-//         break;
-//     }
-// }
-
-// window.addEventListener('onMount', on_mount)
-// window.addEventListener('onDestroy', () => window.removeEventListener('onMount', on_mount))
+window.addEventListener('unload', send_metrics, false);

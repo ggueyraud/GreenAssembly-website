@@ -21,5 +21,7 @@ pub fn config(cfg: &mut web::ServiceConfig) {
         .service(controllers::legals)
         .service(controllers::faq)
         .service(controllers::sitemap)
-        .service(controllers::robots);
+        .service(controllers::robots)
+        .service(controllers::metrics::log)
+        .service(controllers::metrics::create);
 }

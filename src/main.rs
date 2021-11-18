@@ -1,3 +1,4 @@
+use actix_cors::Cors;
 use actix_files::NamedFile;
 use actix_web::{
     get,
@@ -155,10 +156,18 @@ async fn main() -> std::io::Result<()> {
     .run();
 
     let server = HttpServer::new(move || {
+        let mut cors = Cors::default()
+            .allowed_methods(vec!["POST"]);
+
+        if cfg!(debug_assertions) {
+            cors = cors.allow_any_origin();
+        }
+
         App::new()
             .data(pool.clone())
             .data(UserAgentParser::from_path("regexes.yaml").expect("regexes.yaml not found"))
             .wrap(Compress::default())
+            .wrap(cors)
             .wrap(middlewares::www::RedirectWWW)
             .wrap_fn(|req, srv| {
                 use actix_service::Service;

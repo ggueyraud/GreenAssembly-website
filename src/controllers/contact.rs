@@ -174,18 +174,25 @@ pub async fn send(mut form: web::Json<Email>) -> Result<HttpResponse, Error> {
 
 #[get("")]
 pub async fn page(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) = services::pages::get(&pool, "contact").await {
-        crate::controllers::metrics::add(&req, &pool, page.id).await;
+    if let Ok(page) = services::pages::get(&pool, "/contact").await {
+        let mut token: Option<String> = None;
+
+        if let Ok(Some(id)) = crate::controllers::metrics::add(&req, &pool, page.id).await {
+            token = Some(id.to_string());
+        }
+
         #[derive(Template)]
         #[template(path = "contact.html")]
         struct Contact {
             title: String,
             description: Option<String>,
+            metrics_token: Option<String>
         }
 
         let page = Contact {
             title: page.title,
             description: page.description,
+            metrics_token: token
         };
 
         if let Ok(content) = page.render() {
