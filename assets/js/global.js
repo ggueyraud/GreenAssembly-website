@@ -101,7 +101,7 @@ document.addEventListener('readystatechange', e => {
         if (scroll_down) {
             scroll_down.addEventListener('click', () => {
                 window.scrollTo({
-                    top: window.innerHeight,
+                    top: window.innerHeight - (window.innerWidth > 737 ? 80 : 0),
                     behavior: 'smooth'
                 });
             });
