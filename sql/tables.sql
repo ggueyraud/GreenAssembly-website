@@ -34,7 +34,7 @@ DROP TABLE IF EXISTS metric_sessions CASCADE;
 CREATE TABLE metric_sessions (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     ip VARCHAR(60),
-    valid_until_date TIMESTAMP WITH TIME ZONE DEFAULT NOW() + interval '30 minutes'
+    expiration_date TIMESTAMP WITH TIME ZONE DEFAULT NOW() + interval '30 minutes' NOT NULL
 );
 
 DROP TABLE IF EXISTS metrics CASCADE;
