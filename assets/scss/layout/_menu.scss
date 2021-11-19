@@ -51,6 +51,10 @@
                 margin-top: 0
             }
         }
+
+        > img {
+            display: none;
+        }
     }
 
     #socials {
@@ -155,6 +159,15 @@
 
             > * {
                 margin-top: 0 !important;
+            }
+
+            > img {
+                display: block;
+                position: relative;
+                width: auto;
+                height: 50px;
+                top: -5px;
+                margin-right: 1rem;
             }
         }
     
