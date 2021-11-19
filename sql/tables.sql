@@ -33,7 +33,7 @@ CREATE TABLE pages (
 DROP TABLE IF EXISTS metric_sessions CASCADE;
 CREATE TABLE metric_sessions (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    ip VARCHAR(60),
+    ip VARCHAR(120),
     expiration_date TIMESTAMP WITH TIME ZONE DEFAULT NOW() + interval '30 minutes' NOT NULL
 );
 
@@ -44,7 +44,7 @@ CREATE TABLE metrics (
     page_id SMALLINT NOT NULL
         REFERENCES pages (id)
         ON DELETE CASCADE,
-    ip VARCHAR(60),
+    ip VARCHAR(120),
     browser VARCHAR(20),
     os VARCHAR(20),
     device_type VARCHAR(20),
