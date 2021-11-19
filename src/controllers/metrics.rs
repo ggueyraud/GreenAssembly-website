@@ -126,11 +126,12 @@ pub struct SessionData {
 
 #[get("/metrics/session")]
 pub async fn create_session(pool: web::Data<PgPool>, req: HttpRequest) -> HttpResponse {
-    let user_ip = &req.peer_addr().unwrap().ip().to_string();
+    let digest_ip = digest::digest(&digest::SHA256, req.peer_addr().unwrap().ip().to_string().as_bytes());
+    let digest_ip = format!("{:?}", digest_ip);
     
     if let Ok(session_data) = metrics::sessions::add(
         &pool,
-        user_ip
+        &digest_ip
     )
     .await {
         let sid = session_data.0.to_hyphenated().to_string();
