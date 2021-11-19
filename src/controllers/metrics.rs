@@ -4,6 +4,7 @@ use serde::{Serialize, Deserialize};
 use chrono::{DateTime, Utc};
 use std::str::FromStr;
 use sqlx::{PgPool, types::Uuid};
+use ring::hmac;
 
 pub async fn add(req: &HttpRequest, pool: &PgPool, page_id: i16) -> Result<Option<Uuid>, actix_web::Error> {
     if let Some(gar_log) = req.headers().get("GAR-LOG") {
@@ -13,12 +14,16 @@ pub async fn add(req: &HttpRequest, pool: &PgPool, page_id: i16) -> Result<Optio
     }
 
     let ua = UserAgent::from_request(req, &mut actix_web::dev::Payload::None).await?;
+    let key = hmac::Key::new(hmac::HMAC_SHA256, String::from("GreenAssembly_IP").as_bytes());
+    let encrypted_ip = hmac::sign(&key, req.peer_addr().unwrap().ip().to_string().as_bytes());
+    let encrypted_ip = String::from_utf8_lossy(encrypted_ip.as_ref());
+    println!("{}", encrypted_ip.to_string());
 
     match metrics::add(
         &pool,
         None,
         page_id,
-        &req.peer_addr().unwrap().ip().to_string(),
+        &encrypted_ip.to_string(),
         ua.product.name.clone(),
         ua.os.name.clone(),
         ua.device.name.clone(),
@@ -35,30 +40,6 @@ pub async fn add(req: &HttpRequest, pool: &PgPool, page_id: i16) -> Result<Optio
         Ok(id) => Ok(Some(id)),
         Err(e) => Err(actix_web::error::ErrorBadRequest(e))
     }
-
-    // match UserAgent::from_request(req, &mut actix_web::dev::Payload::None).await {
-    //     Ok(ua) => match metrics::add(
-    //         &pool,
-    //         page_id,
-    //         &req.peer_addr().unwrap().ip().to_string(),
-    //         ua.product.name.clone(),
-    //         ua.os.name.clone(),
-    //         ua.device.name.clone(),
-    //         match req.headers().get(actix_web::http::header::REFERER) {
-    //             Some(referer) => match referer.to_str() {
-    //                 Ok(referer) => Some(referer.to_string()),
-    //                 _ => None,
-    //             },
-    //             _ => None,
-    //         },
-    //     )
-    //     .await
-    //     {
-    //         Ok(id) => Ok(Some(id)),
-    //         Err(e) => Err(actix_web::error::ErrorBadRequest(e))
-    //     },
-    //     Err(e) => Err(e)
-    // }
 }
 
 #[derive(Deserialize)]
