@@ -102,6 +102,8 @@ pub async fn create(pool: web::Data<PgPool>, req: HttpRequest, infos: web::Query
 
 #[derive(Deserialize)]
 pub struct Token {
+    #[serde(rename(deserialize = "sid"))]
+    session_id: Option<String>,
     token: String
 }
 
@@ -112,7 +114,15 @@ pub async fn log(
 ) -> HttpResponse {
     if let Ok(token) = sqlx::types::Uuid::from_str(&form.token) {
         if metrics::exists(&pool, token).await {
-            if let Ok(true) = metrics::update_end_date(&pool, token).await {
+            let session_id: Option<Uuid> = match &form.session_id {
+                Some(val) => match Uuid::from_str(val.as_str()) {
+                        Ok(res) => Some(res),
+                        Err(_) => None
+                    }
+                None => None
+            };
+
+            if let Ok(true) = metrics::update_end_date(&pool, session_id, token).await {
                 return HttpResponse::Ok().finish()
             }
         }

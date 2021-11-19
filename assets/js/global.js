@@ -13,9 +13,11 @@ const send_metrics = () => {
     if (!navigator.sendBeacon) return;
     
     const vid = localStorage.getItem('VID');
+    const sid = read_cookie('sid');
 
     if (vid !== null) {
         navigator.sendBeacon('/metrics/log', new URLSearchParams({
+            sid,
             token: vid
         }));
 

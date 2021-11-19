@@ -39,8 +39,15 @@ pub async fn add(
     Ok(res.id)
 }
 
-pub async fn update_end_date(pool: &PgPool, id: Uuid) -> Result<bool, Error> {
-    let res = sqlx::query!("UPDATE metrics SET end_date = NOW() WHERE id = $1", id)
+pub async fn update_end_date(pool: &PgPool, session_id: Option<Uuid>, id: Uuid) -> Result<bool, Error> {
+    let res = sqlx::query!(
+            "UPDATE metrics
+            SET end_date = NOW(),
+                session_id = $1
+            WHERE id = $2",
+            session_id,
+            id
+        )
         .execute(pool)
         .await?;
 
