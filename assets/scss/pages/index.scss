@@ -113,6 +113,7 @@ header#home_banner {
 
         a {
             @include margin_mixin.out(1, top);
+            text-decoration: none;
 
             span {
                 @include margin_mixin.out(1, right);

@@ -5,6 +5,10 @@ import { get } from './utils/http';
 let loader = null;
 let navbar = null;
 
+const read_cookie = (cookie_name) => {
+    return document.cookie.split('; ').find(row => row.startsWith(cookie_name))?.split('=')?.[1]
+};
+
 const send_metrics = () => {
     if (!navigator.sendBeacon) return;
     
@@ -29,7 +33,7 @@ const send_metrics = () => {
 })()
 
 const handle_navbar = () => {
-    navbar.querySelector('.active').classList.remove('active');
+    navbar.querySelector('.active')?.classList.remove('active');
     const new_active = navbar.querySelector(`[href="${location.pathname}"]`);
 
     switch (location.pathname) {
@@ -48,16 +52,30 @@ const handle_navbar = () => {
     }
 }
 
-window.addEventListener('router:change', () => {
+window.addEventListener('router:change', async () => {
     send_metrics();
     LazyLoader();
     Object.assign(loader.style, { transition: 'visibility 100ms ease-out, opacity 100ms ease-out', visibility: 'hidden', opacity: 0 })
     document.documentElement.style.overflow = 'auto';
     handle_navbar();
 
-    get(`/metrics/token?path=${location.pathname}`)
+    // const rgpd_accepted = read_cookie('rgpd_accepted');
+    // if(rgpd_accepted) {
+    let sid = read_cookie('sid');
+    if(!sid) {
+        await get('/metrics/session')
+            .then(res => res.json())
+            .then(session_data => {
+                sid = session_data.sid;
+                const expires = new Date(session_data.vud);
+                document.cookie = 'sid=' + sid + '; expires=' + expires.toUTCString() + '; SameSite=Strict; Secure';
+            });
+    }
+
+    get(`/metrics/token?path=${location.pathname}&sid=${sid}`)
         .then(res => res.text())
         .then(token => localStorage.setItem('VID', token))
+    // }
 
     setTimeout(() => {
         loader.style.transition = null;
@@ -83,7 +101,6 @@ document.addEventListener('readystatechange', e => {
 
         LazyLoader();
 
-        console.log(loader)
         loader.style.visibility = 'hidden';
         loader.style.opacity = '0';
         document.documentElement.style.overflow = 'auto';
@@ -135,7 +152,6 @@ document.addEventListener('readystatechange', e => {
             .forEach(link => {
                 link
                     .addEventListener('click', e => {
-                        console.log(link)
                         if (!link.classList.contains('social')) {
                             e.preventDefault();
                         }
@@ -162,3 +178,63 @@ document.addEventListener('readystatechange', e => {
 });
 
 window.addEventListener('unload', send_metrics, false);
+
+// ------------------------------------------------------------------ //
+// ------------------------------ RGPD ------------------------------ //
+// ------------------------------------------------------------------ //
+
+// const show_rgpd_confirmation = () => {
+//     if(document.querySelector('#rgpd_wrapper')) return
+
+//     const rgpd_title = document.createElement('div');
+//     rgpd_title.classList.add('rgpd-modal__title')
+//     rgpd_title.innerText = 'Cookies ! 🍪';
+//     const rgpd_wrapper = document.createElement('div');
+//     rgpd_wrapper.setAttribute('id', 'rgpd-modal');
+//     rgpd_wrapper.classList.add('rgpd-modal');
+//     rgpd_wrapper.textContent = '\
+//     En naviguant sur notre site web, vous acceptez de recevoir des cookies \
+//     de notre agence de communication digitale. Anonymisés, ils permettent \
+//     d\'améliorer votre experience sur le site.';
+//     rgpd_wrapper.appendChild(rgpd_title);
+
+//     const rgpd_actions = document.createElement('div');
+//     rgpd_actions.classList.add('rgpd-modal__actions');
+    
+//     const rgpd_privacy_button = document.createElement('a');
+//     rgpd_privacy_button.classList.add('rgpd-modal__btn');
+//     rgpd_privacy_button.setAttribute('o-follow', '');
+//     rgpd_privacy_button.setAttribute('href', '/mentions-legales');
+//     rgpd_privacy_button.innerText = 'Mentions légales';
+
+//     const rgpd_confirm_button = document.createElement('button');
+//     rgpd_confirm_button.classList.add('rgpd-modal__btn', 'rgpd-modal__btn--accent');
+//     rgpd_confirm_button.innerText = 'Accepter';
+
+//     rgpd_actions.appendChild(rgpd_privacy_button);
+//     rgpd_actions.appendChild(rgpd_confirm_button);
+//     rgpd_wrapper.appendChild(rgpd_actions);
+//     document.body.appendChild(rgpd_wrapper);
+
+//     rgpd_confirm_button.addEventListener('click', () => {
+//         document.cookie = 'rgpd_accepted=1; max-age=31536000; SameSite=Strict; Secure';
+//         hide_rgpd_confirmation();
+//     });
+// }
+// function hide_rgpd_confirmation() {
+//     let rgpd_wrapper = document.querySelector('#rgpd-modal');
+//     if(rgpd_wrapper) {
+//         document.body.removeChild(rgpd_wrapper);
+//     }
+// }
+
+// function check_rgpd() {
+//     if(!document.cookie.split('; ').some(row => row.startsWith('rgpd_accepted'))) {
+//         show_rgpd_confirmation();
+//     }
+// }
+
+// const on_mount = () => {
+//     check_rgpd();
+// }
+// window.addEventListener('onMount', on_mount);

@@ -226,8 +226,6 @@ const on_mount = () => {
             carousel.next();
         });
 
-        console.log(document.querySelector('#services'))
-
     const project_form = new Form(document.querySelector('[name=project]'), {
         fields: {
             'services[]': {

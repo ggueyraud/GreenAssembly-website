@@ -11,6 +11,7 @@
 @import 'style-box/base/margin';
 @import 'style-box/base/typography';
 @import 'style-box/base/space';
+@import 'components/_card.scss';
 
 // @import 'base/_placement.scss';
 @import 'style-box/base/_text.scss';
@@ -126,3 +127,63 @@ ul {
         }
     }
 }
+
+// ------------------------------------------------------------------ //
+// ------------------------------ RGPD ------------------------------ //
+// ------------------------------------------------------------------ //
+
+// .rgpd-modal {
+//     @extend .card;
+
+//     position: fixed;
+//     height: auto;
+//     right: 0;
+//     left: 0;
+//     bottom: 0;
+
+//     margin: 2rem;
+//     padding: 1.5rem;
+
+//     border-radius: 2rem;
+//     background-color: utilities.color('black');
+
+//     &__title {
+//         order:-1;
+//         font-size: 1.5em;
+//         font-weight: bold;
+//         margin-bottom: 1rem;
+//     }
+
+//     &__actions {
+//         display: flex;
+//         flex-direction: row;
+//         align-items: center;
+//         justify-content: space-between;
+//         margin-top: 1rem;
+//         padding-top: 1rem;
+//         border-top: 1px solid rgba(255,255,255,0.5)
+//     }
+//     &__btn {
+//         display: flex;
+//         align-items: center;
+//         justify-content: center;
+//         color: utilities.color('white');
+//         border: none;
+//         text-decoration: none;
+//         &--accent {
+//             padding: 0.5rem 0.75rem;
+//             font-weight: bold;
+//             text-transform: uppercase;
+//             border-radius: 20px;
+//             background: -webkit-linear-gradient(right, #fd6742, #fe006e);
+//         }
+//     }
+// }
+
+// @media (min-width: 799px) {
+//     .rgpd-modal {
+//         left: unset;
+//         right: 0;
+//         width: 30rem;
+//     }
+// }

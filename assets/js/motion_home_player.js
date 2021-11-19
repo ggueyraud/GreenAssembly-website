@@ -33,7 +33,6 @@ function init() {
             if(!mouseover_tick) {
                 setTimeout(() => {
                     actions.classList.remove('video-actions--hide');
-                    console.log('ok')
                     mouseover_tick = false;
                 }, 250);
             }

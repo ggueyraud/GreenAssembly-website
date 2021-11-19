@@ -13,6 +13,7 @@ pub async fn exists(pool: &PgPool, id: Uuid) -> bool {
 
 pub async fn add(
     pool: &PgPool,
+    session_id: Option<Uuid>,
     page_id: i16,
     ip: &str,
     browser: Option<String>,
@@ -21,10 +22,11 @@ pub async fn add(
     referer: Option<String>,
 ) -> Result<Uuid, Error> {
     let res = sqlx::query!(
-        "INSERT INTO metrics (page_id, ip, browser, os, device_type, referer)
-        VALUES ($1, $2, $3, $4, $5, $6)
+        "INSERT INTO metrics (page_id, session_id, ip, browser, os, device_type, referer)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
         RETURNING id",
         page_id,
+        session_id,
         ip,
         browser,
         os,

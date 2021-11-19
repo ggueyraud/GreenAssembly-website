@@ -116,7 +116,7 @@ async fn portfolio(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
 
 #[get("/mentions-legales")]
 async fn legals(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) = services::pages::get(&pool, "/mentions_legales").await {
+    if let Ok(page) = services::pages::get(&pool, "/mentions-legales").await {
         let mut token: Option<String> = None;
 
         if let Ok(Some(id)) = crate::controllers::metrics::add(&req, &pool, page.id).await {

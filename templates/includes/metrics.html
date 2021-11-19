@@ -1,9 +1,6 @@
 {% match metrics_token %}
     {% when Some with (token) %}
         <script>
-            localStorage.setItem("SID", JSON.stringify({
-                
-            }));
             localStorage.setItem("VID", "{{ token }}");
         </script>
     {% when None %}

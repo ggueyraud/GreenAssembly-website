@@ -23,5 +23,6 @@ pub fn config(cfg: &mut web::ServiceConfig) {
         .service(controllers::sitemap)
         .service(controllers::robots)
         .service(controllers::metrics::log)
-        .service(controllers::metrics::create);
+        .service(controllers::metrics::create)
+        .service(controllers::metrics::create_session);
 }

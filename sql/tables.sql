@@ -40,6 +40,7 @@ CREATE TABLE metric_sessions (
 DROP TABLE IF EXISTS metrics CASCADE;
 CREATE TABLE metrics (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    session_id uuid REFERENCES metric_sessions (id) ON DELETE SET NULL,
     page_id SMALLINT NOT NULL
         REFERENCES pages (id)
         ON DELETE CASCADE,
