@@ -4,7 +4,7 @@ use serde::{Serialize, Deserialize};
 use chrono::{DateTime, Utc};
 use std::str::FromStr;
 use sqlx::{PgPool, types::Uuid};
-use ring::hmac;
+use ring::digest;
 
 pub async fn add(req: &HttpRequest, pool: &PgPool, page_id: i16) -> Result<Option<Uuid>, actix_web::Error> {
     if let Some(gar_log) = req.headers().get("GAR-LOG") {
@@ -14,16 +14,14 @@ pub async fn add(req: &HttpRequest, pool: &PgPool, page_id: i16) -> Result<Optio
     }
 
     let ua = UserAgent::from_request(req, &mut actix_web::dev::Payload::None).await?;
-    let key = hmac::Key::new(hmac::HMAC_SHA256, String::from("GreenAssembly_IP").as_bytes());
-    let encrypted_ip = hmac::sign(&key, req.peer_addr().unwrap().ip().to_string().as_bytes());
-    let encrypted_ip = String::from_utf8_lossy(encrypted_ip.as_ref());
-    println!("{}", encrypted_ip.to_string());
+    let digest_ip = digest::digest(&digest::SHA256, req.peer_addr().unwrap().ip().to_string().as_bytes());
+    let digest_ip = format!("{:?}", digest_ip);
 
     match metrics::add(
         &pool,
         None,
         page_id,
-        &encrypted_ip.to_string(),
+        &digest_ip,
         ua.product.name.clone(),
         ua.os.name.clone(),
         ua.device.name.clone(),
@@ -56,11 +54,15 @@ pub async fn create(pool: web::Data<PgPool>, req: HttpRequest, infos: web::Query
                 Ok(val) => val,
                 Err(_) =>  return HttpResponse::BadRequest().finish()
             };
+
+            let digest_ip = digest::digest(&digest::SHA256, req.peer_addr().unwrap().ip().to_string().as_bytes());
+            let digest_ip = format!("{:?}", digest_ip);
+
             if let Ok(id) = metrics::add(
                 &pool,
                 Some(sid),
                 page_id,
-                &req.peer_addr().unwrap().ip().to_string(),
+                &digest_ip,
                 ua.product.name.clone(),
                 ua.os.name.clone(),
                 ua.device.name.clone(),
