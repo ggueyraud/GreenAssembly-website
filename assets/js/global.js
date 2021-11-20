@@ -17,7 +17,7 @@ const send_metrics = () => {
 
     if (vid !== null) {
         navigator.sendBeacon('/metrics/log', new URLSearchParams({
-            sid,
+            sid: sid ?? null,
             token: vid
         }));
 
