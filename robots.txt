@@ -1,5 +1,4 @@
 ﻿User-agent: *
 Disallow: /admin
-Disallow: /backup
 
 Sitemap: https://greenassembly.fr/sitemap.xml
