@@ -103,12 +103,12 @@ document.addEventListener('readystatechange', e => {
 
         LazyLoader();
 
-        loader.style.visibility = 'hidden';
-        loader.style.opacity = '0';
+        loader?.style.visibility = 'hidden';
+        loader?.style.opacity = '0';
         document.documentElement.style.overflow = 'auto';
         
         window.addEventListener('router:loading', () => {
-            Object.assign(loader.style, { opacity: 100, visibility: 'visible' });
+            Object.assign(loader?.style, { opacity: 100, visibility: 'visible' });
                 
             document.documentElement.style.overflow = 'hidden';
         })
