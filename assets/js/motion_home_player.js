@@ -19,27 +19,27 @@ function init() {
         actions.classList.remove('video-actions--ended');
         actions.classList.add('video-actions--played');
         actions.classList.add('video-actions--hide');
-        video.addEventListener('ended', () => {
-            actions.classList.remove('video-actions--played');
-            actions.classList.add('video-actions--ended');
-        });
-        actions.addEventListener('touchstart', () => {
-            actions.classList.add('video-actions--hide');
-        }, false);
-        actions.addEventListener('touchend', () => {
-            actions.classList.remove('video-actions--hide');
-        }, false);
-        actions.addEventListener('mouseover', () => {
-            if(!mouseover_tick) {
-                setTimeout(() => {
-                    actions.classList.remove('video-actions--hide');
-                    mouseover_tick = false;
-                }, 250);
-            }
-
-            mouseover_tick = true;
-        }, false);
     });
+    video.addEventListener('ended', () => {
+        actions.classList.remove('video-actions--played');
+        actions.classList.add('video-actions--ended');
+    });
+    actions.addEventListener('touchstart', () => {
+        actions.classList.add('video-actions--hide');
+    }, false);
+    actions.addEventListener('touchend', () => {
+        actions.classList.remove('video-actions--hide');
+    }, false);
+    actions.addEventListener('mouseover', () => {
+        if(!mouseover_tick) {
+            setTimeout(() => {
+                actions.classList.remove('video-actions--hide');
+                mouseover_tick = false;
+            }, 250);
+        }
+
+        mouseover_tick = true;
+    }, false);
 }
 
 const on_mount = () => {
