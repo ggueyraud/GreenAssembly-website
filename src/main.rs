@@ -184,11 +184,11 @@ async fn main() -> std::io::Result<()> {
                         HeaderValue::from_static("max-age=31536000; includeSubDomains; preload"),
                     );
 
-                    #[cfg(not(debug_assertions))]
-                    headers.insert(
-                        header::CONTENT_SECURITY_POLICY,
-                        HeaderValue::from_static("script-src 'self'"),
-                    );
+                    // #[cfg(not(debug_assertions))]
+                    // headers.insert(
+                    //     header::CONTENT_SECURITY_POLICY,
+                    //     HeaderValue::from_static("script-src 'self'"),
+                    // );
 
                     headers.insert(header::X_FRAME_OPTIONS, HeaderValue::from_static("deny"));
 
