@@ -14,7 +14,7 @@ safelist = [
     "carousel__pagination__item--hidden",
     "video-actions--ended",
     "video-actions--played",
-    "video--actions--hide"
+    "video-actions--hide"
 ]
 
 [[purgecss]]
