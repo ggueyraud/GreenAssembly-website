@@ -46,7 +46,8 @@ fn serve_file(req: &HttpRequest, path: &Path, cache_duration: i64) -> Result<Htt
 
             Ok(response)
         }
-        Err(_) => {
+        Err(e) => {
+            println!("{:?}", e);
             use askama::Template;
 
             #[derive(Template)]
