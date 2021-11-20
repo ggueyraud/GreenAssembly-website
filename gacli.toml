@@ -6,7 +6,16 @@ safelist = ["webp_supportted", "no_webp", "navbar show", "read_more"]
 [[purgecss]]
 css = "pages/index.css"
 content = ["templates/index.html", ".build/production/js/index.js"]
-safelist = ["webp_supportted", "no_webp", "carousel__pagination__item", "carousel__pagination__item--current", "carousel__pagination__item--hidden"]
+safelist = [
+    "webp_supportted",
+    "no_webp",
+    "carousel__pagination__item",
+    "carousel__pagination__item--current",
+    "carousel__pagination__item--hidden",
+    "video-actions--ended",
+    "video-actions--played",
+    "video--actions--hide"
+]
 
 [[purgecss]]
 css = "pages/agency.css"
