@@ -1,7 +1,7 @@
 [[purgecss]]
 css = "global.css"
 content = ["templates/base.html", ".build/production/js/global.js"]
-safelist = ["webp_supportted", "no_webp", "navbar show"]
+safelist = ["webp_supportted", "no_webp", "navbar show", "read_more"]
 
 [[purgecss]]
 css = "pages/index.css"
