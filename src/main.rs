@@ -161,6 +161,8 @@ async fn main() -> std::io::Result<()> {
 
         if cfg!(debug_assertions) {
             cors = cors.allow_any_origin();
+        } else {
+            cors = cors.allowed_origin("https://greenassembly.fr/");
         }
 
         App::new()
