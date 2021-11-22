@@ -1,4 +1,5 @@
 let mouseover_tick = false;
+let touch_event = false;
 
 function init() {
     const video = document.getElementById('motion_home_video');
@@ -25,12 +26,13 @@ function init() {
         actions.classList.add('video-actions--ended');
     });
     actions.addEventListener('touchstart', () => {
-        actions.classList.add('video-actions--hide');
-    }, false);
-    actions.addEventListener('touchend', () => {
-        actions.classList.remove('video-actions--hide');
-    }, false);
+        actions.classList.toggle('video-actions--hide');
+        touch_event = true;
+    }, { passive: true });
+    
     actions.addEventListener('mouseover', () => {
+        if(touch_event) return
+        
         if(!mouseover_tick) {
             setTimeout(() => {
                 actions.classList.remove('video-actions--hide');
