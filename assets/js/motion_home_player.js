@@ -9,6 +9,7 @@ function init() {
     if(!video) return
 
     play_button?.addEventListener('click', () => {
+        touch_event = false;
         if(video.currentTime > 0 && !video.ended && !video.paused) {
             video.pause();
 
