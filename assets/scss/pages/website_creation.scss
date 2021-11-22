@@ -50,6 +50,15 @@ h2 {
     }
 }
 
+.read_more#pricing_list {
+    a {
+        display: inline-flex;
+        align-items: center;
+        background: #fff;
+        color: utilities.color('black');
+    }
+}
+
 ul {
     list-style: none;
     padding-left: 0;
