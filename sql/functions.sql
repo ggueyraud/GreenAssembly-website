@@ -8,7 +8,26 @@ BEGIN
             SELECT COUNT(DISTINCT metrics.ip)
             FROM metrics
             WHERE DATE(date) BETWEEN $1 AND $2
-            AND  metrics.page_id = pages.id
+            AND metrics.page_id = pages.id
+            AND browser NOT IN (
+                'LinkedInBot',
+                'ZoominfoBot',
+                'Baiduspider',
+                'bingbot',
+                'Applebot',
+                'Python Requests',
+                'MJ12bot',
+                'Go-http-client',
+                'Googlebot',
+                'PetalBot',
+                'FacebookBot',
+                'SemrushBot',
+                'AdsBot-Google',
+                'AhrefsBot',
+                'curl',
+                'crawler',
+                'BLEXBot'
+            )
         )
         FROM pages;
 END;
@@ -24,7 +43,26 @@ BEGIN
             SELECT COUNT(id)
             FROM metrics
             WHERE DATE(date) BETWEEN $1 AND $2
-            AND  metrics.page_id = pages.id
+            AND metrics.page_id = pages.id
+            AND browser NOT IN (
+                'LinkedInBot',
+                'ZoominfoBot',
+                'Baiduspider',
+                'bingbot',
+                'Applebot',
+                'Python Requests',
+                'MJ12bot',
+                'Go-http-client',
+                'Googlebot',
+                'PetalBot',
+                'FacebookBot',
+                'SemrushBot',
+                'AdsBot-Google',
+                'AhrefsBot',
+                'curl',
+                'crawler',
+                'BLEXBot'
+            )
         )
         FROM pages;
 END;
@@ -45,7 +83,26 @@ BEGIN
         FROM metrics
         WHERE page_id = row.id
         AND DATE(date) BETWEEN $1 AND $2
-        AND metrics.end_date IS NOT NULL;
+        AND metrics.end_date IS NOT NULL
+        AND browser NOT IN (
+            'LinkedInBot',
+            'ZoominfoBot',
+            'Baiduspider',
+            'bingbot',
+            'Applebot',
+            'Python Requests',
+            'MJ12bot',
+            'Go-http-client',
+            'Googlebot',
+            'PetalBot',
+            'FacebookBot',
+            'SemrushBot',
+            'AdsBot-Google',
+            'AhrefsBot',
+            'curl',
+            'crawler',
+            'BLEXBot'
+        );
 
         SELECT INTO total_bounce_counter
             COUNT(id)
@@ -53,7 +110,26 @@ BEGIN
         WHERE page_id = row.id
         AND DATE(date) BETWEEN $1 AND $2
         AND metrics.end_date IS NOT NULL
-        AND EXTRACT(EPOCH FROM (metrics.end_date - date)) <= 2;
+        AND EXTRACT(EPOCH FROM (metrics.end_date - date)) <= 2
+        AND browser NOT IN (
+            'LinkedInBot',
+            'ZoominfoBot',
+            'Baiduspider',
+            'bingbot',
+            'Applebot',
+            'Python Requests',
+            'MJ12bot',
+            'Go-http-client',
+            'Googlebot',
+            'PetalBot',
+            'FacebookBot',
+            'SemrushBot',
+            'AdsBot-Google',
+            'AhrefsBot',
+            'curl',
+            'crawler',
+            'BLEXBot'
+        );
         
         IF total_views_counter > 0 THEN
             title := row.title;
@@ -79,12 +155,99 @@ BEGIN
         FROM metrics
         WHERE page_id = row.id
         AND metrics.end_date IS NOT NULL
-        AND DATE(date) BETWEEN $1 AND $2;
+        AND DATE(date) BETWEEN $1 AND $2
+        AND browser NOT IN (
+            'LinkedInBot',
+            'ZoominfoBot',
+            'Baiduspider',
+            'bingbot',
+            'Applebot',
+            'Python Requests',
+            'MJ12bot',
+            'Go-http-client',
+            'Googlebot',
+            'PetalBot',
+            'FacebookBot',
+            'SemrushBot',
+            'AdsBot-Google',
+            'AhrefsBot',
+            'curl',
+            'crawler',
+            'BLEXBot'
+        );
 
         title := row.title;
         seconds := avg_page_time;
 
         RETURN NEXT;
     END LOOP;
+END;
+$$ LANGUAGE PLPGSQL;
+
+DROP FUNCTION IF EXISTS unique_views(DATE, DATE);
+CREATE FUNCTION unique_views(start_date DATE, end_date DATE)
+RETURNS INT AS $$
+DECLARE
+    counter INT;
+BEGIN
+    SELECT INTO counter
+        COUNT(DISTINCT ip)
+        FROM metrics
+        WHERE DATE(date) BETWEEN $1 AND $2
+        AND browser NOT IN (
+            'LinkedInBot',
+            'ZoominfoBot',
+            'Baiduspider',
+            'bingbot',
+            'Applebot',
+            'Python Requests',
+            'MJ12bot',
+            'Go-http-client',
+            'Googlebot',
+            'PetalBot',
+            'FacebookBot',
+            'SemrushBot',
+            'AdsBot-Google',
+            'AhrefsBot',
+            'curl',
+            'crawler',
+            'BLEXBot'
+        );
+
+    RETURN counter;
+END;
+$$ LANGUAGE PLPGSQL;
+
+DROP FUNCTION IF EXISTS sites_origin(DATE, DATE);
+CREATE FUNCTION sites_origin(start_date DATE, end_date DATE)
+RETURNS TABLE (unique_visitors BIGINT, name VARCHAR) AS $$
+BEGIN
+    RETURN QUERY SELECT
+        COUNT(DISTINCT ip),
+        referer
+        FROM metrics
+        WHERE referer NOT ILIKE '%greenassembly.fr%'
+        AND referer NOT ILIKE '%92.222.180.35%'
+        AND DATE(date) BETWEEN $1 AND $2
+        AND browser NOT IN (
+            'LinkedInBot',
+            'ZoominfoBot',
+            'Baiduspider',
+            'bingbot',
+            'Applebot',
+            'Python Requests',
+            'MJ12bot',
+            'Go-http-client',
+            'Googlebot',
+            'PetalBot',
+            'FacebookBot',
+            'SemrushBot',
+            'AdsBot-Google',
+            'AhrefsBot',
+            'curl',
+            'crawler',
+            'BLEXBot'
+        )
+        GROUP BY referer;
 END;
 $$ LANGUAGE PLPGSQL;
