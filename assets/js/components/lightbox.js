@@ -33,11 +33,11 @@ export default class LightBox {
     
             this.img = document.createElement('img');
             this.lightbox.appendChild(this.img);
-            this.img.addEventListener('click', this.close);
+            this.img.addEventListener('click', this.close.bind(this));
     
             document.querySelector('body').insertAdjacentElement('beforeend', this.lightbox);
     
-            this.lightbox.addEventListener('click', this.close)
+            this.lightbox.addEventListener('click', this.close.bind(this))
         }
 
         window.addEventListener('keydown', e => {
