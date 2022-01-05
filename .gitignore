@@ -9,3 +9,5 @@ key.pem
 /assets/wasm/target
 /node_modules
 /.vscode
+/uploads/
+.DS_Store
