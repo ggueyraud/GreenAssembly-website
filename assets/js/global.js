@@ -51,11 +51,9 @@ window.addEventListener('router:change', async () => {
     send_metrics();
     LazyLoader();
 
-    setTimeout(() => {
-        Object.assign(loader.style, { transition: 'visibility 100ms ease-out, opacity 100ms ease-out', visibility: 'hidden', opacity: 0 })
-        document.documentElement.style.overflow = 'auto';
-        loader.querySelector('img').classList.remove('animation_bounce');
-    }, 1000)
+    Object.assign(loader.style, { transition: 'visibility 100ms ease-out, opacity 100ms ease-out', visibility: 'hidden', opacity: 0 })
+    document.documentElement.style.overflow = 'auto';
+    loader.querySelector('img').classList.remove('animation_bounce');
     handle_navbar();
 
     // const rgpd_accepted = read_cookie('rgpd_accepted');
