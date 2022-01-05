@@ -17,9 +17,21 @@
 
     <url>
       <loc>https://greenassembly.fr/portfolio</loc>
-      <lastmod>2021-09-27</lastmod>
+      <lastmod>2022-01-06</lastmod>
       <changefreq>weekly</changefreq>
       <priority>0.8</priority>
+   </url>
+   <url>
+      <loc>https://greenassembly.fr/portfolio/woden-1</loc>
+      <lastmod>2022-01-06</lastmod>
+      <changefreq>yearly</changefreq>
+      <priority>0.6</priority>
+   </url>
+   <url>
+      <loc>https://greenassembly.fr/portfolio/ludivine-farat-2</loc>
+      <lastmod>2022-01-06</lastmod>
+      <changefreq>yearly</changefreq>
+      <priority>0.6</priority>
    </url>
 
     <url>
