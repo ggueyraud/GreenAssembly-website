@@ -30,7 +30,7 @@ safelist = ["webp_supportted", "no_webp"]
 [[purgecss]]
 css = "pages/project.css"
 content = ["templates/portfolio/project.html"]
-safelist = ["lightbox", "lightbox--active"]
+safelist = ["lightbox", "lightbox--active", "carousel__pagination__item", "carousel__pagination__item--current", "carousel__pagination__item--hidden"]
 
 [[purgecss]]
 css = "pages/contact.css"
