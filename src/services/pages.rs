@@ -1,5 +1,5 @@
 use serde::Serialize;
-use sqlx::{Error, PgPool, types::Uuid};
+use sqlx::{Error, PgPool};
 
 #[derive(sqlx::FromRow, Serialize)]
 pub struct Page {
@@ -11,19 +11,41 @@ pub struct Page {
     pub is_visible: bool,
 }
 
-pub async fn get(pool: &PgPool, path: &str) -> Result<Page, Error> {
-    sqlx::query_as!(
-        Page,
+pub async fn get<
+    T: std::marker::Unpin + std::marker::Send + for<'c> sqlx::FromRow<'c, sqlx::postgres::PgRow>,
+>(
+    pool: &PgPool,
+    fields: &str,
+    identifier: &str,
+) -> Result<T, Error> {
+    let res = sqlx::query_as::<_, T>(&format!(
         "SELECT
-            id, title, description, is_seo, is_visible
+            {}
         FROM pages
         WHERE path = $1
         LIMIT 1",
-        path
-    )
+        fields
+    ))
+    .bind(identifier)
     .fetch_one(pool)
-    .await
+    .await?;
+
+    Ok(res)
 }
+
+// pub async fn get(pool: &PgPool, path: &str) -> Result<Page, Error> {
+//     sqlx::query_as!(
+//         Page,
+//         "SELECT
+//             id, title, description, is_seo, is_visible
+//         FROM pages
+//         WHERE path = $1
+//         LIMIT 1",
+//         path
+//     )
+//     .fetch_one(pool)
+//     .await
+// }
 
 pub async fn get_id(pool: &PgPool, path: &str) -> Result<i16, Error> {
     let row = sqlx::query!(

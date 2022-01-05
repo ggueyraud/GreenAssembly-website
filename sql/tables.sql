@@ -1,3 +1,10 @@
+DROP TABLE IF EXISTS files CASCADE;
+CREATE TABLE files (
+    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    name VARCHAR(120),
+    path VARCHAR(255) NOT NULL
+);
+
 DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users (
     id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
@@ -41,9 +48,12 @@ DROP TABLE IF EXISTS metrics CASCADE;
 CREATE TABLE metrics (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     session_id uuid REFERENCES metric_sessions (id) ON DELETE SET NULL,
-    page_id SMALLINT NOT NULL
+    page_id SMALLINT
         REFERENCES pages (id)
-        ON DELETE CASCADE,
+        ON DELETE SET NULL,
+    project_id SMALLINT
+        REFERENCES portfolio_projects (id)
+        ON DELETE SET NULL,
     ip VARCHAR(120),
     browser VARCHAR(20),
     os VARCHAR(20),
@@ -80,4 +90,35 @@ CREATE TABLE faq_answers (
     answer TEXT NOT NULL,
     "order" SMALLINT NOT NULL
     -- UNIQUE (category_id, "order")
+);
+
+DROP TABLE IF EXISTS portfolio_categories CASCADE;
+CREATE TABLE portfolio_categories (
+    id SMALLINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    name VARCHAR(120) NOT NULL,
+    "order" SMALLINT NOT NULL
+);
+
+DROP TABLE IF EXISTS portfolio_projects CASCADE;
+CREATE TABLE portfolio_projects (
+    id SMALLINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    category_id SMALLINT NOT NULL
+        REFERENCES portfolio_categories (id),
+    name VARCHAR(120) NOT NULL,
+    description VARCHAR(300),
+    content TEXT NOT NULL,
+    is_visible BOOLEAN DEFAULT FALSE,
+    date TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    last_update_date TIMESTAMP WITH TIME ZONE
+);
+
+DROP TABLE IF EXISTS portfolio_project_pictures CASCADE;
+CREATE TABLE portfolio_project_pictures (
+    id SMALLINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    project_id SMALLINT NOT NULL
+        REFERENCES portfolio_projects (id)
+        ON DELETE CASCADE,
+    file_id INT NOT NULL
+        REFERENCES files (id),
+    "order" SMALLINT NOT NULL
 );

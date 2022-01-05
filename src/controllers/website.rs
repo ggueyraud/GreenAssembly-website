@@ -5,10 +5,10 @@ use sqlx::PgPool;
 
 #[get("")]
 pub async fn website_creation(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) = services::pages::get(&pool, "/creation-site-web").await {
+    if let Ok(page) = services::pages::get::<super::Page>(&pool, "id, title, description", "/creation-site-web").await {
         let mut token: Option<String> = None;
 
-        if let Ok(Some(id)) = crate::controllers::metrics::add(&req, &pool, page.id).await {
+        if let Ok(Some(id)) = crate::controllers::metrics::add(&req, &pool, services::metrics::BelongsTo::Page(page.id)).await {
             token = Some(id.to_string());
         }
 
@@ -36,10 +36,10 @@ pub async fn website_creation(req: HttpRequest, pool: web::Data<PgPool>) -> Http
 
 #[get("/onepage")]
 pub async fn onepage(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) = services::pages::get(&pool, "/creation-site-web/onepage").await {
+    if let Ok(page) = services::pages::get::<super::Page>(&pool, "id, title, description", "/creation-site-web/onepage").await {
         let mut token: Option<String> = None;
 
-        if let Ok(Some(id)) = crate::controllers::metrics::add(&req, &pool, page.id).await {
+        if let Ok(Some(id)) = crate::controllers::metrics::add(&req, &pool, services::metrics::BelongsTo::Page(page.id)).await {
             token = Some(id.to_string());
         }
 
@@ -67,10 +67,10 @@ pub async fn onepage(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse 
 
 #[get("/vitrine")]
 pub async fn showcase(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) = services::pages::get(&pool, "/creation-site-web/vitrine").await {
+    if let Ok(page) = services::pages::get::<super::Page>(&pool, "id, title, description", "/creation-site-web/vitrine").await {
         let mut token: Option<String> = None;
 
-        if let Ok(Some(id)) = crate::controllers::metrics::add(&req, &pool, page.id).await {
+        if let Ok(Some(id)) = crate::controllers::metrics::add(&req, &pool, services::metrics::BelongsTo::Page(page.id)).await {
             token = Some(id.to_string());
         }
 
@@ -98,10 +98,10 @@ pub async fn showcase(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse
 
 #[get("/e-commerce")]
 pub async fn e_commerce(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) = services::pages::get(&pool, "/creation-site-web/e-commerce").await {
+    if let Ok(page) = services::pages::get::<super::Page>(&pool, "id, title, description", "/creation-site-web/e-commerce").await {
         let mut token: Option<String> = None;
 
-        if let Ok(Some(id)) = crate::controllers::metrics::add(&req, &pool, page.id).await {
+        if let Ok(Some(id)) = crate::controllers::metrics::add(&req, &pool, services::metrics::BelongsTo::Page(page.id)).await {
             token = Some(id.to_string());
         }
 

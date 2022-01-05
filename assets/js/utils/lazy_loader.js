@@ -7,7 +7,6 @@ export default () => {
                 if (entry.isIntersecting) {
                     const lazy_image = entry.target;
 
-
                     if (lazy_image instanceof HTMLPictureElement) {
                         lazy_image
                             .querySelectorAll('source')

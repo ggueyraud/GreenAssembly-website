@@ -1,0 +1,29 @@
+<a
+    href="/portfolio/{{ uri }}"
+    o-follow
+    o-preload-once
+    data-categories="{{ category_id }}"
+>
+    <picture class="lazy">
+        <source
+            data-srcset="/uploads/mobile/{{ fallback_illustration }}"
+            media="(max-width: 768px)"
+            type="image/webp"
+        />
+        <source
+            data-srcset="/uploads/mobile/{{ illustration }}"
+            media="(max-width: 768px)"
+        />
+        <source
+            data-srcset="/uploads/{{ fallback_illustration }}"
+            media="(min-width: 768px)"
+            type="image/webp"
+        />
+
+        <img data-src="/uploads/{{ illustration }}" alt="{{ name }}" />
+    </picture>
+
+    <div class="details">
+        <h3 title="{{ name }}">{{ name }}</h3>
+    </div>
+</a>

@@ -26,7 +26,8 @@ BEGIN
                 'AhrefsBot',
                 'curl',
                 'crawler',
-                'BLEXBot'
+                'BLEXBot',
+                'Apache-HttpClient'
             )
         )
         FROM pages;
@@ -61,7 +62,8 @@ BEGIN
                 'AhrefsBot',
                 'curl',
                 'crawler',
-                'BLEXBot'
+                'BLEXBot',
+                'Apache-HttpClient'
             )
         )
         FROM pages;
@@ -101,7 +103,8 @@ BEGIN
             'AhrefsBot',
             'curl',
             'crawler',
-            'BLEXBot'
+            'BLEXBot',
+            'Apache-HttpClient'
         );
 
         SELECT INTO total_bounce_counter
@@ -128,7 +131,8 @@ BEGIN
             'AhrefsBot',
             'curl',
             'crawler',
-            'BLEXBot'
+            'BLEXBot',
+            'Apache-HttpClient'
         );
         
         IF total_views_counter > 0 THEN
@@ -173,7 +177,8 @@ BEGIN
             'AhrefsBot',
             'curl',
             'crawler',
-            'BLEXBot'
+            'BLEXBot',
+            'Apache-HttpClient'
         );
 
         title := row.title;
@@ -211,7 +216,8 @@ BEGIN
             'AhrefsBot',
             'curl',
             'crawler',
-            'BLEXBot'
+            'BLEXBot',
+            'Apache-HttpClient'
         );
 
     RETURN counter;
@@ -246,7 +252,8 @@ BEGIN
             'AhrefsBot',
             'curl',
             'crawler',
-            'BLEXBot'
+            'BLEXBot',
+            'Apache-HttpClient'
         )
         GROUP BY referer;
 END;

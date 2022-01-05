@@ -1,2 +1,63 @@
+@use '../abstracts/variables' as vars;
+@use 'style-box/abstracts/functions/utilities';
+@use 'style-box/abstracts/mixins/breakpoints' as bp;
+@use 'style-box/abstracts/mixins/text';
 @import '../layout/_banner.scss';
 @import '../base/typography';
+@import 'style-box/base/display';
+@import 'style-box/base/grid';
+
+.project {
+    position: relative;
+    // height: 100%;
+    width: 100%;
+    display: inline-block;
+    height: 300px;
+
+    @include bp.md {
+        &.md_row_span_2 {
+            height: 500px
+        }
+    
+        &:not(.md_row_span_2) {
+            height: calc(250px - 1rem)
+        }
+    }
+
+    picture {
+        width: 100%;
+        height: 100%;
+        display: flex;
+
+        img {
+            object-fit: cover; 
+            height: auto;
+            width:100%;
+        }
+    }
+
+    .details {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        background-color: utilities.color('black');
+        padding: .5rem 1rem;
+        display: flex;
+        justify-content: space-between;
+
+        h3 {
+            color: utilities.color(blue);
+            @include text.text(lg);
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        span {
+            color: color('white');
+            background-color: utilities.color(blue);
+            border-radius: 10px;
+            font-size: .9rem;
+        }
+    }
+}

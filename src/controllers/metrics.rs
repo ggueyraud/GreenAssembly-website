@@ -1,4 +1,4 @@
-use crate::{services::{metrics, pages}, utils::ua::UserAgent};
+use crate::{services, utils::ua::UserAgent};
 use actix_web::{FromRequest, web, HttpRequest, HttpResponse, http::HeaderValue, get, post};
 use serde::{Serialize, Deserialize};
 use chrono::{DateTime, Utc};
@@ -6,7 +6,11 @@ use std::str::FromStr;
 use sqlx::{PgPool, types::Uuid};
 use ring::digest;
 
-pub async fn add(req: &HttpRequest, pool: &PgPool, page_id: i16) -> Result<Option<Uuid>, actix_web::Error> {
+pub async fn add(
+    req: &HttpRequest,
+    pool: &PgPool,
+    belongs_to: services::metrics::BelongsTo
+) -> Result<Option<Uuid>, actix_web::Error> {
     if let Some(gar_log) = req.headers().get("GAR-LOG") {
         if gar_log == HeaderValue::from_static("false") {
             return Ok(None)
@@ -17,10 +21,10 @@ pub async fn add(req: &HttpRequest, pool: &PgPool, page_id: i16) -> Result<Optio
     let digest_ip = digest::digest(&digest::SHA256, req.peer_addr().unwrap().ip().to_string().as_bytes());
     let digest_ip = format!("{:?}", digest_ip);
 
-    match metrics::add(
+    match services::metrics::add(
         &pool,
+        belongs_to,
         None,
-        page_id,
         &digest_ip,
         ua.product.name.clone(),
         ua.os.name.clone(),
@@ -41,42 +45,83 @@ pub async fn add(req: &HttpRequest, pool: &PgPool, page_id: i16) -> Result<Optio
 }
 
 #[derive(Deserialize)]
+pub enum BelongsTo {
+    Page,
+    Project
+}
+
+#[derive(Deserialize)]
 pub struct PageInformations {
     path: String,
     sid: String,
+    belongs_to: BelongsTo,
 }
 
 #[get("/metrics/token")]
 pub async fn create(pool: web::Data<PgPool>, req: HttpRequest, infos: web::Query<PageInformations>) -> HttpResponse {
-    if let Ok(page_id) = pages::get_id(&pool, &infos.path).await {
-        if let Ok(ua) = UserAgent::from_request(&req, &mut actix_web::dev::Payload::None).await {
-            let sid = match Uuid::from_str(infos.sid.as_str()) {
-                Ok(val) => val,
-                Err(_) =>  return HttpResponse::BadRequest().finish()
-            };
+    let mut id: Option<i16> = None;
+    match infos.belongs_to {
+        BelongsTo::Page => {
+            #[derive(sqlx::FromRow)]
+            struct Page {
+                id: i16,
+            }
 
-            let digest_ip = digest::digest(&digest::SHA256, req.peer_addr().unwrap().ip().to_string().as_bytes());
-            let digest_ip = format!("{:?}", digest_ip);
+            match services::pages::get::<Page>(&pool, "id", &infos.path).await {
+                Ok(page) => id = Some(page.id),
+                Err(_) => return HttpResponse::InternalServerError().finish()
+            }
+        }
+        BelongsTo::Project => {
+            match infos.path.split('-').collect::<Vec<_>>().last() {
+                Some(post_id) => match post_id.parse::<i16>() {
+                    Ok(post_id) => match infos.belongs_to {
+                        BelongsTo::Project => {
+                            if !services::portfolio::projects::exists(&pool, post_id).await {
+                                return HttpResponse::NotFound().finish();
+                            }
 
-            if let Ok(id) = metrics::add(
-                &pool,
-                Some(sid),
-                page_id,
-                &digest_ip,
-                ua.product.name.clone(),
-                ua.os.name.clone(),
-                ua.device.name.clone(),
-                match req.headers().get(actix_web::http::header::REFERER) {
-                    Some(referer) => match referer.to_str() {
-                        Ok(referer) => Some(referer.to_string()),
-                        _ => None,
+                            id = Some(post_id)
+                        }
+                        _ => (),
                     },
+                    _ => return HttpResponse::InternalServerError().finish(),
+                },
+                _ => return HttpResponse::InternalServerError().finish(),
+            }
+        }
+    }
+
+    if let Ok(ua) = UserAgent::from_request(&req, &mut actix_web::dev::Payload::None).await {
+        let sid = match Uuid::from_str(infos.sid.as_str()) {
+            Ok(val) => val,
+            Err(_) =>  return HttpResponse::BadRequest().finish()
+        };
+
+        let digest_ip = digest::digest(&digest::SHA256, req.peer_addr().unwrap().ip().to_string().as_bytes());
+        let digest_ip = format!("{:?}", digest_ip);
+
+        if let Ok(id) = services::metrics::add(
+            &pool,
+            match infos.belongs_to {
+                BelongsTo::Project => services::metrics::BelongsTo::Project(id.unwrap()),
+                BelongsTo::Page => services::metrics::BelongsTo::Page(id.unwrap()),
+            },
+            Some(sid),
+            &digest_ip,
+            ua.product.name.clone(),
+            ua.os.name.clone(),
+            ua.device.name.clone(),
+            match req.headers().get(actix_web::http::header::REFERER) {
+                Some(referer) => match referer.to_str() {
+                    Ok(referer) => Some(referer.to_string()),
                     _ => None,
                 },
-            )
-            .await {
-                return HttpResponse::Ok().body(id.to_hyphenated().to_string())
-            }
+                _ => None,
+            },
+        )
+        .await {
+            return HttpResponse::Ok().body(id.to_hyphenated().to_string())
         }
     }
 
@@ -96,7 +141,7 @@ pub async fn log(
     form: web::Form<Token>
 ) -> HttpResponse {
     if let Ok(token) = sqlx::types::Uuid::from_str(&form.token) {
-        if metrics::exists(&pool, token).await {
+        if services::metrics::exists(&pool, token).await {
             let session_id: Option<Uuid> = match &form.session_id {
                 Some(val) => match Uuid::from_str(val.as_str()) {
                         Ok(res) => Some(res),
@@ -105,7 +150,7 @@ pub async fn log(
                 None => None
             };
 
-            if let Ok(true) = metrics::update_end_date(&pool, session_id, token).await {
+            if let Ok(true) = services::metrics::update_end_date(&pool, session_id, token).await {
                 return HttpResponse::Ok().finish()
             }
         }
@@ -129,7 +174,7 @@ pub async fn create_session(pool: web::Data<PgPool>, req: HttpRequest) -> HttpRe
     let digest_ip = digest::digest(&digest::SHA256, req.peer_addr().unwrap().ip().to_string().as_bytes());
     let digest_ip = format!("{:?}", digest_ip);
     
-    if let Ok(session_data) = metrics::sessions::add(
+    if let Ok(session_data) = services::metrics::sessions::add(
         &pool,
         &digest_ip
     )

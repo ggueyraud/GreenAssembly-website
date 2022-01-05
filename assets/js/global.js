@@ -38,46 +38,42 @@ const handle_navbar = () => {
     navbar.querySelector('.active')?.classList.remove('active');
     const new_active = navbar.querySelector(`[href="${location.pathname}"]`);
 
-    switch (location.pathname) {
-        case '/':
-        case '/creation-site-web':
-        case '/agence-digitale-verte':
-        case '/portfolio':
-        case '/contact':
-            new_active.classList.add('active');
-        break;
-        case '/creation-site-web/onepage':
-        case '/creation-site-web/vitrine':
-        case '/creation-site-web/e-commerce':
-            navbar.querySelector('[href="/creation-site-web"]').classList.add('active');
-        break;
+    if (['/', '/agence-digitale-verte', '/contact'].includes(location.pathname)) {
+        new_active.classList.add('active');
+    } else if (location.pathname.includes('/portfolio')) {
+        navbar.querySelector('[href="/portfolio"]').classList.add('active');
+    } else if (location.pathname.includes('/creation-site-web')) {
+        navbar.querySelector('[href="/creation-site-web"]').classList.add('active');
     }
 }
 
 window.addEventListener('router:change', async () => {
     send_metrics();
     LazyLoader();
-    Object.assign(loader.style, { transition: 'visibility 100ms ease-out, opacity 100ms ease-out', visibility: 'hidden', opacity: 0 })
-    document.documentElement.style.overflow = 'auto';
+
+    setTimeout(() => {
+        Object.assign(loader.style, { transition: 'visibility 100ms ease-out, opacity 100ms ease-out', visibility: 'hidden', opacity: 0 })
+        document.documentElement.style.overflow = 'auto';
+        loader.querySelector('img').classList.remove('animation_bounce');
+    }, 1000)
     handle_navbar();
 
     // const rgpd_accepted = read_cookie('rgpd_accepted');
     // if(rgpd_accepted) {
     let sid = read_cookie('sid');
     if(!sid) {
-        await get('/metrics/session')
-            .then(res => res.json())
-            .then(session_data => {
-                sid = session_data.sid;
-                const expires = new Date(session_data.vud);
-                document.cookie = 'sid=' + sid + '; expires=' + expires.toUTCString() + '; SameSite=Strict; Secure';
-            });
+        const res = await get('/metrics/session');
+        const data = await res.json();
+        sid = data.sid;
+        document.cookie = 'sid=' + sid + '; expires=' + new Date(data.vud).toUTCString() + '; SameSite=Strict; Secure';
     }
 
-    get(`/metrics/token?path=${location.pathname}&sid=${sid}`)
-        .then(res => res.text())
-        .then(token => localStorage.setItem('VID', token))
-    // }
+    const { pathname } = location;
+    const belongs_to = pathname.includes('/portfolio/')
+        ? 'Project'
+        : 'Page';
+    const res = await get(`/metrics/token?path=${location.pathname}&sid=${sid}&belongs_to=${belongs_to}`);
+    localStorage.setItem('VID', await res.text());
 
     setTimeout(() => {
         loader.style.transition = null;
@@ -106,9 +102,11 @@ document.addEventListener('readystatechange', e => {
         loader.style.visibility = 'hidden';
         loader.style.opacity = '0';
         document.documentElement.style.overflow = 'auto';
+        loader.querySelector('img').classList.remove('animation_bounce');
         
         window.addEventListener('router:loading', () => {
             Object.assign(loader.style, { opacity: 100, visibility: 'visible' });
+            loader.querySelector('img').classList.add('animation_bounce');
                 
             document.documentElement.style.overflow = 'hidden';
         })

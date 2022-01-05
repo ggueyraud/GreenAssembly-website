@@ -174,10 +174,10 @@ pub async fn send(mut form: web::Json<Email>) -> Result<HttpResponse, Error> {
 
 #[get("")]
 pub async fn page(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) = services::pages::get(&pool, "/contact").await {
+    if let Ok(page) = services::pages::get::<super::Page>(&pool, "id, title, description", "/contact").await {
         let mut token: Option<String> = None;
 
-        if let Ok(Some(id)) = crate::controllers::metrics::add(&req, &pool, page.id).await {
+        if let Ok(Some(id)) = crate::controllers::metrics::add(&req, &pool, services::metrics::BelongsTo::Page(page.id)).await {
             token = Some(id.to_string());
         }
 

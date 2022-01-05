@@ -6,8 +6,9 @@ use crate::services;
 
 #[get("")]
 pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) = services::pages::get(&pool, "blog").await {
-        crate::controllers::metrics::add(&req, &pool, page.id).await;
+    if let Ok(page) = services::pages::get::<super::Page>(&pool, "id, title, description", "blog").await {
+        // TODO : refactor this behavior
+        crate::controllers::metrics::add(&req, &pool, services::metrics::BelongsTo::Page(page.id)).await;
 
         #[derive(Template)]
         #[template(path = "blog/index.html")]

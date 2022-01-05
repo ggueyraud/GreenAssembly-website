@@ -24,8 +24,13 @@ safelist = ["webp_supportted", "no_webp", "carousel__pagination__item", "carouse
 
 [[purgecss]]
 css = "pages/portfolio.css"
-content = ["templates/portfolio.html"]
+content = ["templates/portfolio/index.html", "templates/components/project.html"]
 safelist = ["webp_supportted", "no_webp"]
+
+[[purgecss]]
+css = "pages/project.css"
+content = ["templates/portfolio/project.html"]
+safelist = ["lightbox", "lightbox--active"]
 
 [[purgecss]]
 css = "pages/contact.css"

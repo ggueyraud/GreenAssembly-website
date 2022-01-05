@@ -12,6 +12,7 @@
     line-height: 1.25;
     background: -webkit-linear-gradient(right, rgba(239, 255, 25, 1), rgba(0, 255, 181, 1));
     background-clip: text;
+    -webkit-background-clip:text;
     -webkit-text-stroke: 3px transparent;
 
     @include breakpoints.md {

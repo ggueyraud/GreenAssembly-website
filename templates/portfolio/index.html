@@ -31,7 +31,31 @@
 
 {% block content %}
     <section class="mt_12 md_mt_8 text_center">
-        <p class="h1">Soyez notre premier bourgeon🌱 à apparaitre ici !</p>
+        <p class="text_center pb_12">
+            <a o-follow o-preload-once href="/creation-site-web">Création de site internet sur-mesure</a> ou encore d'identité visuelle, découvrez les projets que nous avons réalisés pour lesquels nos clients ont fait confiance à notre <strong>agence digitale à Annecy</strong> !
+        </p>
+
+        {#<nav>
+            {% for category in categories %}
+                <button type="button" data-id="{{ category.id }}">{{ category.name }}</button>
+            {% endfor %}
+        </nav>#}
+
+        <div class="grid grid_cols_1 md_grid_cols_4 gap_4">
+            {% for project in projects %}
+                <div class="
+                    project
+                    {% if loop.first %}
+                        md_col_span_2 md_row_span_2
+                    {% elseif loop.index0 == 3 %}
+                        md_col_span_2
+                    {% endif %}
+                ">
+                    {{ project|safe }}
+                </div>
+            {% endfor %}
+        </div>
+        {#<p class="h1">Soyez notre premier bourgeon🌱 à apparaitre ici !</p>
         <a
             o-follow
             o-preload-once
@@ -39,6 +63,6 @@
             class="underline mt_4 text_lg inline_block"
         >
             J'ai un projet !
-        </a>
+        </a>#}
     </section>
 {% endblock %}

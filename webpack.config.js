@@ -8,6 +8,7 @@ module.exports = {
         carousel: './assets/js/carousel.js',
         website_creation: './assets/js/website_creation.js',
         motion_home_player: './assets/js/motion_home_player.js',
+        project: './assets/js/project.js',
         faq: './assets/js/faq.js'
     },
     watch: process.env.NODE_ENV === 'development',

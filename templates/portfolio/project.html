@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block head %}
+    {% match description %}
+        {% when Some with (description) %}
+            <meta name="description" content="{{ description }}" />
+        {% when None %}
+    {% endmatch %}
+
+    <link rel="stylesheet" href="/css/pages/project.css" />
+
+    {% include "includes/metrics.html" %}
+
+    <script src="/js/project.js" async></script>
+{% endblock %}
+
+{% block content %}
+    <section>
+        <h1 class="title pb_20 pt_14 sm_pb_40 sm_pt_20 md_pb_48 md_pt_32 text_center">{{ title }}</h1>
+
+        <div class="grid grid_cols_1 md_grid_cols_5 col_gap_4 row_gap_6 md_row_gap_8">
+            <div class="md_col_span_2 md_row_span_2 md_grid md_items_center">
+                <picture class="lazy md_px_12">
+                    <source data-srcset="/uploads/mobile/{{ first_picture.filename }}.webp" type="image/webp" />
+                    
+                    <img
+                        data-src="/uploads/mobile/{{ first_picture.path }}"
+                        data-original="/uploads/{{ first_picture.filename }}.webp"
+                        data-fallback="/uploads/{{ first_picture.path }}"
+                    />
+                </picture>
+            </div>
+
+            <div class="md_row_span_2 md_col_span_3">
+                <p>{{ content|safe }}</p>
+            </div>
+
+            <div class="carousel md_col_span_5 order_3">
+                <div class="carousel__wrapper">
+                    {% for picture in pictures %}
+                        <div class="carousel__wrapper__item">
+                            <picture class="lazy">
+                                <source data-srcset="/uploads/mobile/{{ picture.filename }}.webp" type="image/webp" />
+                                
+                                <img
+                                    data-src="/uploads/mobile/{{ picture.path }}"
+                                    data-original="/uploads/{{ picture.filename }}.webp"
+                                    data-fallback="/uploads/{{ picture.path }}"
+                                />
+                            </picture>
+
+                            {#<div class="ab">
+                                <img
+                                    src="/uploads/{{ picture }}"
+                                    data-original="https://greenassembly.fr/img/website.webp?1637589044"
+                                    data-fallback="https://greenassembly.fr/img/website.png?1637589044"
+                                />
+                            </div>#}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <nav class="carousel__pagination"></nav>
+            </div>
+        </div>
+
+        <div class="card my_24 text_center">
+            <div class="pb_4 text_3xl font_bold pb_2">Vous aussi avez un projet ?</div>
+            <p>Dites-nous en plus sur ce dernier nous vous répondrons sous 24h !</p>
+
+            <div class="read_more mb_0">
+                <a o-follow o-preload-once href="/contact">
+                    nous contacter
+    
+                    <img src="/favicon.svg" width="30" height="30" alt="GreenAssembly Leaf" />
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}
