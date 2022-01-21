@@ -11,6 +11,14 @@
     background-color: utilities.color('black');
     top: 0;
     left: 0;
+    height: 80px;
+    width: 100%;
+    box-shadow: 1px 1px 4px 1px rgba(0, 255, 181, 0.3);
+    display: grid;
+    grid-template-columns: 24px 1fr 24px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
 
     a {
         @include text.text(xl, true);
@@ -68,9 +76,8 @@
     }
 
     #open-mobile-menu {
-        position: fixed;
-        left: 1.5rem;
-        top: 1.5rem;
+        font-size: 0 !important;
+        line-height: 1 !important;
     }
 
     #close-mobile-menu {
@@ -87,10 +94,12 @@
         }
     }
 
-    &.show {
-        @include margin_mixin.in(3);
-        @include margin_mixin.in(14, bottom);
+    #logo {
+        margin: 0 auto
+    }
 
+    &.show {
+        padding: utilities.space(14) utilities.space(3);
         top: 0;
         right: 0;
         bottom: 0;
@@ -99,6 +108,11 @@
         flex-direction: column;
         align-items: flex-start;
         overflow-y: scroll;
+        height: 100vh;
+
+        #logo {
+            display: none;
+        }
 
         #close-mobile-menu {
             border: 1px solid utilities.color('white');
@@ -134,12 +148,9 @@
 
     @media (min-height: 700px) and (orientation: landscape) {
         top: 0;
-        height: 80px;
-        width: 100%;
         display: flex;
         align-items: center;
         transition: none;
-        box-shadow: 1px 1px 4px 1px rgba(0, 255, 181, 0.3);
 
         #open-mobile-menu {
             display: none;

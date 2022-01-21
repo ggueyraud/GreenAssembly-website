@@ -1,9 +1,9 @@
 @use "sass:map";
 @use '../../abstracts/variables' as vars;
 @use 'style-box/abstracts/mixins/margin' as margin_mixin;
-@use 'style-box/abstracts/mixins/breakpoints';
+@use 'style-box/abstracts/mixins/breakpoints' as bp;
 @use 'style-box/abstracts/functions/utilities';
-@use '../../abstracts/_mixins/text';
+@use 'style-box/abstracts/mixins/text';
 
 @import '../../base/typography';
 @import 'style-box/base/text';
@@ -21,7 +21,6 @@
 
     a {
         font-size: 1.2em;
-
         color: utilities.color('white');
         display: inline-block;
 
@@ -51,7 +50,7 @@ header#banner {
         @extend .title;
     }
 
-    @include breakpoints.xl {
+    @include bp.xl {
         margin-top: 3rem;
         margin-bottom: 6rem;
 
@@ -64,57 +63,30 @@ header#banner {
     color: transparent;
 }
 
-#intro {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    line-height: 1.2rem;
+section {
+    display: grid;
+    grid-template-columns: 1fr;
 
-    @include breakpoints.xl {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-gap: 20%;
+    @include bp.md {
+        grid-template-columns: 1fr 30%;
+        gap: utilities.space(4)
+    }
 
-        width: 90%;
-        margin: auto;
-        margin-bottom: 5rem;
-
-        .read_more {
-            grid-column: span 2;
-            text-align: left;
+    nav a {
+        @include text.text(lg);
+        text-transform: uppercase;
+        font-weight: 600;
+        display: block;
+        text-decoration: none;
+        color: utilities.color('gray');
+        cursor: pointer;
+        padding: utilities.space(2) 0;
+        
+        &--active {
+            color: transparent;
+            @extend .title;
+            line-height: 1.75em;
         }
-    }
-}
-
-.filters {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-
-    margin: 2rem 0;
-
-    @include breakpoints.sm {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        gap: 2rem;
-
-        flex-wrap: wrap;
-    }
-}
-
-.filters__filter {
-    font-size: 1.5em!important;
-    text-transform: uppercase;
-    font-weight: 600;
-
-    color: utilities.color('gray');
-    cursor: pointer;
-
-    &--active {
-        color: transparent;
-        @extend .title;
-        line-height: 1.75em;
     }
 }
 
@@ -137,7 +109,7 @@ header#banner {
     flex-direction: column;
     gap: 2rem;
 
-    @include breakpoints.lg {
+    @include bp.lg {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
     }
@@ -147,7 +119,19 @@ article {
     flex-direction: column;
     gap: 0.5rem;
 
-    @include breakpoints.lg {
+    a {
+        text-decoration: none
+    }
+
+    time {
+        font-size: 0.8em;
+    }
+
+    p {
+        padding-top: 0.5rem;
+    }
+
+    @include bp.lg {
         &:first-child {
             grid-column: span 3;
 
@@ -163,9 +147,9 @@ article {
                 margin: auto;
             }
             .article__title,
-            .article__date,
+            time,
             .article__tags,
-            .article__content,
+            p,
             .read_more
             {
                 grid-column: 2;
@@ -178,10 +162,4 @@ article {
 }
 .article__title {
     @extend .text_success;
-}
-.article__date {
-    font-size: 0.8em;
-}
-.article__content {
-    padding-top: 0.5rem;
 }

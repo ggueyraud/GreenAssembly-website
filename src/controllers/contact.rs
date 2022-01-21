@@ -1,4 +1,4 @@
-use crate::services;
+use crate::models;
 use actix_web::{get, post, web, Error, HttpRequest, HttpResponse};
 use askama::Template;
 use lettre::{SmtpClient, Transport};
@@ -174,25 +174,30 @@ pub async fn send(mut form: web::Json<Email>) -> Result<HttpResponse, Error> {
 
 #[get("")]
 pub async fn page(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) = services::pages::get::<super::Page>(&pool, "id, title, description", "/contact").await {
+    if let Ok(page) =
+        models::pages::get::<super::Page>(&pool, "id, title, description", "/contact").await
+    {
         let mut token: Option<String> = None;
 
-        if let Ok(Some(id)) = crate::controllers::metrics::add(&req, &pool, services::metrics::BelongsTo::Page(page.id)).await {
+        if let Ok(Some(id)) =
+            crate::controllers::metrics::add(&req, &pool, models::metrics::BelongsTo::Page(page.id))
+                .await
+        {
             token = Some(id.to_string());
         }
 
         #[derive(Template)]
-        #[template(path = "contact.html")]
+        #[template(path = "pages/contact.html")]
         struct Contact {
             title: String,
             description: Option<String>,
-            metrics_token: Option<String>
+            metrics_token: Option<String>,
         }
 
         let page = Contact {
             title: page.title,
             description: page.description,
-            metrics_token: token
+            metrics_token: token,
         };
 
         if let Ok(content) = page.render() {

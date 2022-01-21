@@ -93,6 +93,8 @@ document.addEventListener('readystatechange', e => {
     if (e.target.readyState === 'complete') {
         loader = document.querySelector('#loading');
         navbar = document.querySelector('#navbar');
+        const scroll2top = document.querySelector('#scroll_top');
+
         handle_navbar();
 
         LazyLoader();
@@ -138,6 +140,24 @@ document.addEventListener('readystatechange', e => {
                 window.history.pushState({ menu_opened: true }, null, '#menu-opened');
                 navbar.classList.add('show');
                 document.documentElement.style.overflow = 'hidden';
+            });
+
+        window.addEventListener('scroll', () => {
+            const show_at = 30 * window.innerHeight / 100;
+
+            if (window.scrollY >= show_at && !scroll2top.classList.contains('show')) {
+                scroll2top.classList.add('show');
+            } else if (window.scrollY < show_at && scroll2top.classList.contains('show')) {
+                scroll2top.classList.remove('show');
+            }
+        });
+
+        scroll2top
+            .addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
             });
         
         // Close menu

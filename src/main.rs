@@ -18,8 +18,8 @@ use user_agent_parser::UserAgentParser;
 
 mod controllers;
 mod middlewares;
+mod models;
 mod routes;
-mod services;
 mod templates;
 mod tests;
 mod utils;
@@ -51,7 +51,7 @@ fn serve_file(req: &HttpRequest, path: &Path, cache_duration: i64) -> Result<Htt
             use askama::Template;
 
             #[derive(Template)]
-            #[template(path = "404.html")]
+            #[template(path = "pages/404.html")]
             struct NotFound;
 
             Ok(HttpResponse::NotFound()
@@ -65,10 +65,10 @@ pub async fn ban_route(req: HttpRequest, pool: web::Data<sqlx::PgPool>) -> HttpR
     if let Some(val) = req.peer_addr() {
         let ip = val.ip().to_string();
 
-        if !services::ips_banned::is_banned(&pool, &ip).await {
+        if !models::ips_banned::is_banned(&pool, &ip).await {
             let (_, counter) = futures::join!(
-                services::ips_banned::add(&pool, &ip),
-                services::ips_banned::count(&pool, &ip)
+                models::ips_banned::add(&pool, &ip),
+                models::ips_banned::count(&pool, &ip)
             );
 
             println!("Ban x{} times", counter);
@@ -157,8 +157,7 @@ async fn main() -> std::io::Result<()> {
     .run();
 
     let server = HttpServer::new(move || {
-        let mut cors = Cors::default()
-            .allowed_methods(vec!["POST"]);
+        let mut cors = Cors::default().allowed_methods(vec!["POST"]);
 
         if cfg!(debug_assertions) {
             cors = cors.allow_any_origin();
@@ -211,7 +210,7 @@ async fn main() -> std::io::Result<()> {
             .configure(routes::website::config)
             .configure(routes::config)
             .configure(routes::contact::config)
-            // .configure(routes::blog::config)
+            .configure(routes::blog::config)
             .service(serve_upload_file)
             .service(serve_public_file)
     })

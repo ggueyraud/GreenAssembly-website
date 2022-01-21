@@ -35,16 +35,26 @@
         />
     </div>
 
-    <ga-frame name="banner">
-        {% block banner %}{% endblock %}
-    </ga-frame>
-
     <div class="relative container mx_auto px_4 sm_px_0">
         {% include "includes/navbar.html" %}
     
         <ga-frame name="main">
             <main>
-                {% block content %}{% endblock %}
+                <header>{% block banner %}{% endblock %}</header>
+
+                <section>
+                    {% block content %}{% endblock %}
+
+                    <nav>
+                        <header>
+                            <h3>Catégories</h3>
+                        </header>
+
+                        {% for category in categories %}
+                            <a href="/blog/categories/{{ category.uri}}" o-follow>{{ category.name }}</a>
+                        {% endfor %}
+                    </nav>
+                </section>
             </main>
         </ga-frame>
     </div>

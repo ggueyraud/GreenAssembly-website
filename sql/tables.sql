@@ -7,24 +7,19 @@ CREATE TABLE files (
 
 DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users (
-    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    login VARCHAR(64) NOT NULL UNIQUE,
-    password VARCHAR(128) NOT NULL
-);
-
-DROP TABLE IF EXISTS employees CASCADE;
-CREATE TABLE employees (
-    /* On utilisera l'id pour le nom de l'avatar,
-       donc pas besoin de créer un champ pour */
-    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id SMALLINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    email VARCHAR(255) NOT NULL UNIQUE,
     firstname VARCHAR(32) NOT NULL,
     lastname VARCHAR(32) NOT NULL,
+    nickname VARCHAR(32),
     job VARCHAR(64) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    picture_id INT
+        REFERENCES files (id)
+        ON DELETE SET NULL,
+    is_employed BOOLEAN,
     description VARCHAR(500),
-    picture VARCHAR(32) NOT NULL,
-    /* drawing_order nous permettra de définir l'ordre d'affichage,
-       il suffira de trier avec ce champ par ordre croissant */
-    "order" SMALLINT DEFAULT 0
+    "order" SMALLINT -- Order of display on the agency page
 );
 
 DROP TABLE IF EXISTS pages CASCADE;
@@ -121,4 +116,46 @@ CREATE TABLE portfolio_project_pictures (
     file_id INT NOT NULL
         REFERENCES files (id),
     "order" SMALLINT NOT NULL
+);
+
+DROP TABLE IF EXISTS blog_categories CASCADE;
+CREATE TABLE blog_categories (
+    id SMALLINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    name VARCHAR(60) NOT NULL,
+    uri VARCHAR(70) NOT NULL,
+    description VARCHAR(255),
+    is_visible BOOLEAN,
+    is_seo BOOLEAN,
+    "order" SMALLINT NOT NULL
+);
+
+DROP TABLE IF EXISTS blog_posts CASCADE;
+CREATE TABLE blog_posts (
+    id SMALLINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    category_id SMALLINT
+        REFERENCES blog_categories (id)
+        ON DELETE SET NULL,
+    cover_id INT NOT NULL
+        REFERENCES files (id)
+        ON DELETE SET NULL,
+    user_id SMALLINT NOT NULL
+        REFERENCES users (id),
+    name VARCHAR(255) NOT NULL,
+    description VARCHAR(320),
+    content TEXT NOT NULL,
+    uri VARCHAR(260) NOT NULL,
+    "date" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    modified_date TIMESTAMP WITH TIME ZONE,
+    is_published BOOLEAN DEFAULT FALSE,
+    is_seo BOOLEAN DEFAULT FALSE
+);
+
+DROP TABLE IF EXISTS blog_post_images CASCADE;
+CREATE TABLE blog_post_images (
+    id uuid NOT NULL DEFAULT gen_random_uuid(),
+    post_id SMALLINT NOT NULL
+        REFERENCES blog_posts (id)
+        ON DELETE CASCADE,
+    file_id INT NOT NULL
+        REFERENCES files (id)
 );

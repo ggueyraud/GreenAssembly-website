@@ -46,18 +46,3 @@ pub async fn get<
 //     .fetch_one(pool)
 //     .await
 // }
-
-pub async fn get_id(pool: &PgPool, path: &str) -> Result<i16, Error> {
-    let row = sqlx::query!(
-        "SELECT
-            id
-        FROM pages
-        WHERE path = $1
-        LIMIT 1",
-        path
-    )
-    .fetch_one(pool)
-    .await?;
-    
-    Ok(row.id)
-}

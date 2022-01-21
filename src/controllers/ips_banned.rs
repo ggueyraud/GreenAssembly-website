@@ -1,7 +1,7 @@
 use actix_web::{HttpRequest, HttpResponse};
 
 pub async fn is_banned(req: &HttpRequest, pool: &PgPool) -> HttpResponse {
-    if crate::services::ips_banned::get(
+    if crate::models::ips_banned::get(
         &self.pool,
         &req.peer_addr().unwrap().ip().to_string()
     ).await {

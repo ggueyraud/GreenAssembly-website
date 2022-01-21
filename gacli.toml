@@ -5,7 +5,7 @@ safelist = ["webp_supportted", "no_webp", "navbar show", "read_more"]
 
 [[purgecss]]
 css = "pages/index.css"
-content = ["templates/index.html", ".build/production/js/index.js"]
+content = ["templates/pages/index.html", ".build/production/js/index.js"]
 safelist = [
     "webp_supportted",
     "no_webp",
@@ -19,7 +19,7 @@ safelist = [
 
 [[purgecss]]
 css = "pages/agency.css"
-content = ["templates/agency.html", "templates/components/employee.html"]
+content = ["templates/pages/agency.html", "templates/components/employee.html"]
 safelist = ["webp_supportted", "no_webp", "carousel__pagination__item", "carousel__pagination__item--current", "carousel__pagination__item--hidden"]
 
 [[purgecss]]
@@ -34,28 +34,28 @@ safelist = ["lightbox", "lightbox--active", "carousel__pagination__item", "carou
 
 [[purgecss]]
 css = "pages/contact.css"
-content = ["templates/contact.html", ".build/production/js/contact.js"]
+content = ["templates/pages/contact.html", ".build/production/js/contact.js"]
 safelist = ["webp_supportted", "no_webp", "carousel__pagination__item", "carousel__pagination__item--current", "carousel__pagination__item index", "carousel__pagination__item descr"]
 
 [[purgecss]]
 css = "pages/onepage.css"
-content = ["templates/showcase_website.html", "templates/onepage.html", "templates/e_commerce.html", ".build/production/js/global.js"]
+content = ["templates/pages/showcase_website.html", "templates/onepage.html", "templates/e_commerce.html", ".build/production/js/global.js"]
 safelist = ["webp_supportted", "no_webp"]
 
 [[purgecss]]
 css = "pages/legals.css"
-content = ["templates/legals.html"]
+content = ["templates/pages/legals.html"]
 
 [[purgecss]]
 css = "pages/404.css"
-content = ["templates/404.html"]
+content = ["templates/pages/404.html"]
 
 [[purgecss]]
 css = "pages/faq.css"
-content = ["templates/faq.html"]
+content = ["templates/pages/faq.html"]
 safelist = ["aria-expanded"]
 
 [[purgecss]]
 css = "pages/website_creation.css"
-content = ["webp_supportted", "templates/website_creation.html", ".build/production/js/global.js", ".build/production/js/website_creation.js"]
+content = ["webp_supportted", "templates/pages/website_creation.html", ".build/production/js/global.js", ".build/production/js/website_creation.js"]
 safelist = ["carousel__pagination__item", "carousel__pagination__item--current", "carousel__pagination__item index", "carousel__pagination__item descr"]

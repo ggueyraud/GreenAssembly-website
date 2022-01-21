@@ -1,4 +1,4 @@
-use crate::services;
+use crate::models;
 use crate::templates::Employee;
 use actix_web::{get, web, HttpRequest, HttpResponse};
 use askama::Template;
@@ -6,39 +6,40 @@ use askama::Template;
 use sqlx::PgPool;
 pub mod blog;
 pub mod contact;
-pub mod employees;
 pub mod metrics;
-pub mod users;
 pub mod website;
 
 #[derive(sqlx::FromRow)]
 struct Page {
     id: i16,
     title: String,
-    description: Option<String>
+    description: Option<String>,
 }
 
 #[get("/")]
 pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) = services::pages::get::<Page>(&pool, "id, title, description", "/").await {
+    if let Ok(page) = models::pages::get::<Page>(&pool, "id, title, description", "/").await {
         let mut token: Option<String> = None;
 
-        if let Ok(Some(id)) = crate::controllers::metrics::add(&req, &pool, services::metrics::BelongsTo::Page(page.id)).await {
+        if let Ok(Some(id)) =
+            crate::controllers::metrics::add(&req, &pool, models::metrics::BelongsTo::Page(page.id))
+                .await
+        {
             token = Some(id.to_string());
         }
 
         #[derive(Template)]
-        #[template(path = "index.html")]
+        #[template(path = "pages/index.html")]
         struct Index {
             title: String,
             description: Option<String>,
-            metrics_token: Option<String>
+            metrics_token: Option<String>,
         }
 
         let page = Index {
             title: page.title,
             description: page.description,
-            metrics_token: token
+            metrics_token: token,
         };
 
         if let Ok(content) = page.render() {
@@ -51,68 +52,75 @@ pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
 
 #[get("/agence-digitale-verte")]
 async fn agency(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    match futures::join!(
-        services::pages::get::<Page>(&pool, "id, title, description", "/agence-digitale-verte"),
-        services::employees::get_all(&pool)
+    if let (Ok(page), employees) = futures::join!(
+        models::pages::get::<Page>(&pool, "id, title, description", "/agence-digitale-verte"),
+        models::users::get_employees(&pool)
     ) {
-        (Ok(page), Ok(employees)) => {
-            let mut token: Option<String> = None;
+        let mut token: Option<String> = None;
 
-            if let Ok(Some(id)) = crate::controllers::metrics::add(&req, &pool, services::metrics::BelongsTo::Page(page.id)).await {
-                token = Some(id.to_string());
-            }
-
-            #[derive(Template)]
-            #[template(path = "agency.html")]
-            struct Agency {
-                title: String,
-                description: Option<String>,
-                employees: Vec<Employee>,
-                metrics_token: Option<String>
-            }
-
-            let page = Agency {
-                title: page.title,
-                description: page.description,
-                employees: employees
-                    .iter()
-                    .map(|employee| Employee::from((*employee).clone()))
-                    .collect::<Vec<Employee>>(),
-                metrics_token: token
-            };
-
-            match page.render() {
-                Ok(content) => HttpResponse::Ok().content_type("text/html").body(content),
-                _ => HttpResponse::InternalServerError().finish(),
-            }
+        if let Ok(Some(id)) =
+            crate::controllers::metrics::add(&req, &pool, models::metrics::BelongsTo::Page(page.id))
+                .await
+        {
+            token = Some(id.to_string());
         }
-        _ => HttpResponse::InternalServerError().finish(),
+
+        #[derive(Template)]
+        #[template(path = "pages/agency.html")]
+        struct Agency {
+            title: String,
+            description: Option<String>,
+            employees: Vec<Employee>,
+            metrics_token: Option<String>,
+        }
+
+        let page = Agency {
+            title: page.title,
+            description: page.description,
+            employees: employees
+                .iter()
+                .map(|employee| Employee::from((*employee).clone()))
+                .collect::<Vec<Employee>>(),
+            metrics_token: token,
+        };
+
+        if let Ok(content) = page.render() {
+            return HttpResponse::Ok().content_type("text/html").body(content);
+        }
     }
+
+    HttpResponse::InternalServerError().finish()
 }
 
 #[get("/portfolio")]
 async fn portfolio(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) = services::pages::get::<Page>(&pool, "id, title, description", "/portfolio").await {
+    if let Ok(page) =
+        models::pages::get::<Page>(&pool, "id, title, description", "/portfolio").await
+    {
         #[derive(sqlx::FromRow)]
         struct Category {
             id: i16,
-            name: String
+            name: String,
         }
 
         #[derive(sqlx::FromRow)]
         struct Project {
             id: i16,
             name: String,
-            category_id: i16
+            category_id: i16,
         }
 
         if let (Ok(metric_id), Ok(categories), Ok(projects)) = futures::join!(
-            crate::controllers::metrics::add(&req, &pool, services::metrics::BelongsTo::Page(page.id)),
-            services::portfolio::categories::get_all::<Category>(&pool, "id, name"),
-            services::portfolio::projects::get_all::<Project>(&pool, "id, name, category_id")
+            crate::controllers::metrics::add(
+                &req,
+                &pool,
+                models::metrics::BelongsTo::Page(page.id)
+            ),
+            models::portfolio::categories::get_all::<Category>(&pool, "id, name"),
+            models::portfolio::projects::get_all::<Project>(&pool, "id, name, category_id")
         ) {
             let mut token: Option<String> = None;
-    
+
             if let Some(id) = metric_id {
                 token = Some(id.to_string());
             }
@@ -124,23 +132,23 @@ async fn portfolio(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
                 uri: String,
                 illustration: String,
                 fallback_illustration: String,
-                category_id: i16
+                category_id: i16,
             }
 
             #[derive(Template)]
-            #[template(path = "portfolio/index.html")]
+            #[template(path = "pages/portfolio/index.html")]
             struct Portfolio {
                 title: String,
                 description: Option<String>,
                 metrics_token: Option<String>,
                 categories: Vec<Category>,
-                projects: Vec<Project>
+                projects: Vec<Project>,
             }
 
             let mut cover_fut = vec![];
 
             for project in &projects {
-                cover_fut.push(services::portfolio::pictures::get_cover(&pool, project.id));
+                cover_fut.push(models::portfolio::pictures::get_cover(&pool, project.id));
             }
 
             if let Ok(covers) = futures::future::try_join_all(cover_fut).await {
@@ -149,7 +157,7 @@ async fn portfolio(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
                     description: page.description,
                     metrics_token: token,
                     categories,
-                    projects: vec![]
+                    projects: vec![],
                 };
 
                 for (i, cover) in covers.iter().enumerate() {
@@ -158,20 +166,15 @@ async fn portfolio(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
                             name: project.name.clone(),
                             fallback_illustration: format!(
                                 "{}.webp",
-                                cover
-                                    .clone()
-                                    .split('.')
-                                    .collect::<Vec<_>>()
-                                    .get(0)
-                                    .unwrap()
+                                cover.clone().split('.').collect::<Vec<_>>().get(0).unwrap()
                             ),
                             illustration: cover.to_string(),
                             uri: slugmin::slugify(&format!("{}-{}", project.name, project.id)),
-                            category_id: project.category_id
+                            category_id: project.category_id,
                         });
                     }
                 }
-        
+
                 if let Ok(content) = page.render() {
                     return HttpResponse::Ok().content_type("text/html").body(content);
                 }
@@ -183,46 +186,46 @@ async fn portfolio(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
 }
 
 #[get("/portfolio/{name}-{id}")]
-async fn view_project(
+async fn show_project(
     req: HttpRequest,
     pool: web::Data<PgPool>,
     web::Path((_, id)): web::Path<(String, i16)>,
 ) -> HttpResponse {
-    if !services::portfolio::projects::exists(&pool, id).await {
+    if !models::portfolio::projects::exists(&pool, id).await {
         return HttpResponse::NotFound().finish();
     }
 
-    #[derive(sqlx::FromRow, Debug)]
+    #[derive(sqlx::FromRow)]
     struct Picture {
-        path: String
+        path: String,
     }
 
-    #[derive(sqlx::FromRow, Debug)]
+    #[derive(sqlx::FromRow)]
     struct Project {
         name: String,
         description: Option<String>,
         content: String,
         is_visible: Option<bool>,
-        date: chrono::DateTime::<chrono::Utc>,
+        date: chrono::DateTime<chrono::Utc>,
         international_date: String,
-        last_update_date: Option<chrono::DateTime<chrono::Utc>>
+        last_update_date: Option<chrono::DateTime<chrono::Utc>>,
     }
-    
-    // println!("{:?}", metrics::add(&req, &pool, services::metrics::BelongsTo::Project(id)).await);
-    // println!("{:?}",services::portfolio::projects::get::<Project>(
+
+    // println!("{:?}", metrics::add(&req, &pool, models::metrics::BelongsTo::Project(id)).await);
+    // println!("{:?}",models::portfolio::projects::get::<Project>(
     //     &pool,
     //     r#"name, description, content, is_visible, date, TO_CHAR(date, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') AS international_date, last_update_date"#,
     //     id
     // ).await);
-    // println!("{:?}", services::portfolio::pictures::get_all::<Picture>(&pool, "path", id).await);
+    // println!("{:?}", models::portfolio::pictures::get_all::<Picture>(&pool, "path", id).await);
     if let (Ok(metric_id), Ok(project), Ok(mut pictures)) = futures::join!(
-        metrics::add(&req, &pool, services::metrics::BelongsTo::Project(id)),
-        services::portfolio::projects::get::<Project>(
+        metrics::add(&req, &pool, models::metrics::BelongsTo::Project(id)),
+        models::portfolio::projects::get::<Project>(
             &pool,
             r#"name, description, content, is_visible, date, TO_CHAR(date, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') AS international_date, last_update_date"#,
             id
         ),
-        services::portfolio::pictures::get_all::<Picture>(&pool, "path", id)
+        models::portfolio::pictures::get_all::<Picture>(&pool, "path", id)
     ) {
         let mut token: Option<String> = None;
         if let Some(id) = metric_id {
@@ -231,20 +234,20 @@ async fn view_project(
 
         struct Picture {
             filename: String,
-            path: String
+            path: String,
         }
 
         #[derive(Template)]
-        #[template(path = "portfolio/project.html")]
+        #[template(path = "pages/portfolio/project.html")]
         struct PortfolioProject {
             title: String,
             description: Option<String>,
             content: String,
-            date: chrono::DateTime::<chrono::Utc>,
+            date: chrono::DateTime<chrono::Utc>,
             international_date: String,
             first_picture: Picture,
             pictures: Vec<Picture>,
-            metrics_token: Option<String>
+            metrics_token: Option<String>,
         }
 
         let cover = pictures.remove(0).path;
@@ -262,20 +265,23 @@ async fn view_project(
                     .collect::<Vec<_>>()
                     .get(0)
                     .unwrap()
-                    .to_string()
+                    .to_string(),
             },
-            pictures: pictures.iter().map(|picture| Picture {
-                path: picture.path.clone(),
-                filename: picture
-                    .path
-                    .clone()
-                    .split('.')
-                    .collect::<Vec<_>>()
-                    .get(0)
-                    .unwrap()
-                    .to_string()
-            }).collect::<Vec<_>>(),
-            metrics_token: token
+            pictures: pictures
+                .iter()
+                .map(|picture| Picture {
+                    path: picture.path.clone(),
+                    filename: picture
+                        .path
+                        .clone()
+                        .split('.')
+                        .collect::<Vec<_>>()
+                        .get(0)
+                        .unwrap()
+                        .to_string(),
+                })
+                .collect::<Vec<_>>(),
+            metrics_token: token,
         };
 
         if let Ok(content) = project.render() {
@@ -288,25 +294,30 @@ async fn view_project(
 
 #[get("/mentions-legales")]
 async fn legals(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) = services::pages::get::<Page>(&pool, "id, title, description", "/mentions-legales").await {
+    if let Ok(page) =
+        models::pages::get::<Page>(&pool, "id, title, description", "/mentions-legales").await
+    {
         let mut token: Option<String> = None;
 
-        if let Ok(Some(id)) = crate::controllers::metrics::add(&req, &pool, services::metrics::BelongsTo::Page(page.id)).await {
+        if let Ok(Some(id)) =
+            crate::controllers::metrics::add(&req, &pool, models::metrics::BelongsTo::Page(page.id))
+                .await
+        {
             token = Some(id.to_string());
         }
 
         #[derive(Template)]
-        #[template(path = "legals.html")]
+        #[template(path = "pages/legals.html")]
         struct Legals {
             title: String,
             description: Option<String>,
-            metrics_token: Option<String>
+            metrics_token: Option<String>,
         }
 
         let page = Legals {
             title: page.title,
             description: page.description,
-            metrics_token: token
+            metrics_token: token,
         };
 
         if let Ok(content) = page.render() {
@@ -319,20 +330,23 @@ async fn legals(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
 
 #[get("/faq")]
 async fn faq(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) = services::pages::get::<Page>(&pool, "id, title, description", "/faq").await {
+    if let Ok(page) = models::pages::get::<Page>(&pool, "id, title, description", "/faq").await {
         let mut token: Option<String> = None;
 
-        if let Ok(Some(id)) = crate::controllers::metrics::add(&req, &pool, services::metrics::BelongsTo::Page(page.id)).await {
+        if let Ok(Some(id)) =
+            crate::controllers::metrics::add(&req, &pool, models::metrics::BelongsTo::Page(page.id))
+                .await
+        {
             token = Some(id.to_string());
         }
 
         struct Category {
             id: i16,
             name: String,
-            questions: Vec<services::faq::Answer>,
+            questions: Vec<models::faq::Answer>,
         }
 
-        let mut categories = services::faq::categories::get_all(&pool)
+        let mut categories = models::faq::categories::get_all(&pool)
             .await
             .iter_mut()
             .map(|category| Category {
@@ -343,23 +357,23 @@ async fn faq(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
             .collect::<Vec<_>>();
 
         for category in &mut categories {
-            category.questions = services::faq::answers::get_all(&pool, category.id).await;
+            category.questions = models::faq::answers::get_all(&pool, category.id).await;
         }
 
         #[derive(Template)]
-        #[template(path = "faq.html")]
+        #[template(path = "pages/faq.html")]
         struct FAQ {
             title: String,
             description: Option<String>,
             categories: Vec<Category>,
-            metrics_token: Option<String>
+            metrics_token: Option<String>,
         }
 
         let page = FAQ {
             title: page.title,
             description: page.description,
             categories,
-            metrics_token: token
+            metrics_token: token,
         };
 
         if let Ok(content) = page.render() {

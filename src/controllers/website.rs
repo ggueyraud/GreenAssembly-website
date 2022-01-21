@@ -1,29 +1,35 @@
-use crate::services;
+use crate::models;
 use actix_web::{get, web, HttpRequest, HttpResponse};
 use askama::Template;
 use sqlx::PgPool;
 
 #[get("")]
 pub async fn website_creation(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) = services::pages::get::<super::Page>(&pool, "id, title, description", "/creation-site-web").await {
+    if let Ok(page) =
+        models::pages::get::<super::Page>(&pool, "id, title, description", "/creation-site-web")
+            .await
+    {
         let mut token: Option<String> = None;
 
-        if let Ok(Some(id)) = crate::controllers::metrics::add(&req, &pool, services::metrics::BelongsTo::Page(page.id)).await {
+        if let Ok(Some(id)) =
+            crate::controllers::metrics::add(&req, &pool, models::metrics::BelongsTo::Page(page.id))
+                .await
+        {
             token = Some(id.to_string());
         }
 
         #[derive(Template)]
-        #[template(path = "website_creation.html")]
+        #[template(path = "pages/website_creation.html")]
         struct WebsiteCreation {
             title: String,
             description: Option<String>,
-            metrics_token: Option<String>
+            metrics_token: Option<String>,
         }
 
         let page = WebsiteCreation {
             title: page.title,
             description: page.description,
-            metrics_token: token
+            metrics_token: token,
         };
 
         if let Ok(content) = page.render() {
@@ -36,25 +42,34 @@ pub async fn website_creation(req: HttpRequest, pool: web::Data<PgPool>) -> Http
 
 #[get("/onepage")]
 pub async fn onepage(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) = services::pages::get::<super::Page>(&pool, "id, title, description", "/creation-site-web/onepage").await {
+    if let Ok(page) = models::pages::get::<super::Page>(
+        &pool,
+        "id, title, description",
+        "/creation-site-web/onepage",
+    )
+    .await
+    {
         let mut token: Option<String> = None;
 
-        if let Ok(Some(id)) = crate::controllers::metrics::add(&req, &pool, services::metrics::BelongsTo::Page(page.id)).await {
+        if let Ok(Some(id)) =
+            crate::controllers::metrics::add(&req, &pool, models::metrics::BelongsTo::Page(page.id))
+                .await
+        {
             token = Some(id.to_string());
         }
 
         #[derive(Template)]
-        #[template(path = "onepage_website.html")]
+        #[template(path = "pages/onepage_website.html")]
         struct OnePage {
             title: String,
             description: Option<String>,
-            metrics_token: Option<String>
+            metrics_token: Option<String>,
         }
 
         let page = OnePage {
             title: page.title,
             description: page.description,
-            metrics_token: token
+            metrics_token: token,
         };
 
         if let Ok(content) = page.render() {
@@ -67,25 +82,34 @@ pub async fn onepage(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse 
 
 #[get("/vitrine")]
 pub async fn showcase(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) = services::pages::get::<super::Page>(&pool, "id, title, description", "/creation-site-web/vitrine").await {
+    if let Ok(page) = models::pages::get::<super::Page>(
+        &pool,
+        "id, title, description",
+        "/creation-site-web/vitrine",
+    )
+    .await
+    {
         let mut token: Option<String> = None;
 
-        if let Ok(Some(id)) = crate::controllers::metrics::add(&req, &pool, services::metrics::BelongsTo::Page(page.id)).await {
+        if let Ok(Some(id)) =
+            crate::controllers::metrics::add(&req, &pool, models::metrics::BelongsTo::Page(page.id))
+                .await
+        {
             token = Some(id.to_string());
         }
 
         #[derive(Template)]
-        #[template(path = "showcase_website.html")]
+        #[template(path = "pages/showcase_website.html")]
         struct Showcase {
             title: String,
             description: Option<String>,
-            metrics_token: Option<String>
+            metrics_token: Option<String>,
         }
 
         let page = Showcase {
             title: page.title,
             description: page.description,
-            metrics_token: token
+            metrics_token: token,
         };
 
         if let Ok(content) = page.render() {
@@ -98,25 +122,34 @@ pub async fn showcase(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse
 
 #[get("/e-commerce")]
 pub async fn e_commerce(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) = services::pages::get::<super::Page>(&pool, "id, title, description", "/creation-site-web/e-commerce").await {
+    if let Ok(page) = models::pages::get::<super::Page>(
+        &pool,
+        "id, title, description",
+        "/creation-site-web/e-commerce",
+    )
+    .await
+    {
         let mut token: Option<String> = None;
 
-        if let Ok(Some(id)) = crate::controllers::metrics::add(&req, &pool, services::metrics::BelongsTo::Page(page.id)).await {
+        if let Ok(Some(id)) =
+            crate::controllers::metrics::add(&req, &pool, models::metrics::BelongsTo::Page(page.id))
+                .await
+        {
             token = Some(id.to_string());
         }
 
         #[derive(Template)]
-        #[template(path = "e_commerce_website.html")]
+        #[template(path = "pages/e_commerce_website.html")]
         struct ECommerce {
             title: String,
             description: Option<String>,
-            metrics_token: Option<String>
+            metrics_token: Option<String>,
         }
 
         let page = ECommerce {
             title: page.title,
             description: page.description,
-            metrics_token: token
+            metrics_token: token,
         };
 
         if let Ok(content) = page.render() {

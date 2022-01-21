@@ -59,7 +59,7 @@
 //         let fut = self.service.call(req);
 
 //         Box::pin(async move {
-//             let res = crate::services::ips_banned::get(&pool, &ip).await;
+//             let res = crate::models::ips_banned::get(&pool, &ip).await;
 //             // let response = fut.await?;
 
 //             match res {

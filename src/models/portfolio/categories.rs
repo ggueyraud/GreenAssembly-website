@@ -13,8 +13,8 @@ pub async fn get_all<
         ORDER BY "order""#,
         fields
     ))
-        .fetch_all(pool)
-        .await?;
+    .fetch_all(pool)
+    .await?;
 
     Ok(categories)
 }

@@ -1,21 +1,25 @@
+use crate::models::users;
 use askama::Template;
 
 #[derive(Template)]
 #[template(path = "components/employee.html")]
 pub struct Employee {
     pub fullname: String,
-    pub position_held: String, // Nom du poste occupé
+    pub job: String,
     pub description: Option<String>,
     pub picture: String,
 }
 
-impl From<crate::services::employees::Employee> for Employee {
-    fn from(employee: crate::services::employees::Employee) -> Self {
+impl From<users::Employee> for Employee {
+    fn from(employee: users::Employee) -> Self {
+        let filename = employee.picture.split('.').collect::<Vec<_>>();
+        let filename = filename.get(0).unwrap();
+
         Self {
             fullname: employee.fullname,
-            position_held: employee.job,
+            job: employee.job,
             description: employee.description,
-            picture: employee.picture,
+            picture: filename.to_string(),
         }
     }
 }

@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "blog.html" %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -9,16 +9,22 @@
         {% when None %}
     {% endmatch %}
 
-    <link rel="stylesheet" href="/css/pages/blog/view_article.css" />
+    <link rel="stylesheet" href="/css/pages/blog/index.css" />
+
+    {% include "includes/metrics.html" %}
 {% endblock %}
 
 {% block banner %}
     <header id="banner">
-        <h1>{{ title }}</h1>
-        <img src="{{ image_path }}" alt="">
+        <h1>Blog</h1>
+        <h2>La <span class="banner__green-word">green</span> actu</h2>
     </header>
 {% endblock %}
 
 {% block content %}
-    Article content
+    <div class="articles">
+        {% for post in posts %}
+            {{ post|safe }}
+        {% endfor %}
+    </div>
 {% endblock %}

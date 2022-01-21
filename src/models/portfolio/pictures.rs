@@ -9,8 +9,8 @@ pub async fn get_cover(pool: &PgPool, project_id: i16) -> Result<String, Error> 
         WHERE prp.project_id = $1 AND prp.order = 0"#,
         project_id
     )
-        .fetch_one(pool)
-        .await?;
+    .fetch_one(pool)
+    .await?;
 
     Ok(res.path)
 }
@@ -20,7 +20,7 @@ pub async fn get_all<
 >(
     pool: &PgPool,
     fields: &str,
-    project_id: i16
+    project_id: i16,
 ) -> Result<Vec<T>, Error> {
     let pictures = sqlx::query_as::<_, T>(&format!(
         r#"SELECT
@@ -31,9 +31,9 @@ pub async fn get_all<
         ORDER BY prp.order"#,
         fields
     ))
-        .bind(project_id)
-        .fetch_all(pool)
-        .await?;
+    .bind(project_id)
+    .fetch_all(pool)
+    .await?;
 
     Ok(pictures)
 }

@@ -1,16 +1,14 @@
-use sqlx::{Error, PgPool, types::Uuid};
+use sqlx::{types::Uuid, Error, PgPool};
 
 pub mod sessions;
 
 pub enum BelongsTo {
     Page(i16),
-    Project(i16)
+    Project(i16),
 }
 
 pub async fn exists(pool: &PgPool, id: Uuid) -> bool {
-    sqlx::query!(
-        "SELECT 1 AS one FROM metrics WHERE id = $1", id
-    )
+    sqlx::query!("SELECT 1 AS one FROM metrics WHERE id = $1", id)
         .fetch_one(pool)
         .await
         .is_ok()
@@ -78,17 +76,21 @@ pub async fn add(
     Ok(id)
 }
 
-pub async fn update_end_date(pool: &PgPool, session_id: Option<Uuid>, id: Uuid) -> Result<bool, Error> {
+pub async fn update_end_date(
+    pool: &PgPool,
+    session_id: Option<Uuid>,
+    id: Uuid,
+) -> Result<bool, Error> {
     let res = sqlx::query!(
-            "UPDATE metrics
+        "UPDATE metrics
             SET end_date = NOW(),
                 session_id = $1
             WHERE id = $2",
-            session_id,
-            id
-        )
-        .execute(pool)
-        .await?;
+        session_id,
+        id
+    )
+    .execute(pool)
+    .await?;
 
     Ok(res.rows_affected() == 1)
 }

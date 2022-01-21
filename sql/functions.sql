@@ -27,10 +27,42 @@ BEGIN
                 'curl',
                 'crawler',
                 'BLEXBot',
-                'Apache-HttpClient'
+                'Apache-HttpClient',
+                'Discordbot'
             )
         )
-        FROM pages;
+        FROM pages
+        UNION
+        SELECT
+            name,
+            (
+                SELECT COUNT(DISTINCT metrics.ip)
+                FROM metrics
+                WHERE DATE(date) BETWEEN $1 AND $2
+                AND metrics.project_id = portfolio_projects.id
+                AND browser NOT IN (
+                    'LinkedInBot',
+                    'ZoominfoBot',
+                    'Baiduspider',
+                    'bingbot',
+                    'Applebot',
+                    'Python Requests',
+                    'MJ12bot',
+                    'Go-http-client',
+                    'Googlebot',
+                    'PetalBot',
+                    'FacebookBot',
+                    'SemrushBot',
+                    'AdsBot-Google',
+                    'AhrefsBot',
+                    'curl',
+                    'crawler',
+                    'BLEXBot',
+                    'Apache-HttpClient',
+                    'Discordbot'
+                )
+            )
+            FROM portfolio_projects;
 END;
 $$ LANGUAGE PLPGSQL;
 
@@ -63,7 +95,8 @@ BEGIN
                 'curl',
                 'crawler',
                 'BLEXBot',
-                'Apache-HttpClient'
+                'Apache-HttpClient',
+                'Discordbot'
             )
         )
         FROM pages;
@@ -104,7 +137,8 @@ BEGIN
             'curl',
             'crawler',
             'BLEXBot',
-            'Apache-HttpClient'
+            'Apache-HttpClient',
+            'Discordbot'
         );
 
         SELECT INTO total_bounce_counter
@@ -132,7 +166,8 @@ BEGIN
             'curl',
             'crawler',
             'BLEXBot',
-            'Apache-HttpClient'
+            'Apache-HttpClient',
+            'Discordbot'
         );
         
         IF total_views_counter > 0 THEN
@@ -178,7 +213,8 @@ BEGIN
             'curl',
             'crawler',
             'BLEXBot',
-            'Apache-HttpClient'
+            'Apache-HttpClient',
+            'Discordbot'
         );
 
         title := row.title;
@@ -217,7 +253,8 @@ BEGIN
             'curl',
             'crawler',
             'BLEXBot',
-            'Apache-HttpClient'
+            'Apache-HttpClient',
+            'Discordbot'
         );
 
     RETURN counter;
@@ -253,8 +290,65 @@ BEGIN
             'curl',
             'crawler',
             'BLEXBot',
-            'Apache-HttpClient'
+            'Apache-HttpClient',
+            'Discordbot'
         )
         GROUP BY referer;
+END;
+$$ LANGUAGE PLPGSQL;
+
+DROP FUNCTION IF EXISTS avg_pages_session(DATE, DATE);
+CREATE FUNCTION avg_pages_session(start_date DATE, end_date DATE)
+RETURNS INT AS $$
+DECLARE
+    counter INT;
+BEGIN
+    SELECT INTO counter AVG(count)
+        FROM (
+            SELECT
+                COUNT(id) as count
+            FROM metrics
+            WHERE DATE(date) BETWEEN $1 AND $2
+            AND session_id IS NOT NULL
+            AND browser NOT IN (
+                'LinkedInBot',
+                'ZoominfoBot',
+                'Baiduspider',
+                'bingbot',
+                'Applebot',
+                'Python Requests',
+                'MJ12bot',
+                'Go-http-client',
+                'Googlebot',
+                'PetalBot',
+                'FacebookBot',
+                'SemrushBot',
+                'AdsBot-Google',
+                'AhrefsBot',
+                'curl',
+                'crawler',
+                'BLEXBot',
+                'Apache-HttpClient',
+                'Discordbot'
+            )
+            GROUP BY session_id
+        ) as counts;
+
+    RETURN counter;
+END;
+$$ LANGUAGE PLPGSQL;
+
+DROP FUNCTION IF EXISTS sessions(DATE, DATE);
+CREATE FUNCTION sessions(start_date DATE DEFAULT CURRENT_DATE, end_date DATE DEFAULT CURRENT_DATE)
+RETURNS INT AS $$
+DECLARE
+    counter INT;
+BEGIN
+    SELECT INTO COUNTER
+        COUNT(id)
+    FROM metric_sessions
+    WHERE expiration_date BETWEEN $1 AND $2;
+
+    RETURN counter;
 END;
 $$ LANGUAGE PLPGSQL;

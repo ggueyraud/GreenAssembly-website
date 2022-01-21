@@ -20,8 +20,8 @@ pub async fn get_all<
         ORDER BY id DESC",
         fields
     ))
-        .fetch_all(pool)
-        .await?;
+    .fetch_all(pool)
+    .await?;
 
     Ok(projects)
 }
@@ -33,7 +33,10 @@ pub async fn get<
     fields: &str,
     id: i16,
 ) -> Result<T, Error> {
-    let query = format!("SELECT {} FROM portfolio_projects WHERE id = $1 LIMIT 1", fields);
+    let query = format!(
+        "SELECT {} FROM portfolio_projects WHERE id = $1 LIMIT 1",
+        fields
+    );
 
     let res = sqlx::query_as::<_, T>(&query)
         .bind(id)

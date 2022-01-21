@@ -51,14 +51,17 @@ where
             "/agence" => {
                 Either::Right(ok(req.into_response(
                     HttpResponse::MovedPermanently()
-                        .header(http::header::LOCATION, "https://greenassembly.fr/agence-digitale-verte")
+                        .header(
+                            http::header::LOCATION,
+                            "https://greenassembly.fr/agence-digitale-verte",
+                        )
                         // .header(http::header::LOCATION, "https://localhost:8443/agence-digitale-verte")
                         .header(http::header::REFERER, format!("http://{}{}", host, uri))
                         .finish()
                         .into_body(),
                 )))
             }
-            _ =>  {
+            _ => {
                 if req.connection_info().host() == "www.greenassembly.fr" {
                     Either::Right(ok(req.into_response(
                         HttpResponse::MovedPermanently()

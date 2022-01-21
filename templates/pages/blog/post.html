@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}{{ name }}{% endblock %}
+
+{% block head %}
+    {% match description %}
+        {% when Some with (description) %}
+            <meta name="description" content="{{ description }}" />
+        {% when None %}
+    {% endmatch %}
+
+    <link rel="stylesheet" href="/css/pages/blog/post.css" />
+{% endblock %}
+
+{% block content %}
+    <article>
+        <header>
+            <h1>{{ name }}</h1>
+
+            <div class="flex items_center justify_between gap_2 mb_4">
+                <time datetime="{{ international_date }}">{{ date }}</time>
+
+                <div class="flex items_center justify_between gap_2">
+                    {% match author.picture %}
+                        {% when Some with (picture) %}
+                        <picture class="lazy">
+                            <source data-srcset="/uploads/{{ picture }}.webp" type="image/webp" />
+                        
+                            <img
+                                data-src="/uploads/{{ picture }}.png"
+                                alt="{{ author.fullname }}"
+                                width="50"
+                                height="50"
+                                itemprop="image"
+                            />
+                        </picture>
+                        {% when None %}
+                    {% endmatch %}
+    
+                    {{ author.fullname }}
+                </div>
+            </div>
+
+            <img src="{{ image_path }}" alt="{{ name }}" />
+        </header>
+
+        <p>{{ content|safe }}</p>
+    </article>
+{% endblock %}

@@ -1,7 +1,17 @@
-INSERT INTO employees (firstname, lastname, job, description, picture, "order") VALUES
-('Guillaume', 'Gueyraud', 'Dirigeant • Développeur', 'Parce que la fiabilité d''un site web fait toute la différence, je mets un point d''honneur à créer des sites web sécurisés et performants, répondant en tout point à vos attentes.', 'gg', 1),
-('Vincent', 'Bréhaut', 'Dirigeant • Développeur', 'C''est un fait, les internautes accordent peu de temps à leurs recherches sur le web. D''où l''importance d''avoir un site web réactif, clair et intuitif, tout en réduisant au maximum l''impact écologique.', 'vb', 2),
-('Ludivine', 'Farat', 'Designer Graphique', 'J''ai à cœur de trouver ce petit plus qui fait que vous êtes vous et pas un autre, et je le retranscris dans l''ensemble de votre communication visuelle.', 'lf', 3);
+INSERT INTO users (email, firstname, lastname, job, password, is_employed, description, "order") VALUES
+('g.gueyraud@greenassembly.fr', 'Guillaume', 'Gueyraud', 'Dirigeant • Développeur', 'lorem', true, 'Parce que la fiabilité d''un site web fait toute la différence, je mets un point d''honneur à créer des sites web sécurisés et performants, répondant en tout point à vos attentes.', 1),
+('v.brehaut@greenassembly.fr', 'Vincent', 'Bréhaut', 'Dirigeant • Développeur', 'lorem', true, 'C''est un fait, les internautes accordent peu de temps à leurs recherches sur le web. D''où l''importance d''avoir un site web réactif, clair et intuitif, tout en réduisant au maximum l''impact écologique.', 2),
+('hello@ludivinefarat.fr', 'Ludivine', 'Farat', 'Designer Graphique', 'lorem', true, 'J''ai à cœur de trouver ce petit plus qui fait que vous êtes vous et pas un autre, et je le retranscris dans l''ensemble de votre communication visuelle.', 3);
+
+INSERT INTO files (path) VALUES
+('gg.png'),
+('vb.png'),
+('lf.png');
+
+INSERT INTO users (email, firstname, lastname, job, description, password, is_employed, "order") VALUES
+('ggueyraud@greenassembly.fr', 'Guillaume', 'Gueyraud', 'Dirigeant • Développeur', 'Parce que la fiabilité d''un site web fait toute la différence, je mets un point d''honneur à créer des sites web sécurisés et performants, répondant en tout point à vos attentes.', '', true, 1),
+('vbrehaut@greenassembly.fr', 'Vincent', 'Bréhaut', 'Dirigeant • Développeur', 'C''est un fait, les internautes accordent peu de temps à leurs recherches sur le web. D''où l''importance d''avoir un site web réactif, clair et intuitif, tout en réduisant au maximum l''impact écologique.', '', true, 2),
+('hello@ludivinefarat.fr', 'Ludivine', 'Farat', 'Designer Graphique - Freelance', 'J''ai à cœur de trouver ce petit plus qui fait que vous êtes vous et pas un autre, et je le retranscris dans l''ensemble de votre communication visuelle.', '', true, 3);
 
 INSERT INTO pages (title, path, description, is_seo) VALUES
 ('Accueil', '/', 'GreenAssembly l''Agence Digitale Verte spécialisée dans la création de site web éco-conçu sur-mesure, d''identité visuelle et de motion design à votre image.', true),
@@ -44,3 +54,11 @@ INSERT INTO faq_answers (category_id, question, answer, "order") VALUES
 (6, 'Proposez-vous des services d’hébergement de sites-web ?', 'En complément des sites-web nous conseillons à nos clients notre formule de maintenance, la sérénité d’avoir un site déployé sur un serveur adapté à accueillir la charge prévue et que les données soient sauvegardées dans un environnement sûr 🛡️.<br />En cas de dysfonctionnement du site le contrat de maintenance vous assure d’être dépanné sous 24h ouvrés. 🧑‍💻', 1),
 (7, 'Êtes-vous en capacité de développer des fonctionnalités bien précises pour mon site web ?', 'Assurément ! 👌<br />Ayant développé sur-mesure l’ensemble du site web nous avons fait nôtres les lignes dont il est composé, ainsi à votre demande nous pouvons ajouter, modifier ou supprimer quelque contenu ou fonctionnalité que ce soit !', 1),
 (7, 'Est-ce que le webdesign de mon site web sera personnalisé ?', 'La création d’expérience est au cœur de notre initiative de <a href="creation-site-web" o-follow o-preload-once>création de site internet</a>, de fait tout projet réalisé par <a href="agence-digitale-verte" o-follow o-preload-once>notre agence</a> passera entre les mains des nos talentueux collaborateurs designer graphique ✨ !', 2);
+
+INSERT INTO blog_categories (name, uri, is_visible, "order") VALUES
+('Lorem', 'lorem-1', true, 1),
+('Ipsum', 'lorem-2', true, 2),
+('Dolor', 'lorem-3', true, 3);
+
+INSERT INTO blog_posts (cover_id, user_id, name, content, uri, is_published) VALUES
+(1, 1, 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'lorem-1', true);
