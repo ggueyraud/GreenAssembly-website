@@ -1,5 +1,5 @@
 @use '../abstracts/variables' as vars;
-@use '../abstracts/_mixins/text';
+@use 'style-box/abstracts/mixins/text';
 
 @use 'style-box/abstracts/functions/utilities';
 @use 'style-box/abstracts/mixins/breakpoints';

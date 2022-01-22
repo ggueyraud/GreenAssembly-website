@@ -2,7 +2,7 @@
 @use '../abstracts/variables' as vars;
 @use 'style-box/abstracts/mixins/margin' as margin_mixin;
 @use 'style-box/abstracts/functions/utilities';
-@use '../abstracts/_mixins/text';
+@use 'style-box/abstracts/mixins/text';
 
 #navbar {
     position: fixed;

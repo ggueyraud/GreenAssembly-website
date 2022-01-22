@@ -1,7 +1,0 @@
-@use "sass:map";
-@use '../variables' as vars;
-
-@mixin text($size, $important: false) {
-    font-size: map.get(vars.$font_sizes, $size)  #{if($important == true, ' !important', '')};
-    line-height: map.get(vars.$line_heights, $size)  #{if($important == true, ' !important', '')};
-}

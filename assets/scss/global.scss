@@ -1,7 +1,7 @@
 @use 'abstracts/variables' as vars;
 @use 'style-box/abstracts/functions/utilities';
 @use 'style-box/abstracts/mixins/margin' as margin_mixin;
-@use 'abstracts/_mixins/text';
+@use 'style-box/abstracts/mixins/text';
 
 @import 'style-box/base/_container.scss';
 @import 'style-box/base/animations';

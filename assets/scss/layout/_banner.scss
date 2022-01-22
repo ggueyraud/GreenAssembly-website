@@ -1,7 +1,7 @@
 @use "sass:map";
 @use '../abstracts/variables' as vars;
 @use 'style-box/abstracts/mixins/breakpoints';
-@use '../abstracts/_mixins/text';
+@use 'style-box/abstracts/mixins/text';
 @use 'style-box/abstracts/functions/utilities';
 
 @import 'style-box/base/animations';

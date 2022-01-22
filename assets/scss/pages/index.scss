@@ -3,7 +3,7 @@
 @use 'style-box/abstracts/mixins/margin' as margin_mixin;
 @use 'style-box/abstracts/mixins/breakpoints';
 @use 'style-box/abstracts/functions/utilities';
-@use '../abstracts/_mixins/text';
+@use 'style-box/abstracts/mixins/text';
 
 @import 'carousel/src/index.scss';
 @import 'style-box/base/animations';
