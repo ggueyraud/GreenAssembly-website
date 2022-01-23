@@ -211,6 +211,7 @@ async fn main() -> std::io::Result<()> {
             .configure(routes::config)
             .configure(routes::contact::config)
             .configure(routes::blog::config)
+            // .configure(routes::newsletter::config)
             .service(serve_upload_file)
             .service(serve_public_file)
     })

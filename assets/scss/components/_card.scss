@@ -2,7 +2,7 @@
 @use 'style-box/abstracts/mixins/margin' as margin_mixin;
 @use 'style-box/abstracts/mixins/breakpoints';
 @use 'style-box/abstracts/functions/utilities';
-@use '../abstracts/_mixins/text';
+@use 'style-box/abstracts/mixins/text';
 
 .card {
     @include margin_mixin.in(6, y);
@@ -12,7 +12,7 @@
         @include margin_mixin.in(10, y);
         @include margin_mixin.in(6, x);
     
-        h3 {
+        h3, h4 {
             @include margin_mixin.out(8, bottom, true);
         }
     }
@@ -24,7 +24,7 @@
     height: 100%;
     flex-direction: column;
 
-    h3 {
+    h3, h4 {
         @include text.text(2xl);
         @include margin_mixin.out(4, bottom);
 

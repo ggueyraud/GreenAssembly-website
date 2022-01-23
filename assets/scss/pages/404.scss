@@ -16,6 +16,7 @@ section {
 
     a {
         @include margin_mixin.out(4, top);
+        text-decoration: none;
 
         span {
             @include margin_mixin.out(1, left);

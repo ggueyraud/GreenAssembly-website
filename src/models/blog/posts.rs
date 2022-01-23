@@ -3,6 +3,7 @@ use sqlx::{Error, FromRow, PgPool};
 #[derive(FromRow, Debug)]
 pub struct Post {
     pub name: String,
+    pub cover: String,
     pub description: Option<String>,
     pub content: String,
     pub date: chrono::DateTime<chrono::Utc>,
@@ -23,9 +24,11 @@ pub async fn get(pool: &PgPool, id: i16) -> Result<Post, Error> {
             content,
             date,
             CONCAT(u.firstname, ' ', u.lastname) AS "fullname!",
-            f.path AS "path?"
+            f.path AS "path?",
+            c.path AS "cover"
         FROM blog_posts bp
         JOIN users u ON user_id = u.id
+        JOIN files c ON bp.cover_id = c.id
         LEFT JOIN files f ON u.picture_id = f.id
         WHERE bp.id = $1"#,
         id
@@ -35,6 +38,7 @@ pub async fn get(pool: &PgPool, id: i16) -> Result<Post, Error> {
 
     Ok(Post {
         name: row.name,
+        cover: row.cover,
         description: row.description,
         content: row.content,
         date: row.date,

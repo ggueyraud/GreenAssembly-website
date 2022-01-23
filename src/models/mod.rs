@@ -5,3 +5,4 @@ pub mod metrics;
 pub mod pages;
 pub mod portfolio;
 pub mod users;
+pub mod newsletters;

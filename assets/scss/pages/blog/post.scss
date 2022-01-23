@@ -1,13 +1,16 @@
 @use '../../abstracts/variables' as vars;
 @use 'style-box/abstracts/mixins/breakpoints' as bp;
 @use 'style-box/abstracts/functions/utilities';
-@use '../../abstracts/_mixins/text';
+@use 'style-box/abstracts/mixins/text';
 
+@import 'formvalidation/src/index.scss';
 @import '../../base/typography';
 @import 'style-box/base/text';
 @import 'style-box/base/_text.scss';
 @import '../../base/_typography.scss';
 @import '../../layout/_banner.scss';
+@import '../../components/_input.scss';
+@import '../../components/_button.scss';
 
 article {
     header {
@@ -18,6 +21,17 @@ article {
 
         picture {
             font-size: 0;
+        }
+
+        #cover {
+            display: flex;
+            height: 300px;
+
+            img {
+                object-fit: cover;
+                height: auto;
+                width: 100%;
+            }
         }
     
         h1 {
@@ -37,6 +51,30 @@ article {
                 margin: 4rem 0;
             }
         }
+    }
+}
+
+.card {
+    display: block;
+    margin-top: utilities.space(8);
+    margin-left: auto;
+    margin-right: auto;
+
+    @include bp.lg {
+        width: 80%;
+    }
+
+    h4 {
+        margin-top: 0;
+        margin-bottom: utilities.space(2) !important;
+    }
+
+    h4, p {
+        text-align: center
+    }
+
+    p {
+        margin-bottom: utilities.space(2)
     }
 }
 

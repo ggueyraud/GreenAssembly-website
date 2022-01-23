@@ -9,7 +9,8 @@ module.exports = {
         website_creation: './assets/js/website_creation.js',
         motion_home_player: './assets/js/motion_home_player.js',
         project: './assets/js/project.js',
-        faq: './assets/js/faq.js'
+        faq: './assets/js/faq.js',
+        post: './assets/js/post.js'
     },
     watch: process.env.NODE_ENV === 'development',
     watchOptions: {

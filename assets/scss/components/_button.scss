@@ -1,5 +1,6 @@
 @use 'style-box/abstracts/mixins/margin' as margin_mixin;
-@use '../abstracts/_mixins/text';
+@use 'style-box/abstracts/functions/utilities';
+@use 'style-box/abstracts/mixins/text';
 
 button {
     font-size: 100%;
@@ -23,5 +24,16 @@ button {
         @include margin_mixin.in(3, x);
         @include margin_mixin.in(1, y);
         @include text.text(lg)
+    }
+
+    &--outline {
+        border: 1px solid utilities.color('white');
+        border-radius: .5rem;
+        transition-property: background-color, opacity, color;
+
+        &:hover {
+            color: utilities.color('black');
+            background-color: utilities.color('white')
+        }
     }
 }

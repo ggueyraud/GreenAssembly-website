@@ -43,6 +43,10 @@ select {
     }
 }
 
+.fv_border_error {
+    border-color: utilities.color(warning);
+}
+
 .fv_error {
     color: utilities.color(warning);
     line-height: 1;
@@ -52,7 +56,7 @@ select {
     font-size: 0;
     opacity: 0;
 
-    &.active {
+    &--show {
         @include margin_mixin.out(1, top);
 
         font-size: inherit;

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Newsletter : Confirmation inscription{% endblock %}
+
+{% block head %}
+    <meta name="robots" content="noindex" />
+
+    <link rel="stylesheet" href="/css/pages/404.css" />
+{% endblock %}
+
+{% block content %}
+    <section>
+        <h1>Newsletter</h1>
+
+        {% if !exist %}
+            <p>Cet email n'existe pas</p>
+        {% else if confirmed %}
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eleifend cursus fermentum. Curabitur efficitur nec enim sit amet semper. Donec pellentesque fringilla dictum. Curabitur in sollicitudin nulla. Nunc ut lacinia tellus. Quisque ut quam ullamcorper eros iaculis ultricies. Ut tincidunt justo non velit faucibus consequat. Proin et volutpat lorem, eget faucibus mi. Ut diam dui, pretium id dolor sed, aliquet pulvinar mi.</p>
+        {% else if already_confirmed %}
+            <p>Cet email a déjà été validé</p>
+        {% endif %}
+    </section>
+{% endblock %}

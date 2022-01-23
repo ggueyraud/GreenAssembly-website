@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "carousel": "github:GreenAssembly/carousel",
-    "formvalidation": "github:GreenAssembly/formvalidation",
+    "formvalidation": "../Formvalidation",
     "router": "github:GreenAssembly/router#development",
     "style-box": "github:GreenAssembly/style-box"
   },

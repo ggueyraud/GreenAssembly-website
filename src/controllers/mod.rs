@@ -8,6 +8,7 @@ pub mod blog;
 pub mod contact;
 pub mod metrics;
 pub mod website;
+pub mod newsletter;
 
 #[derive(sqlx::FromRow)]
 struct Page {

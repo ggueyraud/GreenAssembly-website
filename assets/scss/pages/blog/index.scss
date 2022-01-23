@@ -72,20 +72,24 @@ section {
         gap: utilities.space(4)
     }
 
-    nav a {
-        @include text.text(lg);
-        text-transform: uppercase;
-        font-weight: 600;
-        display: block;
-        text-decoration: none;
-        color: utilities.color('gray');
-        cursor: pointer;
-        padding: utilities.space(2) 0;
-        
-        &--active {
-            color: transparent;
-            @extend .title;
-            line-height: 1.75em;
+    nav {
+        margin-top: utilities.space(8);
+
+        a {
+            @include text.text(lg);
+            text-transform: uppercase;
+            font-weight: 600;
+            display: block;
+            text-decoration: none;
+            color: utilities.color('gray');
+            cursor: pointer;
+            padding: utilities.space(2) 0;
+            
+            &--active {
+                color: transparent;
+                @extend .title;
+                line-height: 1.75em;
+            }
         }
     }
 }

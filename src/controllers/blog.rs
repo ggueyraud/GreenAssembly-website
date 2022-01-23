@@ -112,7 +112,9 @@ pub async fn show_article(
             name: String,
             description: Option<String>,
             content: String,
-            image_path: String,
+            cover_filename: String,
+            cover_path: String,
+            // image_path: String,
             date: String,
             international_date: String,
             author: models::blog::posts::Author,
@@ -122,7 +124,12 @@ pub async fn show_article(
             name: post.name,
             description: post.description,
             content: post.content,
-            image_path: "/img/showcase.jpg".to_owned(),
+            cover_filename: {
+                let cover = post.cover.split('.').collect::<Vec<_>>();
+                cover.get(0).expect("Cannot get filename").to_string()
+            },
+            cover_path: post.cover,
+            // image_path: "/img/showcase.jpg".to_owned(),
             date: post.date.format("%d/%m/%Y").to_string(),
             international_date: post.date.to_rfc3339(),
             author: models::blog::posts::Author {

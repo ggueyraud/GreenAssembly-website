@@ -10,6 +10,7 @@
     {% endmatch %}
 
     <link rel="stylesheet" href="/css/pages/blog/post.css" />
+    <script src="/js/post.js" async></script>
 {% endblock %}
 
 {% block content %}
@@ -41,9 +42,29 @@
                 </div>
             </div>
 
-            <img src="{{ image_path }}" alt="{{ name }}" />
+            <picture id="cover">
+                <source srcset="/uploads/{{ cover_filename }}.webp" type="image/webp" />
+
+                <img
+                    src="/uploads/{{ cover_path }}"
+                    alt="{{ name }} cover"
+                />
+            </picture>
         </header>
 
         <p>{{ content|safe }}</p>
+
+        {#
+            <div class="card">
+                <h4>Inscrivez-vous à la <span class="text_success">green</span>letter ! 📰</h4>
+                <p>Soyez informés lors de la sortie d'un nouvel article de blog ou d'une actualité à propos de GreenAssembly.</p>
+
+                <form>
+                    <label for="email" class="mb_1">Email</label>
+                    <input type="email" name="email" id="email" />
+                    <button type="submit" class="btn btn--lg btn--outline text_white mx_auto block mt_4">Je m'inscris</button>
+                </form>
+            </div>
+        #}
     </article>
 {% endblock %}
