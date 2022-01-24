@@ -81,16 +81,13 @@ pub async fn create(
         }
         BelongsTo::Project => match infos.path.split('-').collect::<Vec<_>>().last() {
             Some(post_id) => match post_id.parse::<i16>() {
-                Ok(post_id) => match infos.belongs_to {
-                    BelongsTo::Project => {
-                        if !models::portfolio::projects::exists(&pool, post_id).await {
-                            return HttpResponse::NotFound().finish();
-                        }
-
-                        id = Some(post_id)
+                Ok(post_id) => if let BelongsTo::Project = infos.belongs_to {
+                    if !models::portfolio::projects::exists(&pool, post_id).await {
+                        return HttpResponse::NotFound().finish();
                     }
-                    _ => (),
-                },
+
+                    id = Some(post_id)
+                }
                 _ => return HttpResponse::InternalServerError().finish(),
             },
             _ => return HttpResponse::InternalServerError().finish(),

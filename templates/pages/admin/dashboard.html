@@ -3,12 +3,11 @@
 {% block title %}Tableau de bord{% endblock %}
 
 {% block head %}
+    <script src="/js/admin/dashboard.js" async></script>
 {% endblock %}
-
-{% block sidenav %}{% endblock %}
 
 {% block content %}
     <section id="content" class="px_4">
-        Tableau de bord
+        <canvas id="myChart" width="400" height="400"></canvas>
     </section>
 {% endblock %}

@@ -247,8 +247,6 @@ async fn show_project(
             title: String,
             description: Option<String>,
             content: String,
-            date: chrono::DateTime<chrono::Utc>,
-            international_date: String,
             first_picture: Picture,
             pictures: Vec<Picture>,
             metrics_token: Option<String>,
@@ -260,8 +258,6 @@ async fn show_project(
             title: project.name,
             description: project.description,
             content: project.content,
-            date: project.date,
-            international_date: project.international_date,
             first_picture: Picture {
                 path: cover.clone(),
                 filename: cover
@@ -366,14 +362,15 @@ async fn faq(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
 
         #[derive(Template)]
         #[template(path = "pages/faq.html")]
-        struct FAQ {
+        struct Faq {
+            //
             title: String,
             description: Option<String>,
             categories: Vec<Category>,
             metrics_token: Option<String>,
         }
 
-        let page = FAQ {
+        let page = Faq {
             title: page.title,
             description: page.description,
             categories,
@@ -388,16 +385,16 @@ async fn faq(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
     HttpResponse::InternalServerError().finish()
 }
 
-#[get("/sitemap.xml")]
-pub async fn sitemap() -> HttpResponse {
-    HttpResponse::Ok()
-        .content_type("text/xml")
-        .body(include_str!("../../sitemap.xml"))
-}
+// #[get("/sitemap.xml")]
+// pub async fn sitemap() -> HttpResponse {
+//     HttpResponse::Ok()
+//         .content_type("text/xml")
+//         .body(include_str!("../../sitemap.xml"))
+// }
 
-#[get("/robots.txt")]
-pub async fn robots() -> HttpResponse {
-    HttpResponse::Ok()
-        .content_type("text/plain")
-        .body(include_str!("../../robots.txt"))
-}
+// #[get("/robots.txt")]
+// pub async fn robots() -> HttpResponse {
+//     HttpResponse::Ok()
+//         .content_type("text/plain")
+//         .body(include_str!("../../robots.txt"))
+// }

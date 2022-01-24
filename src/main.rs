@@ -1,4 +1,3 @@
-use actix_cors::Cors;
 use actix_files::NamedFile;
 use actix_identity::{CookieIdentityPolicy, IdentityService};
 use actix_web::{
@@ -22,7 +21,7 @@ mod middlewares;
 mod models;
 mod routes;
 mod templates;
-mod tests;
+// mod tests;
 mod utils;
 
 async fn create_pool() -> Result<sqlx::PgPool, sqlx::Error> {
@@ -60,27 +59,6 @@ fn serve_file(req: &HttpRequest, path: &Path, cache_duration: i64) -> Result<Htt
                 .body(NotFound.render().unwrap()))
         }
     }
-}
-
-pub async fn ban_route(req: HttpRequest, pool: web::Data<sqlx::PgPool>) -> HttpResponse {
-    if let Some(val) = req.peer_addr() {
-        let ip = val.ip().to_string();
-
-        if !models::ips_banned::is_banned(&pool, &ip).await {
-            let (_, counter) = futures::join!(
-                models::ips_banned::add(&pool, &ip),
-                models::ips_banned::count(&pool, &ip)
-            );
-
-            println!("Ban x{} times", counter);
-
-            return HttpResponse::Ok()
-                .content_type("text/plain; charset=utf-8")
-                .body("Détection d'intrustion, par sécurité l'accès au site-web vous est bloqué pour votre IP pendant 5 minutes.");
-        }
-    }
-
-    HttpResponse::NotFound().finish()
 }
 
 #[get("/{filename:.*}")]
@@ -158,62 +136,54 @@ async fn main() -> std::io::Result<()> {
     .run();
 
     let server = HttpServer::new(move || {
-        let mut cors = Cors::default().allowed_methods(vec!["POST"]);
-
-        if cfg!(debug_assertions) {
-            cors = cors.allow_any_origin();
-        } else {
-            cors = cors.allowed_origin("https://greenassembly.fr");
-        }
-
         App::new()
             .data(pool.clone())
             .data(UserAgentParser::from_path("regexes.yaml").expect("regexes.yaml not found"))
             .wrap(Compress::default())
-            .wrap(cors)
             .wrap(IdentityService::new(
                 CookieIdentityPolicy::new(&[0; 32])
                     .name("auth-cookie")
                     .secure(true),
             ))
-            .wrap(middlewares::www::RedirectWWW)
-            .wrap_fn(|req, srv| {
-                use actix_service::Service;
-                use actix_web::http::{header, HeaderValue};
+            // .wrap(middlewares::www::RedirectWWW)
+            // .wrap_fn(|req, srv| {
+            //     use actix_service::Service;
+            //     use actix_web::http::{header, HeaderValue};
 
-                let fut = srv.call(req);
+            //     let fut = srv.call(req);
 
-                async {
-                    let mut res = fut.await?;
-                    let headers = res.headers_mut();
+            //     async {
+            //         let mut res = fut.await?;
+            //         let headers = res.headers_mut();
 
-                    headers.insert(
-                        header::STRICT_TRANSPORT_SECURITY,
-                        HeaderValue::from_static("max-age=31536000; includeSubDomains; preload"),
-                    );
+            //         headers.insert(
+            //             header::STRICT_TRANSPORT_SECURITY,
+            //             HeaderValue::from_static("max-age=31536000; includeSubDomains; preload"),
+            //         );
 
-                    // #[cfg(not(debug_assertions))]
-                    // headers.insert(
-                    //     header::CONTENT_SECURITY_POLICY,
-                    //     HeaderValue::from_static("script-src 'self'"),
-                    // );
+            //         // #[cfg(not(debug_assertions))]
+            //         // headers.insert(
+            //         //     header::CONTENT_SECURITY_POLICY,
+            //         //     HeaderValue::from_static("script-src 'self'"),
+            //         // );
 
-                    headers.insert(header::X_FRAME_OPTIONS, HeaderValue::from_static("deny"));
+            //         headers.insert(header::X_FRAME_OPTIONS, HeaderValue::from_static("deny"));
 
-                    headers.insert(
-                        header::X_CONTENT_TYPE_OPTIONS,
-                        HeaderValue::from_static("nosniff"),
-                    );
+            //         headers.insert(
+            //             header::X_CONTENT_TYPE_OPTIONS,
+            //             HeaderValue::from_static("nosniff"),
+            //         );
 
-                    headers.insert(
-                        header::X_XSS_PROTECTION,
-                        HeaderValue::from_static("1; mode=block"),
-                    );
+            //         headers.insert(
+            //             header::X_XSS_PROTECTION,
+            //             HeaderValue::from_static("1; mode=block"),
+            //         );
 
-                    Ok(res)
-                }
-            })
+            //         Ok(res)
+            //     }
+            // })
             .configure(routes::admin::config)
+            .configure(routes::api::config)
             .configure(routes::users::config)
             .configure(routes::website::config)
             .configure(routes::config)
