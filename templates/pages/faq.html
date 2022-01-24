@@ -16,27 +16,6 @@
     {% include "includes/metrics.html" %}
 
     <script src="/js/faq.js" async></script>
-    {#<script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            "mainEntity": [
-                {% for category in categories %}
-                    {% for question in category.questions %}
-                        {
-                            "@type": "Question",
-                            "name": "{{ question.question }}",
-                            "acceptedAnswer": {
-                                "@type": "Answer",
-                                "text": "{{ question.answer|safe }}"
-                            }
-                        },
-                    {% endfor %}
-                {% endfor %}
-            ]
-        }
-    </script>
-    #}
 {% endblock %}
 
 {% block banner %}
