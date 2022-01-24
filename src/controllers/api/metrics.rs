@@ -1,5 +1,5 @@
 use serde::Deserialize;
-use chrono::{NaiveDate, Utc};
+use chrono::NaiveDate;
 use actix_web::{HttpResponse, web, get};
 use sqlx::PgPool;
 

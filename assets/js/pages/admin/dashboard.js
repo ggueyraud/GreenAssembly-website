@@ -1,4 +1,3 @@
-import Form, { Required, Regex } from 'formvalidation';
 import { get } from '@js/utils/http';
 
 const on_mount = () => {
