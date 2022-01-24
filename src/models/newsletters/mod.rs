@@ -1,2 +1,2 @@
-pub mod subscribers;
 pub mod reads;
+pub mod subscribers;

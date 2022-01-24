@@ -1,4 +1,4 @@
-use sqlx::{PgPool, Error, types::Uuid};
+use sqlx::{types::Uuid, Error, PgPool};
 
 pub async fn exists(pool: &PgPool, email: &str, token: &str) -> bool {
     sqlx::query!(
@@ -6,16 +6,19 @@ pub async fn exists(pool: &PgPool, email: &str, token: &str) -> bool {
         email,
         token
     )
-        .fetch_one(pool)
-        .await
-        .is_ok()
+    .fetch_one(pool)
+    .await
+    .is_ok()
 }
 
 pub async fn exists_for_email(pool: &PgPool, email: &str) -> bool {
-    sqlx::query!("SELECT 1 AS one FROM newsletter_subscribers WHERE email = $1", email)
-        .fetch_one(pool)
-        .await
-        .is_ok()
+    sqlx::query!(
+        "SELECT 1 AS one FROM newsletter_subscribers WHERE email = $1",
+        email
+    )
+    .fetch_one(pool)
+    .await
+    .is_ok()
 }
 
 pub async fn is_confirmed(pool: &PgPool, email: &str) -> bool {
@@ -26,15 +29,15 @@ pub async fn is_confirmed(pool: &PgPool, email: &str) -> bool {
         WHERE email = $1 AND is_confirmed = TRUE",
         email
     )
-        .fetch_one(pool)
-        .await
-        .is_ok()
+    .fetch_one(pool)
+    .await
+    .is_ok()
 }
 
 pub async fn add(
     pool: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
     email: &str,
-    token: &str
+    token: &str,
 ) -> Result<Uuid, Error> {
     let id = sqlx::query!(
         "INSERT INTO newsletter_subscribers
@@ -44,9 +47,9 @@ pub async fn add(
         email,
         token
     )
-        .fetch_one(pool)
-        .await?
-        .id;
+    .fetch_one(pool)
+    .await?
+    .id;
 
     Ok(id)
 }
@@ -59,9 +62,9 @@ pub async fn confirm(pool: &PgPool, token: &str, email: &str) -> Result<bool, Er
         token,
         email
     )
-        .execute(pool)
-        .await?
-        .rows_affected();
+    .execute(pool)
+    .await?
+    .rows_affected();
 
     Ok(rows == 1)
 }
@@ -72,9 +75,9 @@ pub async fn delete(pool: &PgPool, token: &str, email: &str) -> Result<bool, Err
         token,
         email
     )
-        .execute(pool)
-        .await?
-        .rows_affected();
+    .execute(pool)
+    .await?
+    .rows_affected();
 
     Ok(rows == 1)
 }

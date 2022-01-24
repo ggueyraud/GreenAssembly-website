@@ -6,6 +6,6 @@ pub fn config(cfg: &mut web::ServiceConfig) {
         web::scope("/blog")
             .service(blog::index)
             .service(blog::show_article)
-            .service(blog::show_category)
+            .service(blog::show_category),
     );
 }

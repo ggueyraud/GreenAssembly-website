@@ -33,7 +33,7 @@ pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
                 date: String,
                 international_date: String,
                 cover_filename: String,
-                cover_path: String
+                cover_path: String,
             }
 
             #[derive(Template)]
@@ -61,7 +61,7 @@ pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
                             let cover = post.cover.split('.').collect::<Vec<_>>();
                             cover.get(0).expect("Cannot get filename").to_string()
                         },
-                        cover_path: post.cover.clone()
+                        cover_path: post.cover.clone(),
                     })
                     .collect::<Vec<_>>(),
                 metrics_token: token,
@@ -106,7 +106,7 @@ pub async fn show_article(
             international_date: String,
             author: models::blog::posts::Author,
         }
-    
+
         let page = Post {
             name: post.name,
             description: post.description,
@@ -125,7 +125,7 @@ pub async fn show_article(
                 picture: {
                     if let Some(picture) = post.author.picture {
                         let picture = picture.split('.').collect::<Vec<_>>();
-    
+
                         if let Some(filename) = picture.get(0) {
                             Some(filename.to_string())
                         } else {
@@ -137,7 +137,7 @@ pub async fn show_article(
                 },
             },
         };
-    
+
         if let Ok(content) = page.render() {
             return HttpResponse::Ok().content_type("text/html").body(content);
         }
@@ -150,10 +150,10 @@ pub async fn show_article(
 pub async fn show_category(
     req: HttpRequest,
     pool: web::Data<PgPool>,
-    web::Path((name, id)): web::Path<(String, i16)>
+    web::Path((name, id)): web::Path<(String, i16)>,
 ) -> HttpResponse {
     if !models::blog::categories::exists(&pool, id).await {
-        return HttpResponse::NotFound().finish()
+        return HttpResponse::NotFound().finish();
     }
 
     // let mut transaction = pool.begin().await.unwrap();
@@ -165,50 +165,50 @@ pub async fn show_category(
         models::blog::posts::get_latest(&pool, Some(id))
     ) {
         #[derive(Template)]
-            #[template(path = "components/blog_post.html")]
-            struct Post {
-                name: String,
-                uri: String,
-                date: String,
-                international_date: String,
-                cover_filename: String,
-                cover_path: String
-            }
+        #[template(path = "components/blog_post.html")]
+        struct Post {
+            name: String,
+            uri: String,
+            date: String,
+            international_date: String,
+            cover_filename: String,
+            cover_path: String,
+        }
 
-            #[derive(Template)]
-            #[template(path = "pages/blog/category.html")]
-            struct Index {
-                title: String,
-                description: Option<String>,
-                categories: Vec<models::blog::categories::Category>,
-                posts: Vec<Post>,
-                metrics_token: Option<String>,
-            }
+        #[derive(Template)]
+        #[template(path = "pages/blog/category.html")]
+        struct Index {
+            title: String,
+            description: Option<String>,
+            categories: Vec<models::blog::categories::Category>,
+            posts: Vec<Post>,
+            metrics_token: Option<String>,
+        }
 
-            let page = Index {
-                title: current_category.name,
-                description: current_category.description,
-                categories,
-                posts: posts
-                    .iter()
-                    .map(|post| Post {
-                        name: post.name.clone(),
-                        uri: post.uri.clone(),
-                        date: post.date.format("%d/%m/%Y").to_string(),
-                        international_date: post.date.to_rfc3339(),
-                        cover_filename: {
-                            let cover = post.cover.split('.').collect::<Vec<_>>();
-                            cover.get(0).expect("Cannot get filename").to_string()
-                        },
-                        cover_path: post.cover.clone()
-                    })
-                    .collect::<Vec<_>>(),
-                metrics_token: None
-            };
+        let page = Index {
+            title: current_category.name,
+            description: current_category.description,
+            categories,
+            posts: posts
+                .iter()
+                .map(|post| Post {
+                    name: post.name.clone(),
+                    uri: post.uri.clone(),
+                    date: post.date.format("%d/%m/%Y").to_string(),
+                    international_date: post.date.to_rfc3339(),
+                    cover_filename: {
+                        let cover = post.cover.split('.').collect::<Vec<_>>();
+                        cover.get(0).expect("Cannot get filename").to_string()
+                    },
+                    cover_path: post.cover.clone(),
+                })
+                .collect::<Vec<_>>(),
+            metrics_token: None,
+        };
 
-            if let Ok(content) = page.render() {
-                return HttpResponse::Ok().content_type("text/html").body(content);
-            }
+        if let Ok(content) = page.render() {
+            return HttpResponse::Ok().content_type("text/html").body(content);
+        }
     }
 
     // if let Ok(category) = models::blog::categories::get(&pool, id).await {

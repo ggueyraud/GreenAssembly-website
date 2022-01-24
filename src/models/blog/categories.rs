@@ -1,9 +1,9 @@
-use sqlx::{Error, PgPool, FromRow};
+use sqlx::{Error, FromRow, PgPool};
 
 #[derive(FromRow)]
 pub struct CategoryInformations {
     pub name: String,
-    pub description: Option<String>
+    pub description: Option<String>,
 }
 
 pub async fn get(pool: &PgPool, id: i16) -> Result<CategoryInformations, Error> {
@@ -12,8 +12,8 @@ pub async fn get(pool: &PgPool, id: i16) -> Result<CategoryInformations, Error> 
         "SELECT name, description FROM blog_categories WHERE id = $1",
         id
     )
-        .fetch_one(pool)
-        .await?;
+    .fetch_one(pool)
+    .await?;
 
     Ok(row)
 }
@@ -21,7 +21,7 @@ pub async fn get(pool: &PgPool, id: i16) -> Result<CategoryInformations, Error> 
 #[derive(FromRow)]
 pub struct Category {
     pub name: String,
-    pub uri: String
+    pub uri: String,
 }
 
 pub async fn get_all(pool: &PgPool) -> Result<Vec<Category>, Error> {
@@ -29,8 +29,8 @@ pub async fn get_all(pool: &PgPool) -> Result<Vec<Category>, Error> {
         Category,
         r#"SELECT name, uri FROM blog_categories WHERE is_visible = TRUE ORDER BY "order""#
     )
-        .fetch_all(pool)
-        .await?;
+    .fetch_all(pool)
+    .await?;
 
     Ok(rows)
 }

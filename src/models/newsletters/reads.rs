@@ -1,4 +1,4 @@
-use sqlx::{Error, PgPool, types::Uuid};
+use sqlx::{types::Uuid, Error, PgPool};
 
 pub async fn add(pool: &PgPool, newsletter_id: i16, subscriber_id: Uuid) -> Result<(), Error> {
     sqlx::query!(
@@ -6,8 +6,8 @@ pub async fn add(pool: &PgPool, newsletter_id: i16, subscriber_id: Uuid) -> Resu
         newsletter_id,
         subscriber_id
     )
-        .execute(pool)
-        .await?;
+    .execute(pool)
+    .await?;
 
     Ok(())
 }

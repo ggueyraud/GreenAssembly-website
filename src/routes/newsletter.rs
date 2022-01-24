@@ -6,6 +6,6 @@ pub fn config(cfg: &mut web::ServiceConfig) {
         web::scope("/newsletter")
             .service(newsletter::subscribe)
             .service(newsletter::unscribe)
-            .service(newsletter::confirm_subscription)
+            .service(newsletter::confirm_subscription),
     );
 }

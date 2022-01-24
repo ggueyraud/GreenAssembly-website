@@ -54,15 +54,19 @@ pub struct LatestArticle {
     pub name: String,
     pub uri: String,
     pub date: chrono::DateTime<chrono::Utc>,
-    pub cover: String
+    pub cover: String,
 }
 
-pub async fn get_latest(pool: &PgPool, category_id: Option<i16>) -> Result<Vec<LatestArticle>, Error> {
+pub async fn get_latest(
+    pool: &PgPool,
+    category_id: Option<i16>,
+) -> Result<Vec<LatestArticle>, Error> {
     let mut query = r#"SELECT
         bp.name, bp.uri, bp.date, f.path AS "cover"
     FROM blog_posts bp
     JOIN files f ON bp.cover_id = f.id
-    WHERE is_published = TRUE"#.to_string();
+    WHERE is_published = TRUE"#
+        .to_string();
 
     if category_id.is_some() {
         query += " AND bp.category_id = $1";
@@ -75,11 +79,9 @@ pub async fn get_latest(pool: &PgPool, category_id: Option<i16>) -> Result<Vec<L
         query = query.bind(category_id);
     }
 
-    let rows = query
-        .fetch_all(pool)
-        .await?;
+    let rows = query.fetch_all(pool).await?;
 
-    // let query = 
+    // let query =
 
     // let rows = sqlx::query_as!(
     //     LatestArticle,
