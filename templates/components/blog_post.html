@@ -1,28 +1,22 @@
-<article itemscope itemtype="http://schema.org/Article">
+<article>
     <a
-        itemprop="url"
         href="/blog/articles/{{ uri }}"
         o-follow
         o-preload-once
     >
         <header>
-            <img itemprop="image" src="/img/showcase.jpg" class="article__image" alt="{{ name }}" />
+            <picture class="lazy">
+                <source data-srcset="/uploads/{{ cover_filename }}.webp" type="image/webp" />
+
+                <img
+                    data-src="/uploads/{{ cover_path }}"
+                    alt="{{ name }} cover"
+                />
+            </picture>
     
-            <h3 itemprop="name headline" class="article__title">{{ name }}</h3>
+            <h3>{{ name }}</h3>
     
-            <time itemprop="datePublished" datetime="{{ international_date }}">{{ date }}</time>
+            <time datetime="{{ international_date }}">{{ date }}</time>
         </header>
-
-        {#<div class="article__tags">
-            <div class="tag" style="background-color: cyan;">Tag 1</div>
-            <div class="tag" style="background-color: orange;">Tag 2</div>
-            <div class="tag" style="background-color: palegreen;">Tag 3</div>
-        </div>#}
-
-        {% match description %}
-            {% when Some with (description) %}
-                <p itemprop="description">{{ description }}</p>
-            {% when None %}
-        {% endmatch %}
     </a>
 </article>

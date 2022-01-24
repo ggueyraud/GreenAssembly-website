@@ -44,6 +44,8 @@ const handle_navbar = () => {
         navbar.querySelector('[href="/portfolio"]').classList.add('active');
     } else if (location.pathname.includes('/creation-site-web')) {
         navbar.querySelector('[href="/creation-site-web"]').classList.add('active');
+    } else if (location.pathname.includes('/blog')) {
+        navbar.querySelector('[href="/blog"]').classList.add('active');
     }
 }
 

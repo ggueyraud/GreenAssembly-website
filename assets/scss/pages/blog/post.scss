@@ -12,44 +12,42 @@
 @import '../../components/_input.scss';
 @import '../../components/_button.scss';
 
-article {
-    header {
-        height: auto;
-        flex-direction: column;
-        padding-top: 40px;
-        margin-bottom: 2rem;
+header {
+    height: auto;
+    flex-direction: column;
+    padding-top: 40px;
+    margin-bottom: 2rem;
 
-        picture {
-            font-size: 0;
+    picture {
+        font-size: 0;
+    }
+
+    #cover {
+        display: flex;
+        height: 300px !important;
+
+        img {
+            object-fit: cover;
+            height: auto;
+            width: 100%;
         }
+    }
 
-        #cover {
-            display: flex;
-            height: 300px;
+    h1 {
+        @extend .title;
+        margin: 2rem 0;
+        font-size: 1.5em;
+        text-align: center
+    }
 
-            img {
-                object-fit: cover;
-                height: auto;
-                width: 100%;
-            }
-        }
-    
+    @include bp.xl {
+        padding-top: 0;
+        margin-top: 3rem;
+        margin-bottom: 6rem;
+
         h1 {
-            @extend .title;
-            margin: 2rem 0;
-            font-size: 1.5em;
-            text-align: center
-        }
-    
-        @include bp.xl {
-            padding-top: 0;
-            margin-top: 3rem;
-            margin-bottom: 6rem;
-    
-            h1 {
-                font-size: 4rem;
-                margin: 4rem 0;
-            }
+            font-size: 4rem;
+            margin: 4rem 0;
         }
     }
 }
@@ -89,4 +87,10 @@ h2, h3 {
     color: utilities.color('success');
     margin-top: utilities.space(8);
     margin-bottom: utilities.space(2);
+}
+
+#blog_menu {
+    header, h3 {
+        margin: 0
+    }
 }

@@ -45,11 +45,12 @@
                 <section>
                     {% block content %}{% endblock %}
 
-                    <nav>
+                    <nav id="blog_menu">
                         <header>
                             <h3>Catégories</h3>
                         </header>
 
+                        <a href="/blog" o-follow>Tout</a>
                         {% for category in categories %}
                             <a href="/blog/categories/{{ category.uri}}" o-follow>{{ category.name }}</a>
                         {% endfor %}

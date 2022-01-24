@@ -1,0 +1,35 @@
+{% extends "blog.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block head %}
+    {% match description %}
+        {% when Some with (description) %}
+            <meta name="description" content="{{ description }}" />
+        {% when None %}
+    {% endmatch %}
+
+    <link rel="stylesheet" href="/css/pages/blog/index.css" />
+
+    {% include "includes/metrics.html" %}
+{% endblock %}
+
+{% block banner %}
+    <header id="banner">
+        <h1>{{ title }}</h1>
+
+        {% match description %}
+            {% when Some with (description) %}
+                <p>{{ description }}</p>
+            {% when None %}
+        {% endmatch %}
+    </header>
+{% endblock %}
+
+{% block content %}
+    <div class="articles">
+        {% for post in posts %}
+            {{ post|safe }}
+        {% endfor %}
+    </div>
+{% endblock %}

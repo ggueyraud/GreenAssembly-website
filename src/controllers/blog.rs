@@ -9,31 +9,10 @@ pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
     if let Ok(page) =
         models::pages::get::<super::Page>(&pool, "id, title, description", "/blog").await
     {
-        #[derive(sqlx::FromRow, Debug)]
-        struct Category {
-            name: String,
-            uri: String,
-        }
-
-        #[derive(sqlx::FromRow, Debug)]
-        struct Post {
-            name: String,
-            description: Option<String>,
-            uri: String,
-            date: String,
-            international_date: String,
-        }
-
+        println!("{:?}", models::blog::posts::get_latest(&pool, None).await);
         if let (Ok(categories), Ok(posts), Ok(metric_id)) = futures::join!(
-            models::blog::categories::get_all::<Category>(&pool, "name, uri"),
-            models::blog::posts::get_all_published::<Post>(
-                &pool,
-                r#"bp.name,
-                bp.description,
-                uri,
-                TO_CHAR(bp.date, 'DD/MM/YYYY') AS "date",
-                TO_CHAR(bp.date, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') AS international_date"#
-            ),
+            models::blog::categories::get_all(&pool),
+            models::blog::posts::get_latest(&pool, None),
             crate::controllers::metrics::add(
                 &req,
                 &pool,
@@ -50,10 +29,11 @@ pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
             #[template(path = "components/blog_post.html")]
             struct Post {
                 name: String,
-                description: Option<String>,
                 uri: String,
                 date: String,
                 international_date: String,
+                cover_filename: String,
+                cover_path: String
             }
 
             #[derive(Template)]
@@ -61,7 +41,7 @@ pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
             struct Index {
                 title: String,
                 description: Option<String>,
-                categories: Vec<Category>,
+                categories: Vec<models::blog::categories::Category>,
                 posts: Vec<Post>,
                 metrics_token: Option<String>,
             }
@@ -74,10 +54,14 @@ pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
                     .iter()
                     .map(|post| Post {
                         name: post.name.clone(),
-                        description: post.description.clone(),
                         uri: post.uri.clone(),
-                        date: post.date.clone(),
-                        international_date: post.international_date.clone(),
+                        date: post.date.format("%d/%m/%Y").to_string(),
+                        international_date: post.date.to_rfc3339(),
+                        cover_filename: {
+                            let cover = post.cover.split('.').collect::<Vec<_>>();
+                            cover.get(0).expect("Cannot get filename").to_string()
+                        },
+                        cover_path: post.cover.clone()
                     })
                     .collect::<Vec<_>>(),
                 metrics_token: token,
@@ -91,6 +75,7 @@ pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
 
     HttpResponse::InternalServerError().finish()
 }
+
 #[get("/articles/{name}-{id}")]
 pub async fn show_article(
     req: HttpRequest,
@@ -103,14 +88,16 @@ pub async fn show_article(
         return HttpResponse::NotFound().finish();
     }
 
-    if let Ok(post) = models::blog::posts::get(&pool, id).await {
-        println!("{:?}", post);
-
+    if let Ok((post, categories)) = futures::try_join!(
+        models::blog::posts::get(&pool, id),
+        models::blog::categories::get_all(&pool)
+    ) {
         #[derive(Template)]
         #[template(path = "pages/blog/post.html")]
         struct Post {
             name: String,
             description: Option<String>,
+            categories: Vec<models::blog::categories::Category>,
             content: String,
             cover_filename: String,
             cover_path: String,
@@ -119,10 +106,11 @@ pub async fn show_article(
             international_date: String,
             author: models::blog::posts::Author,
         }
-
+    
         let page = Post {
             name: post.name,
             description: post.description,
+            categories,
             content: post.content,
             cover_filename: {
                 let cover = post.cover.split('.').collect::<Vec<_>>();
@@ -137,7 +125,7 @@ pub async fn show_article(
                 picture: {
                     if let Some(picture) = post.author.picture {
                         let picture = picture.split('.').collect::<Vec<_>>();
-
+    
                         if let Some(filename) = picture.get(0) {
                             Some(filename.to_string())
                         } else {
@@ -149,11 +137,83 @@ pub async fn show_article(
                 },
             },
         };
-
+    
         if let Ok(content) = page.render() {
             return HttpResponse::Ok().content_type("text/html").body(content);
         }
     }
+
+    HttpResponse::InternalServerError().finish()
+}
+
+#[get("/categories/{name}-{id}")]
+pub async fn show_category(
+    req: HttpRequest,
+    pool: web::Data<PgPool>,
+    web::Path((name, id)): web::Path<(String, i16)>
+) -> HttpResponse {
+    if !models::blog::categories::exists(&pool, id).await {
+        return HttpResponse::NotFound().finish()
+    }
+
+    // let mut transaction = pool.begin().await.unwrap();
+    // pool: impl sqlx::Executor<'_, Database = sqlx::Postgres>
+
+    if let Ok((current_category, categories, posts)) = futures::try_join!(
+        models::blog::categories::get(&pool, id),
+        models::blog::categories::get_all(&pool),
+        models::blog::posts::get_latest(&pool, Some(id))
+    ) {
+        #[derive(Template)]
+            #[template(path = "components/blog_post.html")]
+            struct Post {
+                name: String,
+                uri: String,
+                date: String,
+                international_date: String,
+                cover_filename: String,
+                cover_path: String
+            }
+
+            #[derive(Template)]
+            #[template(path = "pages/blog/category.html")]
+            struct Index {
+                title: String,
+                description: Option<String>,
+                categories: Vec<models::blog::categories::Category>,
+                posts: Vec<Post>,
+                metrics_token: Option<String>,
+            }
+
+            let page = Index {
+                title: current_category.name,
+                description: current_category.description,
+                categories,
+                posts: posts
+                    .iter()
+                    .map(|post| Post {
+                        name: post.name.clone(),
+                        uri: post.uri.clone(),
+                        date: post.date.format("%d/%m/%Y").to_string(),
+                        international_date: post.date.to_rfc3339(),
+                        cover_filename: {
+                            let cover = post.cover.split('.').collect::<Vec<_>>();
+                            cover.get(0).expect("Cannot get filename").to_string()
+                        },
+                        cover_path: post.cover.clone()
+                    })
+                    .collect::<Vec<_>>(),
+                metrics_token: None
+            };
+
+            if let Ok(content) = page.render() {
+                return HttpResponse::Ok().content_type("text/html").body(content);
+            }
+    }
+
+    // if let Ok(category) = models::blog::categories::get(&pool, id).await {
+    //     let
+    // }
 
     HttpResponse::InternalServerError().finish()
 }

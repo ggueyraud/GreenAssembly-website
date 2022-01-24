@@ -1,4 +1,6 @@
-{% extends "base.html" %}
+{% extends "blog.html" %}
+
+{% block html %}itemscope itemtype="https://schema.org/BlogPosting"{% endblock %}
 
 {% block title %}{{ name }}{% endblock %}
 
@@ -9,62 +11,71 @@
         {% when None %}
     {% endmatch %}
 
+    <link rel="stylesheet" href="/css/pages/blog/index.css" />
     <link rel="stylesheet" href="/css/pages/blog/post.css" />
-    <script src="/js/post.js" async></script>
+    {#<script src="/js/post.js" async></script>#}
+{% endblock %}
+
+{% block banner %}
+    <header>
+        <h1 itemprop="name headline">{{ name }}</h1>
+
+        <div class="flex items_center justify_between gap_2 mb_4">
+            <time itemprop="datePublished" datetime="{{ international_date }}">{{ date }}</time>
+
+            <div
+                itemprop="author"
+                itemscope
+                itemtype="https://schema.org/Person"
+                class="flex items_center justify_between gap_2"
+            >
+                {% match author.picture %}
+                    {% when Some with (picture) %}
+                    <picture class="lazy">
+                        <source data-srcset="/uploads/{{ picture }}.webp" type="image/webp" />
+                    
+                        <img
+                            data-src="/uploads/{{ picture }}.png"
+                            alt="{{ author.fullname }}"
+                            width="50"
+                            height="50"
+                            itemprop="image"
+                        />
+                    </picture>
+                    {% when None %}
+                {% endmatch %}
+
+                <span itemprop="name">{{ author.fullname }}</span>
+            </div>
+        </div>
+
+        <picture id="cover">
+            <source srcset="/uploads/{{ cover_filename }}.webp" type="image/webp" />
+
+            <img
+                src="/uploads/{{ cover_path }}"
+                alt="{{ name }} cover"
+                itemprop="image"
+            />
+        </picture>
+    </header>
 {% endblock %}
 
 {% block content %}
-    <article>
-        <header>
-            <h1>{{ name }}</h1>
+    <div itemprop="text">
+        {{ content|safe }}
+    </div>
 
-            <div class="flex items_center justify_between gap_2 mb_4">
-                <time datetime="{{ international_date }}">{{ date }}</time>
+    {#
+        <div class="card">
+            <h4>Inscrivez-vous à la <span class="text_success">green</span>letter ! 📰</h4>
+            <p>Soyez informés lors de la sortie d'un nouvel article de blog ou d'une actualité à propos de GreenAssembly.</p>
 
-                <div class="flex items_center justify_between gap_2">
-                    {% match author.picture %}
-                        {% when Some with (picture) %}
-                        <picture class="lazy">
-                            <source data-srcset="/uploads/{{ picture }}.webp" type="image/webp" />
-                        
-                            <img
-                                data-src="/uploads/{{ picture }}.png"
-                                alt="{{ author.fullname }}"
-                                width="50"
-                                height="50"
-                                itemprop="image"
-                            />
-                        </picture>
-                        {% when None %}
-                    {% endmatch %}
-    
-                    {{ author.fullname }}
-                </div>
-            </div>
-
-            <picture id="cover">
-                <source srcset="/uploads/{{ cover_filename }}.webp" type="image/webp" />
-
-                <img
-                    src="/uploads/{{ cover_path }}"
-                    alt="{{ name }} cover"
-                />
-            </picture>
-        </header>
-
-        <p>{{ content|safe }}</p>
-
-        {#
-            <div class="card">
-                <h4>Inscrivez-vous à la <span class="text_success">green</span>letter ! 📰</h4>
-                <p>Soyez informés lors de la sortie d'un nouvel article de blog ou d'une actualité à propos de GreenAssembly.</p>
-
-                <form>
-                    <label for="email" class="mb_1">Email</label>
-                    <input type="email" name="email" id="email" />
-                    <button type="submit" class="btn btn--lg btn--outline text_white mx_auto block mt_4">Je m'inscris</button>
-                </form>
-            </div>
-        #}
-    </article>
+            <form>
+                <label for="email" class="mb_1">Email</label>
+                <input type="email" name="email" id="email" />
+                <button type="submit" class="btn btn--lg btn--outline text_white mx_auto block mt_4">Je m'inscris</button>
+            </form>
+        </div>
+    #}
 {% endblock %}

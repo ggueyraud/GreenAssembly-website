@@ -1,0 +1,27 @@
+#blog_menu {
+    margin-top: utilities.space(8);
+
+    h3 {
+        color: utilities.color('white')
+    }
+
+    a {
+        @include text.text(lg);
+        text-transform: uppercase;
+        font-weight: 600;
+        display: block;
+        text-decoration: none;
+        color: utilities.color('gray');
+        cursor: pointer;
+        padding: utilities.space(2) 0;
+        transition: color 250ms linear;
+        
+        &--active, &:hover {
+            color: utilities.color('success');
+        }
+    }
+
+    @include bp.lg {
+        margin-top: 0
+    }
+}
