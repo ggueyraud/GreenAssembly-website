@@ -2,13 +2,16 @@ use crate::models;
 use crate::templates::Employee;
 use actix_web::{get, web, HttpRequest, HttpResponse};
 use askama::Template;
-
 use sqlx::PgPool;
+
+pub mod api;
+pub mod admin;
 pub mod blog;
 pub mod contact;
 pub mod metrics;
-pub mod website;
 pub mod newsletter;
+pub mod website;
+pub mod users;
 
 #[derive(sqlx::FromRow)]
 struct Page {

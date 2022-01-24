@@ -15,6 +15,7 @@ button {
     @include margin_mixin.in(4, x);
     @include margin_mixin.in(2, y);
     outline: none;
+    color: utilities.color('white');
 
     &--gradient {
         background: linear-gradient(265.27deg, #EFFF19 29.55%, #00FFB5 71.37%);

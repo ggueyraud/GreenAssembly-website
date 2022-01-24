@@ -1,22 +1,16 @@
 use crate::controllers;
 use actix_web::web;
 
+pub mod api;
+pub mod admin;
 pub mod blog;
 pub mod contact;
 pub mod newsletter;
 pub mod website;
+pub mod users;
 
 pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.service(controllers::index)
-        // Redirection old agency route to new route
-        // .route(
-        //     "/agence",
-        //     web::get().to(|| {
-        //         HttpResponse::MovedPermanently()
-        //             .header("Location", "/agence-digitale-verte")
-        //             .finish()
-        //     }),
-        // )
         .service(controllers::agency)
         .service(controllers::portfolio)
         .service(controllers::show_project)

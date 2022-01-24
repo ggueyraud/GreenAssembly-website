@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "carousel": "github:GreenAssembly/carousel",
+    "chart.js": "^3.7.0",
     "formvalidation": "../Formvalidation",
     "router": "github:GreenAssembly/router#development",
     "style-box": "github:GreenAssembly/style-box"

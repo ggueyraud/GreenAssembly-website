@@ -1,5 +1,5 @@
 import Carousel, { CarouselPagination, CarouselTouch } from 'carousel';
-import LightBox from './components/lightbox';
+import LightBox from '@js/components/lightbox';
 
 let lightbox = null;
 

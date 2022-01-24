@@ -3,7 +3,7 @@
 @use 'style-box/abstracts/mixins/margin' as margin_mixin;
 @use 'style-box/abstracts/mixins/text';
 
-@import 'style-box/base/_container.scss';
+@import 'style-box/base/container';
 @import 'style-box/base/animations';
 @import 'style-box/base/background';
 @import 'style-box/base/display';
@@ -83,16 +83,11 @@ html {
         font-weight: 500;
         line-height: 1.75;
         font-family: 'Montserrat', Arial, Helvetica, sans-serif;
-        font-size: 16px;
-
-        // @media (min-height: 700px) and (orientation: landscape) {
-        //     margin-top: 80px
-        // }
+        font-size: 16px
     }
 }
 
 a {
-    // text-decoration: none;
     color: inherit;
 }
 

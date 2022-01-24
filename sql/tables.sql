@@ -212,3 +212,12 @@ CREATE TABLE newsletter_unsubscribed_segments (
     "date" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     PRIMARY KEY (subscriber_id, segment_id)
 );
+
+DROP TABLE IF EXISTS attempts CASCADE;
+CREATE TABLE attempts (
+    id SMALLINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    email VARCHAR(250) NOT NULL,
+    ip VARCHAR(60) NOT NULL,
+    is_login BOOLEAN NOT NULL,
+    "date" tIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+);

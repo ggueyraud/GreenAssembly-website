@@ -67,16 +67,17 @@ END;
 $$ LANGUAGE PLPGSQL;
 
 DROP FUNCTION IF EXISTS views_per_page(DATE, DATE);
-CREATE FUNCTION views_per_page(start_date DATE, end_date DATE)
-RETURNS TABLE (title VARCHAR, views BIGINT) AS $$
+CREATE FUNCTION views_per_page(start_date DATE DEFAULT CURRENT_DATE, end_date DATE DEFAULT CURRENT_DATE)
+RETURNS TABLE ("date" DATE, title VARCHAR, views BIGINT) AS $$
 BEGIN
-    RETURN QUERY SELECT 
-        pages.title,
+    RETURN QUERY SELECT
+        day::DATE,
+        p.title,
         (
             SELECT COUNT(id)
             FROM metrics
-            WHERE DATE(date) BETWEEN $1 AND $2
-            AND metrics.page_id = pages.id
+            WHERE DATE(metrics.date) = day::DATE
+            AND metrics.page_id = p.id
             AND browser NOT IN (
                 'LinkedInBot',
                 'ZoominfoBot',
@@ -99,7 +100,39 @@ BEGIN
                 'Discordbot'
             )
         )
-        FROM pages;
+    FROM generate_series($1::timestamp, $2, '1 day') day,
+    pages p;
+
+    -- RETURN QUERY SELECT 
+    --     pages.title,
+    --     (
+    --         SELECT COUNT(id)
+    --         FROM metrics
+    --         WHERE DATE(date) BETWEEN $1 AND $2
+    --         AND metrics.page_id = pages.id
+    --         AND browser NOT IN (
+    --             'LinkedInBot',
+    --             'ZoominfoBot',
+    --             'Baiduspider',
+    --             'bingbot',
+    --             'Applebot',
+    --             'Python Requests',
+    --             'MJ12bot',
+    --             'Go-http-client',
+    --             'Googlebot',
+    --             'PetalBot',
+    --             'FacebookBot',
+    --             'SemrushBot',
+    --             'AdsBot-Google',
+    --             'AhrefsBot',
+    --             'curl',
+    --             'crawler',
+    --             'BLEXBot',
+    --             'Apache-HttpClient',
+    --             'Discordbot'
+    --         )
+    --     )
+    --     FROM pages;
 END;
 $$ LANGUAGE PLPGSQL;
 

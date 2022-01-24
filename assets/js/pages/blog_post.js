@@ -1,5 +1,5 @@
 import Form, { Required, Regex } from 'formvalidation';
-import { post } from './utils/http';
+import { post } from '@js/utils/http';
 
 const on_mount = () => {
     new Form(document.querySelector('form'), {

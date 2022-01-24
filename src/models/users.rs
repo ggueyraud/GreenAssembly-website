@@ -1,4 +1,4 @@
-use sqlx::{FromRow, PgPool};
+use sqlx::{Error, FromRow, PgPool};
 
 #[derive(FromRow, Clone)]
 pub struct Employee {
@@ -24,4 +24,12 @@ pub async fn get_employees(pool: &PgPool) -> Vec<Employee> {
     .fetch_all(pool)
     .await
     .unwrap()
+}
+
+pub async fn get_password(pool: &PgPool, email: &str) -> Result<String, Error> {
+    let row = sqlx::query!("SELECT password FROM users WHERE email = $1 LIMIT 1", email)
+        .fetch_one(pool)
+        .await?;
+
+    Ok(row.password)
 }

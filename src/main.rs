@@ -1,5 +1,6 @@
 use actix_cors::Cors;
 use actix_files::NamedFile;
+use actix_identity::{CookieIdentityPolicy, IdentityService};
 use actix_web::{
     get,
     http::{
@@ -170,6 +171,11 @@ async fn main() -> std::io::Result<()> {
             .data(UserAgentParser::from_path("regexes.yaml").expect("regexes.yaml not found"))
             .wrap(Compress::default())
             .wrap(cors)
+            .wrap(IdentityService::new(
+                CookieIdentityPolicy::new(&[0; 32])
+                    .name("auth-cookie")
+                    .secure(true),
+            ))
             .wrap(middlewares::www::RedirectWWW)
             .wrap_fn(|req, srv| {
                 use actix_service::Service;
@@ -207,6 +213,8 @@ async fn main() -> std::io::Result<()> {
                     Ok(res)
                 }
             })
+            .configure(routes::admin::config)
+            .configure(routes::users::config)
             .configure(routes::website::config)
             .configure(routes::config)
             .configure(routes::contact::config)

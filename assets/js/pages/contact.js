@@ -1,7 +1,7 @@
 import Form, { Required, StringLength, Regex } from 'formvalidation';
 // import chk from './components/checkbox';
 import Carousel from 'carousel';
-import { post } from './utils/http';
+import { post } from '@js/utils/http';
 
 // const chks = chk('.checkbox', { checked: true });
 // chks[1].checked = false

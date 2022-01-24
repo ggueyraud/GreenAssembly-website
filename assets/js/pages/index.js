@@ -1,7 +1,23 @@
-let mouseover_tick = false;
-let touch_event = false;
+import Carousel, { CarouselPagination, CarouselTouch } from 'carousel';
 
-function init() {
+const on_mount = () => {
+    // Carousel
+    const carousel = new Carousel(document.querySelector('.carousel'), {
+        breakpoints: {
+            768: {
+                slides_visible: 2
+            },
+            1280: {
+                slides_visible: 3
+            }
+        }
+    });
+    carousel.use([CarouselTouch]);
+    carousel.use(CarouselPagination);
+
+    // Vidéo
+    let mouseover_tick = false;
+    let touch_event = false;
     const video = document.getElementById('motion_home_video');
     const actions = document.getElementById('motion_home_actions');
     const play_button = document.getElementById('motion_home_video_button');
@@ -43,10 +59,6 @@ function init() {
 
         mouseover_tick = true;
     }, false);
-}
-
-const on_mount = () => {
-    init();
 }
 window.addEventListener('onMount', on_mount)
 window.addEventListener('onDestroy', () => window.removeEventListener('onMount', on_mount))
