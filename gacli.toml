@@ -34,7 +34,7 @@ safelist = ["lightbox", "lightbox--active", "carousel__pagination__item", "carou
 
 [[purgecss]]
 css = "pages/contact.css"
-content = ["templates/pages/contact.html", ".build/production/js/pages/contact.js"]
+content = ["templates/pages/contact.html", ".build/production/js/contact.js"]
 safelist = ["webp_supportted", "no_webp", "carousel__pagination__item", "carousel__pagination__item--current", "carousel__pagination__item index", "carousel__pagination__item descr"]
 
 [[purgecss]]
