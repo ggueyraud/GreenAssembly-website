@@ -66,6 +66,60 @@ BEGIN
 END;
 $$ LANGUAGE PLPGSQL;
 
+DROP FUNCTION IF EXISTS device_types(DATE, DATE);
+CREATE FUNCTION device_types(start_date DATE DEFAULT CURRENT_DATE, end_date DATE DEFAULT CURRENT_DATE)
+RETURNS TABLE (name VARCHAR, percent REAL) AS $$
+BEGIN
+    RETURN QUERY SELECT
+        device_type,
+        (COUNT(id)::REAL * 100.0::REAL / (
+            SELECT
+                COUNT(id)
+            FROM metrics
+            WHERE DATE("date") BETWEEN $1 AND $2 AND device_type IS NOT NULL
+        )::REAL)
+    FROM metrics
+    WHERE DATE("date") BETWEEN $1 AND $2 AND device_type IS NOT NULL
+    GROUP BY device_type;
+END;
+$$ LANGUAGE PLPGSQL;
+
+DROP FUNCTION IF EXISTS os(DATE, DATE);
+CREATE FUNCTION os(start_date DATE DEFAULT CURRENT_DATE, end_date DATE DEFAULT CURRENT_DATE)
+RETURNS TABLE (name VARCHAR, percent REAL) AS $$
+BEGIN
+    RETURN QUERY SELECT
+        os,
+        (COUNT(id)::REAL * 100.0::REAL / (
+            SELECT
+                COUNT(id)
+            FROM metrics
+            WHERE DATE("date") BETWEEN $1 AND $2 AND os IS NOT NULL
+        )::REAL)
+    FROM metrics
+    WHERE DATE("date") BETWEEN $1 AND $2 AND os IS NOT NULL
+    GROUP BY os;
+END;
+$$ LANGUAGE PLPGSQL;
+
+DROP FUNCTION IF EXISTS browsers(DATE, DATE);
+CREATE FUNCTION browsers(start_date DATE DEFAULT CURRENT_DATE, end_date DATE DEFAULT CURRENT_DATE)
+RETURNS TABLE (name VARCHAR, percent REAL) AS $$
+BEGIN
+    RETURN QUERY SELECT
+        browser,
+        (COUNT(id)::REAL * 100.0::REAL / (
+            SELECT
+                COUNT(id)
+            FROM metrics
+            WHERE DATE("date") BETWEEN $1 AND $2 AND browser IS NOT NULL
+        )::REAL)
+    FROM metrics
+    WHERE DATE("date") BETWEEN $1 AND $2 AND browser IS NOT NULL
+    GROUP BY browser;
+END;
+$$ LANGUAGE PLPGSQL;
+
 DROP FUNCTION IF EXISTS views_per_page(DATE, DATE);
 CREATE FUNCTION views_per_page(start_date DATE DEFAULT CURRENT_DATE, end_date DATE DEFAULT CURRENT_DATE)
 RETURNS TABLE ("date" DATE, title VARCHAR, views BIGINT) AS $$
@@ -102,37 +156,6 @@ BEGIN
         )
     FROM generate_series($1::timestamp, $2, '1 day') day,
     pages p;
-
-    -- RETURN QUERY SELECT 
-    --     pages.title,
-    --     (
-    --         SELECT COUNT(id)
-    --         FROM metrics
-    --         WHERE DATE(date) BETWEEN $1 AND $2
-    --         AND metrics.page_id = pages.id
-    --         AND browser NOT IN (
-    --             'LinkedInBot',
-    --             'ZoominfoBot',
-    --             'Baiduspider',
-    --             'bingbot',
-    --             'Applebot',
-    --             'Python Requests',
-    --             'MJ12bot',
-    --             'Go-http-client',
-    --             'Googlebot',
-    --             'PetalBot',
-    --             'FacebookBot',
-    --             'SemrushBot',
-    --             'AdsBot-Google',
-    --             'AhrefsBot',
-    --             'curl',
-    --             'crawler',
-    --             'BLEXBot',
-    --             'Apache-HttpClient',
-    --             'Discordbot'
-    --         )
-    --     )
-    --     FROM pages;
 END;
 $$ LANGUAGE PLPGSQL;
 

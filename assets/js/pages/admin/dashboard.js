@@ -1,15 +1,79 @@
 import { get } from '@js/utils/http';
 import Chart from 'chart.js/auto';
 
+const DounghnutChart = (element, data, options = {}) => {
+    options.plugins = Object.assign({
+        tooltip: {
+            titleColor: '#000',
+            bodyColor: '#000',
+            backgroundColor: '#fff',
+            callbacks: {
+                label: ctx => `${ctx.label} : ${ctx.parsed.toFixed(2)}%`
+            }
+        },
+        legend: {
+            position: 'bottom',
+        },
+        title: {
+            display: true,
+            color: '#fff',
+            // text: 'Répartition par devices'
+        }
+    }, options.plugins);
+
+    options = Object.assign({
+        responsive: true,
+        scaleFontColor: '#fff'
+        
+    }, options);
+
+    console.log(
+        options
+        // Object.assign({
+        //     tooltip: {
+        //         titleColor: '#000',
+        //         bodyColor: '#000',
+        //         backgroundColor: '#fff',
+        //         callbacks: {
+        //             label: ctx => `${ctx.label} : ${ctx.parsed.toFixed(2)}%`
+        //         }
+        //     },
+        //     legend: {
+        //         position: 'bottom',
+        //     },
+        //     title: {
+        //         display: true,
+        //         color: '#fff',
+        //         text: 'Répartition par devices'
+        //     }
+        // }, options.plugins)
+    )
+
+    return new Chart(element.getContext('2d'), {
+        type: 'doughnut',
+        data,
+        options
+    });
+}
+
 
 const on_mount = () => {
-    // Chart.register(BarController, CategoryScale, LinearScale, BarElement, LineController, PointElement, LineElement, Tooltip, Title, ScaleOptions);
+    const colors = [
+        '13, 110, 253',
+        '220, 53, 69',
+        '25, 135, 84',
+        '102, 16, 242',
+        '214, 51, 132',
+        '255, 193, 7',
+        '32, 201, 151',
+        '111, 66, 193',
+        '13, 202, 240',
+        '255, 255, 255',
+        '108, 117, 125'
+    ];
     const data = {};
 
-    get(
-        `/api/metrics/views-page?start=2022-01-22&end=2022-01-24`,
-        { validate_status: status => status === 200 }
-    )
+    get(`/api/metrics/views-page?start=2022-01-22&end=2022-01-25`)
     .then(async res => {
         res = await res.json();
 
@@ -20,22 +84,8 @@ const on_mount = () => {
             .filter(unique);
 
         const datasets = [];
-        const colors = [
-            '#0d6efd',
-            '#6610f2',
-            '#6f42c1',
-            '#d63384',
-            '#dc3545',
-            '#fd7e14',
-            '#ffc107',
-            '#198754',
-            '#20c997',
-            '#0dcaf0',
-            '#fff',
-            '#6c757d',
-        ];
 
-        res.forEach((value, index) => {
+        res.forEach(value => {
             const dataset = datasets.find(dataset => dataset.label === value.title);
 
             if (value.views > 0) {
@@ -49,7 +99,8 @@ const on_mount = () => {
                         data: [value.views],
                         borderRadius: 6,
                         borderWidth: 2,
-                        backgroundColor: colors[datasets.length]
+                        borderColor: `rgb(${colors[datasets.length]})`,
+                        backgroundColor: `rgba(${colors[datasets.length]}, .45`
                     };
     
                     datasets.push(new_dataset);
@@ -69,7 +120,8 @@ const on_mount = () => {
                 return sum / dataset.data.length
             }),
             fill: false,
-            borderColor: 'rgb(54, 162, 235)'
+            borderColor: 'rgb(54, 162, 235)',
+            borderDash: [5, 5],
         });
         data.datasets.push({
             type: 'line',
@@ -95,7 +147,9 @@ const on_mount = () => {
                     tooltip: {
                         titleColor: '#000',
                         bodyColor: '#000',
-                        backgroundColor: '#fff'
+                        backgroundColor: '#fff',
+                        mode: 'index',
+                        intersect: true
                     },
                     legend: {
                         position: 'bottom',
@@ -108,6 +162,11 @@ const on_mount = () => {
                 },
                 scales: {
                     x: {
+                        title: {
+                            text: 'Dates',
+                            color: '#fff',
+                            display: true
+                        },
                         grid: {
                             color: 'rgba(255, 255, 255, .5)'
                         },
@@ -116,18 +175,114 @@ const on_mount = () => {
                         }
                     },
                     y: {
+                        type: 'logarithmic',
+                        // max: 67,
+                        // display: false,
+                        title: {
+                            text: 'Nombre de vues',
+                            color: '#fff',
+                            display: true
+                        },
                         grid: {
                             color: 'rgba(255, 255, 255, .5)'
                         },
                         ticks: {
+                            // stepSize: 25,
                             color: 'rgba(255, 255, 255, .5)'
                         },
-                        beginAtZero: true,
-                        // max: 10
+                        beginAtZero: true
                     }
                 }
             }
         });
+    });
+
+    get(`/api/metrics/devices?start=2022-01-22&end=2022-01-25`)
+    .then(async res => {
+        res = await res.json();
+        let c = colors.sort(() => Math.random() - 0.5);
+
+        DounghnutChart(
+            document.getElementById('devices'),
+            {
+                labels: res.map(value => value.name),
+                datasets: [
+                    {
+                        data: res.map(value => value.percent),
+                        backgroundColor: res.map((_, index) => `rgba(${c[index]}, .45)`),
+                        borderColor: res.map((_, index) => `rgb(${c[index]}, .45)`)
+                    }
+                ]
+            },
+            {
+                plugins: {
+                    title: {
+                        display: true,
+                        color: '#fff',
+                        text: 'Répartition par devices'
+                    }
+                }
+            }
+        );
+    })
+
+    get(`/api/metrics/os?start=2022-01-22&end=2022-01-25`)
+    .then(async res => {
+        res = await res.json();
+        let c = colors.sort(() => Math.random() - 0.5);
+
+        DounghnutChart(
+            document.getElementById('os'),
+            {
+                labels: res.map(value => value.name),
+                datasets: [
+                    {
+                        data: res.map(value => value.percent),
+                        backgroundColor: res.map((_, index) => `rgba(${c[index]}, .45)`),
+                        borderColor: res.map((_, index) => `rgb(${c[index]}, .45)`)
+                    }
+                ]
+            },
+            {
+                plugins: {
+                    title: {
+                        display: true,
+                        color: '#fff',
+                        text: 'Répartition par OS'
+                    }
+                }
+            }
+        );
+    })
+
+    get(`/api/metrics/browsers?start=2022-01-22&end=2022-01-25`)
+    .then(async res => {
+        res = await res.json();
+
+        let c = colors.sort(() => Math.random() - 0.5);
+
+        DounghnutChart(
+            document.getElementById('browsers'),
+            {
+                labels: res.map(value => value.name),
+                datasets: [
+                    {
+                        data: res.map(value => value.percent),
+                        backgroundColor: res.map((_, index) => `rgba(${c[index]}, .45)`),
+                        borderColor: res.map((_, index) => `rgb(${c[index]}, .45)`)
+                    }
+                ]
+            },
+            {
+                plugins: {
+                    title: {
+                        display: true,
+                        color: '#fff',
+                        text: 'Répartition par navigateurs'
+                    }
+                }
+            }
+        );
     })
 
 }

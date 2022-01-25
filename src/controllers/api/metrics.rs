@@ -1,8 +1,7 @@
 use serde::{Serialize, Deserialize};
 use chrono::NaiveDate;
-use serde_json::json;
 use actix_web::{HttpResponse, web, get};
-use sqlx::PgPool;
+use sqlx::{FromRow, PgPool};
 
 #[derive(Deserialize)]
 pub struct P {
@@ -12,7 +11,7 @@ pub struct P {
 
 #[get("/views-page")]
 pub async fn views_page(pool: web::Data<PgPool>, query: web::Query<P>) -> HttpResponse {
-    #[derive(sqlx::FromRow, Serialize)]
+    #[derive(FromRow, Serialize)]
     struct Data {
         date: NaiveDate,
         title: String,
@@ -27,9 +26,70 @@ pub async fn views_page(pool: web::Data<PgPool>, query: web::Query<P>) -> HttpRe
     )
         .fetch_all(pool.as_ref())
         .await {
-            Ok(rows) => {
-                HttpResponse::Ok().json(rows)
-            },
+            Ok(rows) => HttpResponse::Ok().json(rows),
+            _ => HttpResponse::InternalServerError().finish()
+        }
+}
+
+#[get("/devices")]
+pub async fn devices(pool: web::Data<PgPool>, query: web::Query<P>) -> HttpResponse  {
+    #[derive(FromRow, Serialize)]
+    struct Data {
+        name: String,
+        percent: f32
+    }
+
+    match sqlx::query_as!(
+        Data,
+        r#"SELECT name AS "name!", percent AS "percent!" FROM device_types($1, $2)"#,
+        query.start,
+        query.end
+    )
+        .fetch_all(pool.as_ref())
+        .await {
+            Ok(rows) => HttpResponse::Ok().json(rows),
+            _ => HttpResponse::InternalServerError().finish()
+        }
+}
+
+#[get("/os")]
+pub async fn os(pool: web::Data<PgPool>, query: web::Query<P>) -> HttpResponse  {
+    #[derive(FromRow, Serialize)]
+    struct Data {
+        name: String,
+        percent: f32
+    }
+
+    match sqlx::query_as!(
+        Data,
+        r#"SELECT name AS "name!", percent AS "percent!" FROM os($1, $2)"#,
+        query.start,
+        query.end
+    )
+        .fetch_all(pool.as_ref())
+        .await {
+            Ok(rows) => HttpResponse::Ok().json(rows),
+            _ => HttpResponse::InternalServerError().finish()
+        }
+}
+
+#[get("/browsers")]
+pub async fn browsers(pool: web::Data<PgPool>, query: web::Query<P>) -> HttpResponse  {
+    #[derive(FromRow, Serialize)]
+    struct Data {
+        name: String,
+        percent: f32
+    }
+
+    match sqlx::query_as!(
+        Data,
+        r#"SELECT name AS "name!", percent AS "percent!" FROM browsers($1, $2)"#,
+        query.start,
+        query.end
+    )
+        .fetch_all(pool.as_ref())
+        .await {
+            Ok(rows) => HttpResponse::Ok().json(rows),
             _ => HttpResponse::InternalServerError().finish()
         }
 }
