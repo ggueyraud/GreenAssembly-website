@@ -80,10 +80,7 @@ pub async fn login(
                 }
             }
         }
-        Err(e) => {
-            println!("{:?}", e);
-            HttpResponse::InternalServerError().finish()
-        },
+        _ => HttpResponse::InternalServerError().finish()
     }
 }
 

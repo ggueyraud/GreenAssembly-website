@@ -9,7 +9,6 @@ pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
     if let Ok(page) =
         models::pages::get::<super::Page>(&pool, "id, title, description", "/blog").await
     {
-        println!("{:?}", models::blog::posts::get_latest(&pool, None).await);
         if let (Ok(categories), Ok(posts), Ok(metric_id)) = futures::join!(
             models::blog::categories::get_all(&pool),
             models::blog::posts::get_latest(&pool, None),

@@ -30,7 +30,6 @@ pub async fn subscribe(pool: web::Data<PgPool>, form: web::Form<SubscribeForm>) 
 
     let mut transaction = pool.begin().await.unwrap();
 
-    // println!("{:?}", models::newsletters::subscribers::add(transaction.deref_mut(), &form.email, &token[..60]).await);
     if models::newsletters::subscribers::add(transaction.deref_mut(), &form.email, &token[..60])
         .await
         .is_err()

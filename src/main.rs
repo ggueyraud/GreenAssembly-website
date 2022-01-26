@@ -21,7 +21,7 @@ mod middlewares;
 mod models;
 mod routes;
 mod templates;
-// mod tests;
+mod tests;
 mod utils;
 
 async fn create_pool() -> Result<sqlx::PgPool, sqlx::Error> {
@@ -47,7 +47,6 @@ fn serve_file(req: &HttpRequest, path: &Path, cache_duration: i64) -> Result<Htt
             Ok(response)
         }
         Err(e) => {
-            println!("{:?}", e);
             use askama::Template;
 
             #[derive(Template)]

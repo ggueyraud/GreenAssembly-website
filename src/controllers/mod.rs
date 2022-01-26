@@ -215,13 +215,6 @@ async fn show_project(
         last_update_date: Option<chrono::DateTime<chrono::Utc>>,
     }
 
-    // println!("{:?}", metrics::add(&req, &pool, models::metrics::BelongsTo::Project(id)).await);
-    // println!("{:?}",models::portfolio::projects::get::<Project>(
-    //     &pool,
-    //     r#"name, description, content, is_visible, date, TO_CHAR(date, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') AS international_date, last_update_date"#,
-    //     id
-    // ).await);
-    // println!("{:?}", models::portfolio::pictures::get_all::<Picture>(&pool, "path", id).await);
     if let (Ok(metric_id), Ok(project), Ok(mut pictures)) = futures::join!(
         metrics::add(&req, &pool, models::metrics::BelongsTo::Project(id)),
         models::portfolio::projects::get::<Project>(

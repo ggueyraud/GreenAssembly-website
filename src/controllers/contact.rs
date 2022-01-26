@@ -160,7 +160,6 @@ pub async fn send(mut form: web::Json<Email>) -> Result<HttpResponse, Error> {
     match email {
         Ok(mail) => {
             let e = mailer.send(mail.into());
-            println!("Error: {:?}", e);
 
             if e.is_err() {
                 return Ok(HttpResponse::InternalServerError().json("Unable to send email"));
