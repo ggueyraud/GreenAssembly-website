@@ -1,7 +1,6 @@
 use std::task::{Context, Poll};
 
-use actix_service::{Service, Transform};
-use actix_web::dev::{ServiceRequest, ServiceResponse};
+use actix_web::dev::{ServiceRequest, ServiceResponse, Service, Transform};
 use actix_web::{http, Error, HttpResponse};
 use futures::future::{ok, Either, Ready};
 
