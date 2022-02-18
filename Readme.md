@@ -1,0 +1,1 @@
+[![Rust](https://github.com/GreenAssembly/website/actions/workflows/rust.yml/badge.svg?branch=development)](https://github.com/GreenAssembly/website/actions/workflows/rust.yml)
