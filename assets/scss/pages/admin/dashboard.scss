@@ -1,5 +1,10 @@
+@use 'style-box/abstracts/functions/utilities';
 @import '../../components/_card.scss';
+@import 'style-box/base/overflow';
 
-body {
-    background-color: red;
+[name="main"] {
+    max-height: 100vh;
+    display: grid;
+    gap: utilities.space(3);
+    grid-template-columns: repeat(6, 1fr);
 }

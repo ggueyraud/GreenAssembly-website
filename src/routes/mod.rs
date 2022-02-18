@@ -1,13 +1,13 @@
 use crate::controllers;
 use actix_web::web;
 
-pub mod api;
 pub mod admin;
+pub mod api;
 pub mod blog;
 pub mod contact;
 pub mod newsletter;
-pub mod website;
 pub mod users;
+pub mod website;
 
 pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.service(controllers::index)

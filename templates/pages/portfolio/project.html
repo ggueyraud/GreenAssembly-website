@@ -9,6 +9,14 @@
         {% when None %}
     {% endmatch %}
 
+    {% match is_seo %}
+        {% when Some with (is_seo) %}
+            {% if !is_seo %}
+                <meta name="robots" content="noindex" />
+            {% endif %}
+        {% when None %}
+    {% endmatch %}
+
     <link rel="stylesheet" href="/css/pages/project.css" />
 
     {% include "includes/metrics.html" %}

@@ -8,7 +8,9 @@
 {% endblock %}
 
 {% block content %}
-    <section id="content" class="px_4">
+    <div class=""></div>
+
+    <div class="overflow_x_auto">
         <table>
             <thead>
                 <tr>
@@ -27,20 +29,20 @@
                 {% endfor %}
             </tbody>
         </table>
+    </div>
 
-        <canvas id="myChart" width="400" height="400"></canvas>
+    <canvas id="myChart"></canvas>
 
-        <div class="card">
-            <canvas id="browsers" width="400" height="400"></canvas>
+    <div class="card">
+        <canvas id="browsers"></canvas>
 
-        </div>
-        <div class="card">
-            <canvas id="os" width="400" height="400"></canvas>
+    </div>
+    <div class="card">
+        <canvas id="os"></canvas>
 
-        </div>
-        <div class="card">
-            <canvas id="devices" width="400" height="400"></canvas>
+    </div>
+    <div class="card">
+        <canvas id="devices"></canvas>
 
-        </div>
-    </section>
+    </div>
 {% endblock %}

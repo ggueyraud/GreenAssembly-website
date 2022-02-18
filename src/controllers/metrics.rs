@@ -25,7 +25,7 @@ pub async fn add(
     let digest_ip = format!("{:?}", digest_ip);
 
     match models::metrics::add(
-        &pool,
+        pool,
         belongs_to,
         None,
         &digest_ip,
@@ -74,19 +74,21 @@ pub async fn create(
                 id: i16,
             }
 
-            match models::pages::get::<Page>(&pool, "id", &infos.path).await {
+            match models::pages::get(&pool, &infos.path).await {
                 Ok(page) => id = Some(page.id),
                 Err(_) => return HttpResponse::InternalServerError().finish(),
             }
         }
         BelongsTo::Project => match infos.path.split('-').collect::<Vec<_>>().last() {
             Some(post_id) => match post_id.parse::<i16>() {
-                Ok(post_id) => if let BelongsTo::Project = infos.belongs_to {
-                    if !models::portfolio::projects::exists(&pool, post_id).await {
-                        return HttpResponse::NotFound().finish();
-                    }
+                Ok(post_id) => {
+                    if let BelongsTo::Project = infos.belongs_to {
+                        if !models::portfolio::projects::exists(&pool, post_id).await {
+                            return HttpResponse::NotFound().finish();
+                        }
 
-                    id = Some(post_id)
+                        id = Some(post_id)
+                    }
                 }
                 _ => return HttpResponse::InternalServerError().finish(),
             },

@@ -1,8 +1,8 @@
 use crate::models;
 use actix_web::{get, post, web, HttpResponse};
 use askama::Template;
-use lettre::{SmtpClient, Transport};
-use lettre_email::EmailBuilder;
+// use lettre::{SmtpClient, Transport};
+// use lettre_email::EmailBuilder;
 use serde::Deserialize;
 use serde_json::json;
 use sqlx::PgPool;

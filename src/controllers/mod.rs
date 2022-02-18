@@ -4,25 +4,18 @@ use actix_web::{get, web, HttpRequest, HttpResponse};
 use askama::Template;
 use sqlx::PgPool;
 
-pub mod api;
 pub mod admin;
+pub mod api;
 pub mod blog;
 pub mod contact;
 pub mod metrics;
 pub mod newsletter;
-pub mod website;
 pub mod users;
-
-#[derive(sqlx::FromRow)]
-struct Page {
-    id: i16,
-    title: String,
-    description: Option<String>,
-}
+pub mod website;
 
 #[get("/")]
 pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) = models::pages::get::<Page>(&pool, "id, title, description", "/").await {
+    if let Ok(page) = models::pages::get(&pool, "/").await {
         let mut token: Option<String> = None;
 
         if let Ok(Some(id)) =
@@ -56,8 +49,8 @@ pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
 
 #[get("/agence-digitale-verte")]
 async fn agency(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let (Ok(page), employees) = futures::join!(
-        models::pages::get::<Page>(&pool, "id, title, description", "/agence-digitale-verte"),
+    if let (Ok(page), Ok(employees)) = futures::join!(
+        models::pages::get(&pool, "/agence-digitale-verte"),
         models::users::get_employees(&pool)
     ) {
         let mut token: Option<String> = None;
@@ -98,30 +91,15 @@ async fn agency(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
 
 #[get("/portfolio")]
 async fn portfolio(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) =
-        models::pages::get::<Page>(&pool, "id, title, description", "/portfolio").await
-    {
-        #[derive(sqlx::FromRow)]
-        struct Category {
-            id: i16,
-            name: String,
-        }
-
-        #[derive(sqlx::FromRow)]
-        struct Project {
-            id: i16,
-            name: String,
-            category_id: i16,
-        }
-
-        if let (Ok(metric_id), Ok(categories), Ok(projects)) = futures::join!(
+    if let Ok(page) = models::pages::get(&pool, "/portfolio").await {
+        if let (Ok(metric_id), Ok(_categories), Ok(projects)) = futures::join!(
             crate::controllers::metrics::add(
                 &req,
                 &pool,
                 models::metrics::BelongsTo::Page(page.id)
             ),
-            models::portfolio::categories::get_all::<Category>(&pool, "id, name"),
-            models::portfolio::projects::get_all::<Project>(&pool, "id, name, category_id")
+            models::portfolio::categories::get_all(&pool),
+            models::portfolio::projects::get_all(&pool)
         ) {
             let mut token: Option<String> = None;
 
@@ -145,7 +123,7 @@ async fn portfolio(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
                 title: String,
                 description: Option<String>,
                 metrics_token: Option<String>,
-                categories: Vec<Category>,
+                // categories: Vec<Category>,
                 projects: Vec<Project>,
             }
 
@@ -160,7 +138,7 @@ async fn portfolio(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
                     title: page.title,
                     description: page.description,
                     metrics_token: token,
-                    categories,
+                    // categories,
                     projects: vec![],
                 };
 
@@ -199,30 +177,17 @@ async fn show_project(
         return HttpResponse::NotFound().finish();
     }
 
-    #[derive(sqlx::FromRow)]
-    struct Picture {
-        path: String,
-    }
-
-    #[derive(sqlx::FromRow)]
-    struct Project {
-        name: String,
-        description: Option<String>,
-        content: String,
-        is_visible: Option<bool>,
-        date: chrono::DateTime<chrono::Utc>,
-        international_date: String,
-        last_update_date: Option<chrono::DateTime<chrono::Utc>>,
+    // If the project to be accessed isn't published, so we redirect to portfolio home page
+    if !models::portfolio::projects::is_published(&pool, id).await {
+        return HttpResponse::NotFound()
+            .header("Location", "/portfolio")
+            .finish();
     }
 
     if let (Ok(metric_id), Ok(project), Ok(mut pictures)) = futures::join!(
         metrics::add(&req, &pool, models::metrics::BelongsTo::Project(id)),
-        models::portfolio::projects::get::<Project>(
-            &pool,
-            r#"name, description, content, is_visible, date, TO_CHAR(date, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') AS international_date, last_update_date"#,
-            id
-        ),
-        models::portfolio::pictures::get_all::<Picture>(&pool, "path", id)
+        models::portfolio::projects::get(&pool, id),
+        models::portfolio::pictures::get_all(&pool, id)
     ) {
         let mut token: Option<String> = None;
         if let Some(id) = metric_id {
@@ -243,9 +208,10 @@ async fn show_project(
             first_picture: Picture,
             pictures: Vec<Picture>,
             metrics_token: Option<String>,
+            is_seo: Option<bool>,
         }
 
-        let cover = pictures.remove(0).path;
+        let cover = pictures.remove(0);
 
         let project = PortfolioProject {
             title: project.name,
@@ -253,28 +219,17 @@ async fn show_project(
             content: project.content,
             first_picture: Picture {
                 path: cover.clone(),
-                filename: cover
-                    .split('.')
-                    .collect::<Vec<_>>()
-                    .get(0)
-                    .unwrap()
-                    .to_string(),
+                filename: crate::utils::extract_filename(&cover).unwrap(),
             },
             pictures: pictures
                 .iter()
                 .map(|picture| Picture {
-                    path: picture.path.clone(),
-                    filename: picture
-                        .path
-                        .clone()
-                        .split('.')
-                        .collect::<Vec<_>>()
-                        .get(0)
-                        .unwrap()
-                        .to_string(),
+                    path: picture.clone(),
+                    filename: crate::utils::extract_filename(&picture).unwrap()
                 })
                 .collect::<Vec<_>>(),
             metrics_token: token,
+            is_seo: project.is_seo,
         };
 
         if let Ok(content) = project.render() {
@@ -287,9 +242,7 @@ async fn show_project(
 
 #[get("/mentions-legales")]
 async fn legals(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) =
-        models::pages::get::<Page>(&pool, "id, title, description", "/mentions-legales").await
-    {
+    if let Ok(page) = models::pages::get(&pool, "/mentions-legales").await {
         let mut token: Option<String> = None;
 
         if let Ok(Some(id)) =
@@ -323,7 +276,7 @@ async fn legals(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
 
 #[get("/faq")]
 async fn faq(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) = models::pages::get::<Page>(&pool, "id, title, description", "/faq").await {
+    if let Ok(page) = models::pages::get(&pool, "/faq").await {
         let mut token: Option<String> = None;
 
         if let Ok(Some(id)) =
@@ -339,55 +292,44 @@ async fn faq(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
             questions: Vec<models::faq::Answer>,
         }
 
-        let mut categories = models::faq::categories::get_all(&pool)
-            .await
-            .iter_mut()
-            .map(|category| Category {
-                id: category.id,
-                name: category.name.clone(),
-                questions: vec![],
-            })
-            .collect::<Vec<_>>();
+        if let Ok(categories) = models::faq::categories::get_all(&pool).await {
+            let mut categories = categories
+                .iter()
+                .map(|category| Category {
+                    id: category.id,
+                    name: category.name.clone(),
+                    questions: vec![],
+                })
+                .collect::<Vec<_>>();
 
-        for category in &mut categories {
-            category.questions = models::faq::answers::get_all(&pool, category.id).await;
-        }
-
-        #[derive(Template)]
-        #[template(path = "pages/faq.html")]
-        struct Faq {
-            //
-            title: String,
-            description: Option<String>,
-            categories: Vec<Category>,
-            metrics_token: Option<String>,
-        }
-
-        let page = Faq {
-            title: page.title,
-            description: page.description,
-            categories,
-            metrics_token: token,
-        };
-
-        if let Ok(content) = page.render() {
-            return HttpResponse::Ok().content_type("text/html").body(content);
+            for category in &mut categories {
+                match models::faq::answers::get_all(&pool, category.id).await {
+                    Ok(answers) => category.questions = answers,
+                    Err(_) => return HttpResponse::InternalServerError().finish()
+                }
+            }
+        
+            #[derive(Template)]
+            #[template(path = "pages/faq.html")]
+            struct Faq {
+                title: String,
+                description: Option<String>,
+                categories: Vec<Category>,
+                metrics_token: Option<String>,
+            }
+        
+            let page = Faq {
+                title: page.title,
+                description: page.description,
+                categories,
+                metrics_token: token,
+            };
+        
+            if let Ok(content) = page.render() {
+                return HttpResponse::Ok().content_type("text/html").body(content);
+            }
         }
     }
-
+    
     HttpResponse::InternalServerError().finish()
 }
-
-// #[get("/sitemap.xml")]
-// pub async fn sitemap() -> HttpResponse {
-//     HttpResponse::Ok()
-//         .content_type("text/xml")
-//         .body(include_str!("../../sitemap.xml"))
-// }
-
-// #[get("/robots.txt")]
-// pub async fn robots() -> HttpResponse {
-//     HttpResponse::Ok()
-//         .content_type("text/plain")
-//         .body(include_str!("../../robots.txt"))
-// }

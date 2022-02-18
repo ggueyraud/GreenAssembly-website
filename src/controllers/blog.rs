@@ -6,11 +6,9 @@ use crate::models;
 
 #[get("")]
 pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) =
-        models::pages::get::<super::Page>(&pool, "id, title, description", "/blog").await
-    {
+    if let Ok(page) = models::pages::get(&pool, "/blog").await {
         if let (Ok(categories), Ok(posts), Ok(metric_id)) = futures::join!(
-            models::blog::categories::get_all(&pool),
+            models::blog::categories::get_all_visible(&pool),
             models::blog::posts::get_latest(&pool, None),
             crate::controllers::metrics::add(
                 &req,
@@ -77,11 +75,24 @@ pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
 
 #[get("/articles/{name}-{id}")]
 pub async fn show_article(
-    req: HttpRequest,
+    // TODO : get metric
+    _req: HttpRequest,
     pool: web::Data<PgPool>,
+    // TODO : check if name has changed so make a redirection 500
     web::Path((name, id)): web::Path<(String, i16)>,
 ) -> HttpResponse {
-    if !models::blog::posts::exists(&pool, id).await
+    if models::blog::posts::is_redirected(&pool, id, &name).await {
+        return match models::blog::posts::get_uri(&pool, id).await {
+            Ok(uri) => HttpResponse::MovedPermanently()
+                .header(actix_web::http::header::LOCATION, uri)
+                .finish(),
+            Err(_) => HttpResponse::InternalServerError().finish(),
+        };
+    }
+
+    // If the uri neither a redirection or isn't the current uri or the post isn't published so it doesn't exist
+    // TODO : handle is_seo
+    if !models::blog::posts::exists(&pool, id, &name).await
         || !models::blog::posts::is_published(&pool, id).await
     {
         return HttpResponse::NotFound().finish();
@@ -89,7 +100,7 @@ pub async fn show_article(
 
     if let Ok((post, categories)) = futures::try_join!(
         models::blog::posts::get(&pool, id),
-        models::blog::categories::get_all(&pool)
+        models::blog::categories::get_all_visible(&pool)
     ) {
         #[derive(Template)]
         #[template(path = "pages/blog/post.html")]
@@ -147,8 +158,10 @@ pub async fn show_article(
 
 #[get("/categories/{name}-{id}")]
 pub async fn show_category(
-    req: HttpRequest,
+    // TODO : get metric
+    _req: HttpRequest,
     pool: web::Data<PgPool>,
+    // TODO : check if name has changed so make a redirection 500
     web::Path((name, id)): web::Path<(String, i16)>,
 ) -> HttpResponse {
     if !models::blog::categories::exists(&pool, id).await {
@@ -160,7 +173,7 @@ pub async fn show_category(
 
     if let Ok((current_category, categories, posts)) = futures::try_join!(
         models::blog::categories::get(&pool, id),
-        models::blog::categories::get_all(&pool),
+        models::blog::categories::get_all_visible(&pool),
         models::blog::posts::get_latest(&pool, Some(id))
     ) {
         #[derive(Template)]
@@ -209,10 +222,6 @@ pub async fn show_category(
             return HttpResponse::Ok().content_type("text/html").body(content);
         }
     }
-
-    // if let Ok(category) = models::blog::categories::get(&pool, id).await {
-    //     let
-    // }
 
     HttpResponse::InternalServerError().finish()
 }

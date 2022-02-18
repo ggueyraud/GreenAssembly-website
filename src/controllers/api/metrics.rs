@@ -1,12 +1,12 @@
-use serde::{Serialize, Deserialize};
+use actix_web::{get, web, HttpResponse};
 use chrono::NaiveDate;
-use actix_web::{HttpResponse, web, get};
+use serde::{Deserialize, Serialize};
 use sqlx::{FromRow, PgPool};
 
 #[derive(Deserialize)]
 pub struct P {
     start: NaiveDate,
-    end: NaiveDate
+    end: NaiveDate,
 }
 
 #[get("/views-page")]
@@ -15,7 +15,7 @@ pub async fn views_page(pool: web::Data<PgPool>, query: web::Query<P>) -> HttpRe
     struct Data {
         date: NaiveDate,
         title: String,
-        views: i64
+        views: i64,
     }
 
     match sqlx::query_as!(
@@ -32,11 +32,11 @@ pub async fn views_page(pool: web::Data<PgPool>, query: web::Query<P>) -> HttpRe
 }
 
 #[get("/devices")]
-pub async fn devices(pool: web::Data<PgPool>, query: web::Query<P>) -> HttpResponse  {
+pub async fn devices(pool: web::Data<PgPool>, query: web::Query<P>) -> HttpResponse {
     #[derive(FromRow, Serialize)]
     struct Data {
         name: String,
-        percent: f32
+        percent: f32,
     }
 
     match sqlx::query_as!(
@@ -45,19 +45,20 @@ pub async fn devices(pool: web::Data<PgPool>, query: web::Query<P>) -> HttpRespo
         query.start,
         query.end
     )
-        .fetch_all(pool.as_ref())
-        .await {
-            Ok(rows) => HttpResponse::Ok().json(rows),
-            _ => HttpResponse::InternalServerError().finish()
-        }
+    .fetch_all(pool.as_ref())
+    .await
+    {
+        Ok(rows) => HttpResponse::Ok().json(rows),
+        _ => HttpResponse::InternalServerError().finish(),
+    }
 }
 
 #[get("/os")]
-pub async fn os(pool: web::Data<PgPool>, query: web::Query<P>) -> HttpResponse  {
+pub async fn os(pool: web::Data<PgPool>, query: web::Query<P>) -> HttpResponse {
     #[derive(FromRow, Serialize)]
     struct Data {
         name: String,
-        percent: f32
+        percent: f32,
     }
 
     match sqlx::query_as!(
@@ -66,19 +67,20 @@ pub async fn os(pool: web::Data<PgPool>, query: web::Query<P>) -> HttpResponse  
         query.start,
         query.end
     )
-        .fetch_all(pool.as_ref())
-        .await {
-            Ok(rows) => HttpResponse::Ok().json(rows),
-            _ => HttpResponse::InternalServerError().finish()
-        }
+    .fetch_all(pool.as_ref())
+    .await
+    {
+        Ok(rows) => HttpResponse::Ok().json(rows),
+        _ => HttpResponse::InternalServerError().finish(),
+    }
 }
 
 #[get("/browsers")]
-pub async fn browsers(pool: web::Data<PgPool>, query: web::Query<P>) -> HttpResponse  {
+pub async fn browsers(pool: web::Data<PgPool>, query: web::Query<P>) -> HttpResponse {
     #[derive(FromRow, Serialize)]
     struct Data {
         name: String,
-        percent: f32
+        percent: f32,
     }
 
     match sqlx::query_as!(
@@ -87,9 +89,10 @@ pub async fn browsers(pool: web::Data<PgPool>, query: web::Query<P>) -> HttpResp
         query.start,
         query.end
     )
-        .fetch_all(pool.as_ref())
-        .await {
-            Ok(rows) => HttpResponse::Ok().json(rows),
-            _ => HttpResponse::InternalServerError().finish()
-        }
+    .fetch_all(pool.as_ref())
+    .await
+    {
+        Ok(rows) => HttpResponse::Ok().json(rows),
+        _ => HttpResponse::InternalServerError().finish(),
+    }
 }

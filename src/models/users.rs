@@ -8,7 +8,7 @@ pub struct Employee {
     pub picture: String,
 }
 
-pub async fn get_employees(pool: &PgPool) -> Vec<Employee> {
+pub async fn get_employees(pool: &PgPool) -> Result<Vec<Employee>, Error> {
     sqlx::query_as!(
         Employee,
         r#"SELECT
@@ -23,13 +23,11 @@ pub async fn get_employees(pool: &PgPool) -> Vec<Employee> {
     )
     .fetch_all(pool)
     .await
-    .unwrap()
 }
 
 pub async fn get_password(pool: &PgPool, email: &str) -> Result<String, Error> {
-    let row = sqlx::query!("SELECT password FROM users WHERE email = $1 LIMIT 1", email)
+    sqlx::query!("SELECT password FROM users WHERE email = $1 LIMIT 1", email)
         .fetch_one(pool)
-        .await?;
-
-    Ok(row.password)
+        .await
+        .map(|row| row.password)
 }

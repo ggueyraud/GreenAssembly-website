@@ -101,54 +101,54 @@ mod tests {
 
         assert!(resp.status().is_success());
     }
-    #[actix_rt::test]
-    async fn integration_test_blog_get_article() {
-        dotenv().ok();
+    // #[actix_rt::test]
+    // async fn integration_test_blog_get_article() {
+    //     dotenv().ok();
 
-        let pool = create_pool().await.unwrap();
-        let mut app = test::init_service(
-            App::new()
-                .data(pool.clone())
-                .service(controllers::blog::get_article),
-        )
-        .await;
-        let resp = test::TestRequest::get()
-            .uri("/blog/articles/testes-1")
-            .send_request(&mut app)
-            .await;
+    //     let pool = create_pool().await.unwrap();
+    //     let mut app = test::init_service(
+    //         App::new()
+    //             .data(pool.clone())
+    //             .service(controllers::blog::get_article),
+    //     )
+    //     .await;
+    //     let resp = test::TestRequest::get()
+    //         .uri("/blog/articles/testes-1")
+    //         .send_request(&mut app)
+    //         .await;
 
-        assert!(resp.status().is_success());
-    }
+    //     assert!(resp.status().is_success());
+    // }
 
-    #[actix_rt::test]
-    async fn integration_test_sitemap() {
-        dotenv().ok();
+    // #[actix_rt::test]
+    // async fn integration_test_sitemap() {
+    //     dotenv().ok();
 
-        let pool = create_pool().await.unwrap();
-        let mut app =
-            test::init_service(App::new().data(pool.clone()).service(controllers::sitemap)).await;
-        let resp = test::TestRequest::get()
-            .uri("/sitemap.xml")
-            .send_request(&mut app)
-            .await;
+    //     let pool = create_pool().await.unwrap();
+    //     let mut app =
+    //         test::init_service(App::new().data(pool.clone()).service(controllers::sitemap)).await;
+    //     let resp = test::TestRequest::get()
+    //         .uri("/sitemap.xml")
+    //         .send_request(&mut app)
+    //         .await;
 
-        assert!(resp.status().is_success());
-    }
+    //     assert!(resp.status().is_success());
+    // }
 
-    #[actix_rt::test]
-    async fn integration_test_robots() {
-        dotenv().ok();
+    // #[actix_rt::test]
+    // async fn integration_test_robots() {
+    //     dotenv().ok();
 
-        let pool = create_pool().await.unwrap();
-        let mut app =
-            test::init_service(App::new().data(pool.clone()).service(controllers::robots)).await;
-        let resp = test::TestRequest::get()
-            .uri("/robots.txt")
-            .send_request(&mut app)
-            .await;
+    //     let pool = create_pool().await.unwrap();
+    //     let mut app =
+    //         test::init_service(App::new().data(pool.clone()).service(controllers::robots)).await;
+    //     let resp = test::TestRequest::get()
+    //         .uri("/robots.txt")
+    //         .send_request(&mut app)
+    //         .await;
 
-        assert!(resp.status().is_success());
-    }
+    //     assert!(resp.status().is_success());
+    // }
 
     #[actix_rt::test]
     async fn integration_test_contact() {

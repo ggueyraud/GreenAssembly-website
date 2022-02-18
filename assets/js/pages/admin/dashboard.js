@@ -122,6 +122,7 @@ const on_mount = () => {
             fill: false,
             borderColor: 'rgb(54, 162, 235)',
             borderDash: [5, 5],
+            tension: 0.3
         });
         data.datasets.push({
             type: 'line',
@@ -129,7 +130,8 @@ const on_mount = () => {
             data: primary_datasets
                 .map(dataset => dataset.data.reduce((previousValue, currentValue) => previousValue + currentValue)),
             fill: false,
-            borderColor: '#ec980a'
+            borderColor: '#ec980a',
+            tension: 0.3
         });
         data.datasets = [...data.datasets, ...primary_datasets];
 

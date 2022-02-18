@@ -1,3 +1,4 @@
+use super::{Project, ProjectTile};
 use sqlx::{Error, PgPool};
 
 pub async fn exists(pool: &PgPool, id: i16) -> bool {
@@ -7,41 +8,31 @@ pub async fn exists(pool: &PgPool, id: i16) -> bool {
         .is_ok()
 }
 
-pub async fn get_all<
-    T: std::marker::Unpin + std::marker::Send + for<'c> sqlx::FromRow<'c, sqlx::postgres::PgRow>,
->(
-    pool: &PgPool,
-    fields: &str,
-) -> Result<Vec<T>, Error> {
-    let projects = sqlx::query_as::<_, T>(&format!(
-        "SELECT
-            {}
-        FROM portfolio_projects
-        ORDER BY id DESC",
-        fields
-    ))
-    .fetch_all(pool)
-    .await?;
-
-    Ok(projects)
+pub async fn is_published(pool: &PgPool, id: i16) -> bool {
+    sqlx::query!(
+        "SELECT 1 AS one FROM portfolio_projects WHERE id = $1 AND is_published = TRUE",
+        id
+    )
+    .fetch_one(pool)
+    .await
+    .is_ok()
 }
 
-pub async fn get<
-    T: std::marker::Unpin + std::marker::Send + for<'c> sqlx::FromRow<'c, sqlx::postgres::PgRow>,
->(
-    pool: &PgPool,
-    fields: &str,
-    id: i16,
-) -> Result<T, Error> {
-    let query = format!(
-        "SELECT {} FROM portfolio_projects WHERE id = $1 LIMIT 1",
-        fields
-    );
+pub async fn get_all(pool: &PgPool) -> Result<Vec<ProjectTile>, Error> {
+    sqlx::query_as!(
+        ProjectTile,
+        "SELECT id, name, category_id FROM portfolio_projects ORDER BY id DESC"
+    )
+    .fetch_all(pool)
+    .await
+}
 
-    let res = sqlx::query_as::<_, T>(&query)
-        .bind(id)
-        .fetch_one(pool)
-        .await?;
-
-    Ok(res)
+pub async fn get(pool: &PgPool, id: i16) -> Result<Project, Error> {
+    sqlx::query_as!(
+        Project,
+        "SELECT name, description, content, is_seo FROM portfolio_projects WHERE id = $1 LIMIT 1",
+        id
+    )
+    .fetch_one(pool)
+    .await
 }

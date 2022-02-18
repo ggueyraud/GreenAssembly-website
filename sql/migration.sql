@@ -45,7 +45,7 @@ CREATE TABLE portfolio_project_pictures (
 
 INSERT INTO portfolio_categories (name, "order") VALUES ('Site-web', 1);
 
-INSERT INTO portfolio_projects (category_id, name, content, is_visible) VALUES
+INSERT INTO portfolio_projects (category_id, name, content, is_published, is_seo) VALUES
 (1, 'Woden', 'Woden est un concept d’application en SaaS de gestion (facturation, stocks, prestations de service, ..) <strong>développé sur-mesure par l’agence GreenAssembly</strong>.<br /><br />
 
 Le projet est découpé en trois sous-ensemble de projet :
@@ -65,13 +65,13 @@ Développé avec le couple VueJS et NodeJS le projet réponds à un certains nom
 </ul>
 <br /><br />
 L’application web Woden est développée avec VueJS et le site vitrine est développé en NuxtJS/NodeJS, toutes deux communiquent avec l’API.
-La partie graphique a été imaginée par GreenAssembly et le logo a été réalisé par <a href="https://laelian67.wixsite.com/portfolio" target="_blank">Laélia Nadolski</a> que nous remercions !', false),
+La partie graphique a été imaginée par GreenAssembly et le logo a été réalisé par <a href="https://laelian67.wixsite.com/portfolio" target="_blank">Laélia Nadolski</a> que nous remercions !', true, true),
 (1, 'Ludivine Farat', 'Designeuse graphique toujours partante pour relever de nouveaux défis, Ludivine Farat vous accompagne dans la <strong>création d''identité visuelle</strong> de votre marque !<br /><br />
 Ludivine souhaitait un site sur lequel présenter ses créations, ses prestations de services afin d’attirer ses prospects et qu’ils puissent la contacter.<br />
 La conception graphique entièrement réalisée par ses soins, Ludivine a chargé notre <strong>GreenAssembly, agence spécialisée en éco-conception</strong>, du <a o-follow o-preload-once href="/creation-site-web/vitrine">développement sur-mesure de son site vitrine</a>.
 <br /><br />
 Un besoin en création graphique ? 🧑🏻‍🎨<br />
-Jettez un coup d''oeil à son nouveau <strong>site internet à faible impact écologique</strong> ! 👉 <a href="https://ludivinefarat.fr/" target="_blank">ludivinefarat.fr</a>', true);
+Jettez un coup d''oeil à son nouveau <strong>site internet à faible impact écologique</strong> ! 👉 <a href="https://ludivinefarat.fr/" target="_blank">ludivinefarat.fr</a>', true, true);
 
 INSERT INTO files (path) VALUES
 ('woden0.png'),

@@ -43,6 +43,7 @@ pub async fn add(
 
     // Ok(res.id)
 
+    #[allow(unused_assignments)]
     let mut id: Option<i16> = None;
 
     let query = &format!(

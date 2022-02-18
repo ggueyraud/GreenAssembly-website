@@ -1,5 +1,4 @@
 @use "sass:map";
-@use '../abstracts/variables' as vars;
 @use 'style-box/abstracts/mixins/breakpoints';
 @use 'style-box/abstracts/mixins/text';
 @use 'style-box/abstracts/functions/utilities';
@@ -57,13 +56,13 @@ header#banner {
     }
 }
 
-@media (min-width: map.get(vars.$break-points, sm)) {
-    .webp_supportted header#banner {
-        background-image: var(--webp_bg_img);
-    }
+// @media (min-width: map.get(vars.$break-points, sm)) {
+//     .webp_supportted header#banner {
+//         background-image: var(--webp_bg_img);
+//     }
 
-    .no_webp header#banner {
-        --bg_img: url(/img/bg/home.webp);
-        background-image: var(--bg_img);
-    }
-}
+//     .no_webp header#banner {
+//         --bg_img: url(/img/bg/home.webp);
+//         background-image: var(--bg_img);
+//     }
+// }

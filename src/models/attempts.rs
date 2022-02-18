@@ -17,7 +17,7 @@ pub async fn count(pool: &PgPool, ip: &str, is_login: bool) -> i64 {
 }
 
 pub async fn add(pool: &PgPool, email: &str, ip: &str, is_login: bool) -> Result<i16, Error> {
-    let res = sqlx::query!(
+    sqlx::query!(
         "INSERT INTO attempts (email, ip, is_login)
         VALUES ($1, $2, $3)
         RETURNING id",
@@ -26,9 +26,8 @@ pub async fn add(pool: &PgPool, email: &str, ip: &str, is_login: bool) -> Result
         is_login
     )
     .fetch_one(pool)
-    .await?;
-
-    Ok(res.id)
+    .await
+    .map(|row| row.id)
 }
 
 pub async fn clear(pool: &PgPool, ip: &str) -> bool {

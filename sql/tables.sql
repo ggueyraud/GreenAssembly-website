@@ -102,7 +102,8 @@ CREATE TABLE portfolio_projects (
     name VARCHAR(120) NOT NULL,
     description VARCHAR(300),
     content TEXT NOT NULL,
-    is_visible BOOLEAN DEFAULT FALSE,
+    is_published BOOLEAN DEFAULT FALSE,
+    is_seo BOOLEAN DEFAULT FALSE,
     date TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     last_update_date TIMESTAMP WITH TIME ZONE
 );
@@ -148,6 +149,15 @@ CREATE TABLE blog_posts (
     modified_date TIMESTAMP WITH TIME ZONE,
     is_published BOOLEAN DEFAULT FALSE,
     is_seo BOOLEAN DEFAULT FALSE
+);
+
+DROP TABLE IF EXISTS blog_post_redirections CASCADE;
+CREATE TABLE blog_post_redirections (
+    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY, 
+    post_id SMALLINT NOT NULL
+        REFERENCES blog_posts (id)
+        ON DELETE CASCADE,
+    uri VARCHAR(260) NOT NULL
 );
 
 DROP TABLE IF EXISTS blog_post_images CASCADE;

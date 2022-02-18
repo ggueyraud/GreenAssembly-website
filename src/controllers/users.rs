@@ -43,8 +43,7 @@ pub async fn login(
     }
 
     // TODO : move into model
-    match models::users::get_password(&pool, &form.email).await
-    {
+    match models::users::get_password(&pool, &form.email).await {
         Ok(password) => {
             use argon2::{
                 password_hash::{PasswordHash, PasswordVerifier},
@@ -80,7 +79,7 @@ pub async fn login(
                 }
             }
         }
-        _ => HttpResponse::InternalServerError().finish()
+        _ => HttpResponse::InternalServerError().finish(),
     }
 }
 

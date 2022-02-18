@@ -1,6 +1,8 @@
 @use 'abstracts/variables' as vars;
 @use 'style-box/abstracts/functions/utilities';
+@use 'style-box/abstracts/mixins/breakpoints' as bp;
 @import 'style-box/base/typography';
+@import 'style-box/base/margin';
 @import 'style-box/base/container';
 
 * {
@@ -51,4 +53,63 @@ a {
 img, video {
     max-width: 100%;
     height: auto;
+}
+
+main {
+    display: grid;
+    grid-template-columns: 1fr;
+    height: 100vh
+}
+
+@include bp.md {
+    main {
+        grid-template-columns: 20% 1fr;
+        background-color: utilities.color('light_black');
+    }
+}
+
+[name="sidenav"] {
+    // scrollbar-width: thin;
+    // scrollbar-color: #eff2f5 transparent;
+    // overflow: auto;
+    background-color: #191a1f;
+    box-shadow: 10px 0px 40px rgb(83 88 93 / 20%);
+
+    #sidenav {
+        height: 100%;
+    
+        nav {
+            display: flex;
+            flex-direction: column;
+            padding: utilities.space(10);
+            padding-top: utilities.space(5);
+    
+            a {
+                text-decoration: none;
+                padding: utilities.space(4) 0;
+                color: #A1A1A8;
+                font-weight: bold;
+                transition: color 250ms linear;
+
+                &--active, &:hover {
+                    color: #fff
+                }
+            }
+        }
+    }
+}
+
+[name="main"] {
+    max-height: 100vh;
+    display: grid;
+    gap: utilities.space(3);
+    grid-template-columns: 20% 1fr;
+    align-items: start;
+    padding: utilities.space(8);
+    overflow-y: scroll;
+}
+
+section#content {
+    padding: utilities.space(8);
+    height: 100%
 }

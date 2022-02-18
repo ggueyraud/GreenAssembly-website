@@ -7,7 +7,7 @@ use actix_web::{
         HeaderValue,
     },
     middleware::Compress,
-    web, App, Error, HttpRequest, HttpResponse, HttpServer, Result,
+    App, Error, HttpRequest, HttpResponse, HttpServer, Result,
 };
 use rustls::{
     internal::pemfile::{certs, pkcs8_private_keys},
@@ -46,7 +46,7 @@ fn serve_file(req: &HttpRequest, path: &Path, cache_duration: i64) -> Result<Htt
 
             Ok(response)
         }
-        Err(e) => {
+        Err(_) => {
             use askama::Template;
 
             #[derive(Template)]
@@ -148,36 +148,28 @@ async fn main() -> std::io::Result<()> {
             // .wrap_fn(|req, srv| {
             //     use actix_service::Service;
             //     use actix_web::http::{header, HeaderValue};
-
             //     let fut = srv.call(req);
-
             //     async {
             //         let mut res = fut.await?;
             //         let headers = res.headers_mut();
-
             //         headers.insert(
             //             header::STRICT_TRANSPORT_SECURITY,
             //             HeaderValue::from_static("max-age=31536000; includeSubDomains; preload"),
             //         );
-
             //         // #[cfg(not(debug_assertions))]
             //         // headers.insert(
             //         //     header::CONTENT_SECURITY_POLICY,
             //         //     HeaderValue::from_static("script-src 'self'"),
             //         // );
-
             //         headers.insert(header::X_FRAME_OPTIONS, HeaderValue::from_static("deny"));
-
             //         headers.insert(
             //             header::X_CONTENT_TYPE_OPTIONS,
             //             HeaderValue::from_static("nosniff"),
             //         );
-
             //         headers.insert(
             //             header::X_XSS_PROTECTION,
             //             HeaderValue::from_static("1; mode=block"),
             //         );
-
             //         Ok(res)
             //     }
             // })

@@ -1,7 +1,7 @@
 use sqlx::{Error, PgPool};
 
 pub async fn get_cover(pool: &PgPool, project_id: i16) -> Result<String, Error> {
-    let res = sqlx::query!(
+    sqlx::query!(
         r#"SELECT
             f.path AS "path"
         FROM portfolio_project_pictures prp
@@ -10,30 +10,26 @@ pub async fn get_cover(pool: &PgPool, project_id: i16) -> Result<String, Error> 
         project_id
     )
     .fetch_one(pool)
-    .await?;
-
-    Ok(res.path)
+    .await
+    .map(|row| row.path)
 }
 
-pub async fn get_all<
-    T: std::marker::Unpin + std::marker::Send + for<'c> sqlx::FromRow<'c, sqlx::postgres::PgRow>,
->(
-    pool: &PgPool,
-    fields: &str,
-    project_id: i16,
-) -> Result<Vec<T>, Error> {
-    let pictures = sqlx::query_as::<_, T>(&format!(
-        r#"SELECT
-            {}
+pub async fn get_all(pool: &PgPool, project_id: i16) -> Result<Vec<String>, Error> {
+    sqlx::query!(
+        "SELECT
+            path
         FROM portfolio_project_pictures prp
         JOIN files f ON f.id = prp.file_id
         WHERE project_id = $1
-        ORDER BY prp.order"#,
-        fields
-    ))
-    .bind(project_id)
+        ORDER BY prp.order",
+        project_id
+    )
     .fetch_all(pool)
-    .await?;
-
-    Ok(pictures)
+    .await
+    .map(|records| {
+        records
+            .iter()
+            .map(|record| record.path.clone())
+            .collect::<Vec<_>>()
+    })
 }
