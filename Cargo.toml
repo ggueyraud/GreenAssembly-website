@@ -14,16 +14,16 @@ actix-rt = "2.6.0"
 askama = { version = "0.11.0", features = ["serde-json"] }
 env_logger = "0.9.0"
 dotenv = "0.15.0"
-rand = "0.8.4"
-futures = "0.3.19"
-futures-util = { version = "0.3.19", default-features = false }
+rand = "0.8.5"
+futures = "0.3.21"
+futures-util = { version = "0.3.21", default-features = false }
 user-agent-parser = "0.3.0"
 lettre = "0.9.6"
-argon2 = "0.3.2"
+argon2 = "0.3.4"
 lettre_email = "0.9.4"
-serde = { version = "1.0.134", features = ["derive"] }
-serde_json = "1.0.75"
-sqlx = { version = "0.5.10", features = ["macros", "postgres", "chrono", "runtime-async-std-native-tls", "uuid"] }
+serde = { version = "1.0.136", features = ["derive"] }
+serde_json = "1.0.79"
+sqlx = { version = "0.5.11", features = ["macros", "postgres", "chrono", "runtime-async-std-native-tls", "uuid"] }
 chrono = { version = "0.4.19", features = ["serde"] }
 regex = "1.5.4"
 rustls = "0.18.1"
