@@ -74,14 +74,15 @@ pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
 }
 
 #[get("/articles/{name}-{id}")]
-pub async fn show_article(
+pub async fn show_post(
     // TODO : get metric
     _req: HttpRequest,
     pool: web::Data<PgPool>,
     // TODO : check if name has changed so make a redirection 500
     web::Path((name, id)): web::Path<(String, i16)>,
 ) -> HttpResponse {
-    if models::blog::posts::is_redirected(&pool, id, &name).await {
+    // If any redirection exist for the post so current path is an old one
+    if models::blog::redirections::exists(&pool, models::blog::redirections::Type::Post, id, &name).await {
         return match models::blog::posts::get_uri(&pool, id).await {
             Ok(uri) => HttpResponse::MovedPermanently()
                 .header(actix_web::http::header::LOCATION, uri)
@@ -164,6 +165,16 @@ pub async fn show_category(
     // TODO : check if name has changed so make a redirection 500
     web::Path((name, id)): web::Path<(String, i16)>,
 ) -> HttpResponse {
+    // If any redirection exist for the category so current path is an old one
+    if models::blog::redirections::exists(&pool, models::blog::redirections::Type::Category, id, &name).await {
+        return match models::blog::categories::get_uri(&pool, id).await {
+            Ok(uri) => HttpResponse::MovedPermanently()
+                .header(actix_web::http::header::LOCATION, uri)
+                .finish(),
+            Err(_) => HttpResponse::InternalServerError().finish()
+        }
+    }
+
     if !models::blog::categories::exists(&pool, id, &name).await {
         return HttpResponse::NotFound().finish();
     }

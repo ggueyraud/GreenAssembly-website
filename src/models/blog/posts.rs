@@ -165,14 +165,3 @@ pub async fn get_uri(pool: &PgPool, id: i16) -> Result<String, Error> {
         .await
         .map(|record| record.uri)
 }
-
-pub async fn is_redirected(pool: &PgPool, id: i16, uri: &str) -> bool {
-    sqlx::query!(
-        "SELECT 1 AS one FROM blog_post_redirections WHERE post_id = $1 AND uri = $2",
-        id,
-        uri
-    )
-    .fetch_one(pool)
-    .await
-    .is_ok()
-}

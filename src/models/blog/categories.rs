@@ -16,6 +16,13 @@ pub async fn get(pool: &PgPool, id: i16) -> Result<CategoryInformations, Error> 
     .await
 }
 
+pub async fn get_uri(pool: &PgPool, id: i16) -> Result<String, Error> {
+    sqlx::query!("SELECT uri FROM blog_categories WHERE id = $1", id)
+        .fetch_one(pool)
+        .await
+        .map(|record| record.uri)
+}
+
 #[derive(FromRow)]
 pub struct Category {
     pub name: String,

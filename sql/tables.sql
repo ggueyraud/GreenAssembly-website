@@ -151,13 +151,17 @@ CREATE TABLE blog_posts (
     is_seo BOOLEAN DEFAULT FALSE
 );
 
-DROP TABLE IF EXISTS blog_post_redirections CASCADE;
-CREATE TABLE blog_post_redirections (
+DROP TABLE IF EXISTS blog_redirections CASCADE;
+CREATE TABLE blog_redirections (
     id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY, 
-    post_id SMALLINT NOT NULL
+    post_id SMALLINT
         REFERENCES blog_posts (id)
         ON DELETE CASCADE,
-    uri VARCHAR(260) NOT NULL
+    category_id SMALLINT
+        REFERENCES blog_categories (id)
+        ON DELETE CASCADE,
+    uri VARCHAR(260) NOT NULL,
+    CHECK (post_id IS NOT NULL OR category_id IS NOT NULL)
 );
 
 DROP TABLE IF EXISTS blog_post_images CASCADE;
