@@ -164,7 +164,7 @@ pub async fn show_category(
     // TODO : check if name has changed so make a redirection 500
     web::Path((name, id)): web::Path<(String, i16)>,
 ) -> HttpResponse {
-    if !models::blog::categories::exists(&pool, id).await {
+    if !models::blog::categories::exists(&pool, id, &name).await {
         return HttpResponse::NotFound().finish();
     }
 
