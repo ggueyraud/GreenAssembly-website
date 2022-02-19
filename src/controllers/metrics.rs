@@ -3,7 +3,7 @@ use actix_web::{get, http::HeaderValue, post, web, FromRequest, HttpRequest, Htt
 use chrono::{DateTime, Utc};
 use ring::digest;
 use serde::{Deserialize, Serialize};
-use sqlx::{types::Uuid, PgPool, FromRow};
+use sqlx::{types::Uuid, PgPool};
 use std::str::FromStr;
 
 pub async fn add(
@@ -69,13 +69,8 @@ pub async fn create(
     let mut id: Option<i16> = None;
     match infos.belongs_to {
         BelongsTo::Page => {
-            #[derive(FromRow)]
-            struct Page {
-                id: i16,
-            }
-
-            match models::pages::get(&pool, &infos.path).await {
-                Ok(page) => id = Some(page.id),
+            match models::pages::get_id_from_path(&pool, &infos.path).await {
+                Ok(page_id) => id = Some(page_id),
                 Err(_) => return HttpResponse::InternalServerError().finish(),
             }
         }

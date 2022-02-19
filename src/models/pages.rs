@@ -7,17 +7,14 @@ pub struct PageDetails {
     pub description: Option<String>,
 }
 
-// #[derive(sqlx::FromRow, Serialize)]
-// pub struct Page {
-//     pub id: i16,
-//     pub title: String,
-//     // pub identifier: String,
-//     pub description: Option<String>,
-//     pub is_seo: bool,
-//     pub is_visible: bool,
-// }
+pub async fn get_id_from_path(pool: &PgPool, path: &str) -> Result<i16, Error> {
+    sqlx::query!("SELECT id FROM pages WHERE path = $1 LIMIT 1", path)
+        .fetch_one(pool)
+        .await
+        .map(|row| row.id)
+}
 
-pub async fn get(pool: &PgPool, identifier: &str) -> Result<PageDetails, Error> {
+pub async fn get(pool: &PgPool, path: &str) -> Result<PageDetails, Error> {
     sqlx::query_as!(
         PageDetails,
         "SELECT
@@ -25,7 +22,7 @@ pub async fn get(pool: &PgPool, identifier: &str) -> Result<PageDetails, Error> 
         FROM pages
         WHERE path = $1
         LIMIT 1",
-        identifier
+        path
     )
     .fetch_one(pool)
     .await

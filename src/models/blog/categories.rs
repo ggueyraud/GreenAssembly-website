@@ -46,9 +46,13 @@ pub async fn _get_all(pool: &PgPool) -> Result<Vec<CategoryAdminInformations>, E
     .await
 }
 
-pub async fn exists(pool: &PgPool, id: i16) -> bool {
-    sqlx::query!("SELECT 1 AS one FROM blog_categories WHERE id = $1", id)
-        .fetch_one(pool)
-        .await
-        .is_ok()
+pub async fn exists(pool: &PgPool, id: i16, name: &str) -> bool {
+    sqlx::query!(
+        "SELECT 1 AS one FROM blog_categories WHERE id = $1 AND name = $2",
+        id,
+        name
+    )
+    .fetch_one(pool)
+    .await
+    .is_ok()
 }
