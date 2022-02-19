@@ -31,7 +31,7 @@ pub async fn get(pool: &PgPool, identifier: &str) -> Result<PageDetails, Error> 
     .await
 }
 
-#[derive(sqlx::FromRow)]
+#[derive(FromRow)]
 pub struct Page {
     pub id: i16,
     pub title: String,

@@ -3,7 +3,7 @@ use actix_web::{get, http::HeaderValue, post, web, FromRequest, HttpRequest, Htt
 use chrono::{DateTime, Utc};
 use ring::digest;
 use serde::{Deserialize, Serialize};
-use sqlx::{types::Uuid, PgPool};
+use sqlx::{types::Uuid, PgPool, FromRow};
 use std::str::FromStr;
 
 pub async fn add(
@@ -69,7 +69,7 @@ pub async fn create(
     let mut id: Option<i16> = None;
     match infos.belongs_to {
         BelongsTo::Page => {
-            #[derive(sqlx::FromRow)]
+            #[derive(FromRow)]
             struct Page {
                 id: i16,
             }
@@ -145,7 +145,7 @@ pub struct Token {
 
 #[post("/metrics/log")]
 pub async fn log(pool: web::Data<PgPool>, form: web::Form<Token>) -> HttpResponse {
-    if let Ok(token) = sqlx::types::Uuid::from_str(&form.token) {
+    if let Ok(token) = Uuid::from_str(&form.token) {
         if models::metrics::exists(&pool, token).await {
             let session_id: Option<Uuid> = match &form.session_id {
                 Some(val) => match Uuid::from_str(val.as_str()) {
