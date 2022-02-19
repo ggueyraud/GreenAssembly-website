@@ -8,30 +8,36 @@ use std::str::FromStr;
 
 pub async fn add(
     req: &HttpRequest,
-    pool: &PgPool,
+    pool: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
     belongs_to: models::metrics::BelongsTo,
-) -> Result<Option<Uuid>, actix_web::Error> {
+) -> Result<Option<String>, sqlx::Error> {
     if let Some(gar_log) = req.headers().get("GAR-LOG") {
         if gar_log == HeaderValue::from_static("false") {
             return Ok(None);
         }
     }
 
-    let ua = UserAgent::from_request(req, &mut actix_web::dev::Payload::None).await?;
+    let (os, category, name) = if let Some(ua) = crate::utils::ua::UA2::from_headers(req.headers())
+    {
+        (ua.os, ua.category, ua.name)
+    } else {
+        (None, None, None)
+    };
+
     let digest_ip = digest::digest(
         &digest::SHA256,
         req.peer_addr().unwrap().ip().to_string().as_bytes(),
     );
     let digest_ip = format!("{:?}", digest_ip);
 
-    match models::metrics::add(
+    models::metrics::add(
         pool,
         belongs_to,
         None,
         &digest_ip,
-        ua.product.name.clone(),
-        ua.os.name.clone(),
-        ua.device.name.clone(),
+        name,
+        os,
+        category,
         match req.headers().get(actix_web::http::header::REFERER) {
             Some(referer) => match referer.to_str() {
                 Ok(referer) => Some(referer.to_string()),
@@ -41,10 +47,7 @@ pub async fn add(
         },
     )
     .await
-    {
-        Ok(id) => Ok(Some(id)),
-        Err(e) => Err(actix_web::error::ErrorBadRequest(e)),
-    }
+    .map(|res| Some(res.to_string()))
 }
 
 #[derive(Deserialize)]
@@ -102,7 +105,7 @@ pub async fn create(
         let digest_ip = format!("{:?}", digest_ip);
 
         if let Ok(id) = models::metrics::add(
-            &pool,
+            pool.as_ref(),
             match infos.belongs_to {
                 BelongsTo::Project => models::metrics::BelongsTo::Project(id.unwrap()),
                 BelongsTo::Page => models::metrics::BelongsTo::Page(id.unwrap()),

@@ -3,6 +3,50 @@ use actix_web::{dev, Error, FromRequest, HttpRequest};
 use futures_util::future::{err, ok, Ready};
 
 #[derive(Debug)]
+pub struct UA2 {
+    // browser name
+    pub name: Option<String>,
+    // device type
+    pub category: Option<String>,
+    pub os: Option<String>,
+}
+
+impl UA2 {
+    pub fn from_headers(headers: &actix_web::http::HeaderMap) -> Option<UA2> {
+        if let Some(ua) = headers.get(actix_web::http::header::USER_AGENT) {
+            use woothee::parser::Parser;
+            use woothee::woothee::VALUE_UNKNOWN;
+
+            let parser = Parser::new();
+
+            if let Ok(ua) = ua.to_str() {
+                if let Some(result) = parser.parse(ua) {
+                    return Some(UA2 {
+                        name: {
+                            let name = result.name.to_string();
+
+                            (name != VALUE_UNKNOWN).then(|| name)
+                        },
+                        category: {
+                            let category = result.category.to_string();
+
+                            (category != VALUE_UNKNOWN).then(|| category)
+                        },
+                        os: {
+                            let os = result.os.to_string();
+
+                            (os != VALUE_UNKNOWN).then(|| os)
+                        },
+                    });
+                }
+            }
+        }
+
+        None
+    }
+}
+
+#[derive(Debug)]
 pub struct OS {
     pub name: Option<String>,
     pub major: Option<String>,
@@ -18,9 +62,7 @@ impl From<user_agent_parser::OS<'_>> for OS {
             major: os.major.map(|major| major.into_owned()),
             minor: os.minor.map(|minor| minor.into_owned()),
             patch: os.patch.map(|patch| patch.into_owned()),
-            patch_minor: os
-                .patch_minor
-                .map(|patch_minor| patch_minor.into_owned()),
+            patch_minor: os.patch_minor.map(|patch_minor| patch_minor.into_owned()),
         }
     }
 }

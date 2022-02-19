@@ -6,6 +6,7 @@ use lettre_email::EmailBuilder;
 use serde::Deserialize;
 use sqlx::PgPool;
 use std::fmt;
+use std::ops::DerefMut;
 
 #[derive(Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -173,32 +174,35 @@ pub async fn send(mut form: web::Json<Email>) -> Result<HttpResponse, Error> {
 
 #[get("")]
 pub async fn page(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) = models::pages::get(&pool, "/contact").await {
-        let mut token: Option<String> = None;
-
-        if let Ok(Some(id)) =
-            crate::controllers::metrics::add(&req, &pool, models::metrics::BelongsTo::Page(page.id))
-                .await
+    if let Ok((page, mut transaction)) =
+        futures::try_join!(models::pages::get(&pool, "/contact"), pool.begin())
+    {
+        if let Ok(token) = crate::controllers::metrics::add(
+            &req,
+            transaction.deref_mut(),
+            models::metrics::BelongsTo::Page(page.id),
+        )
+        .await
         {
-            token = Some(id.to_string());
-        }
+            #[derive(Template)]
+            #[template(path = "pages/contact.html")]
+            struct Contact {
+                title: String,
+                description: Option<String>,
+                metrics_token: Option<String>,
+            }
 
-        #[derive(Template)]
-        #[template(path = "pages/contact.html")]
-        struct Contact {
-            title: String,
-            description: Option<String>,
-            metrics_token: Option<String>,
-        }
+            let page = Contact {
+                title: page.title,
+                description: page.description,
+                metrics_token: token,
+            };
 
-        let page = Contact {
-            title: page.title,
-            description: page.description,
-            metrics_token: token,
-        };
-
-        if let Ok(content) = page.render() {
-            return HttpResponse::Ok().content_type("text/html").body(content);
+            if let Ok(content) = page.render() {
+                if transaction.commit().await.is_ok() {
+                    return HttpResponse::Ok().content_type("text/html").body(content);
+                }
+            }
         }
     }
 

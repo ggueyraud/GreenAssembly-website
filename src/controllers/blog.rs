@@ -1,27 +1,20 @@
+use crate::{models, utils};
 use actix_web::{get, web, HttpRequest, HttpResponse};
 use askama::Template;
 use sqlx::PgPool;
 
-use crate::models;
-
 #[get("")]
 pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
     if let Ok(page) = models::pages::get(&pool, "/blog").await {
-        if let (Ok(categories), Ok(posts), Ok(metric_id)) = futures::join!(
+        if let Ok((categories, posts, token)) = futures::try_join!(
             models::blog::categories::get_all_visible(&pool),
             models::blog::posts::get_latest(&pool, None),
             crate::controllers::metrics::add(
                 &req,
-                &pool,
+                pool.as_ref(),
                 models::metrics::BelongsTo::Page(page.id)
             )
         ) {
-            let mut token: Option<String> = None;
-
-            if let Some(id) = metric_id {
-                token = Some(id.to_string());
-            }
-
             #[derive(Template)]
             #[template(path = "components/blog_post.html")]
             struct Post {
@@ -54,10 +47,8 @@ pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
                         uri: post.uri.clone(),
                         date: post.date.format("%d/%m/%Y").to_string(),
                         international_date: post.date.to_rfc3339(),
-                        cover_filename: {
-                            let cover = post.cover.split('.').collect::<Vec<_>>();
-                            cover.get(0).expect("Cannot get filename").to_string()
-                        },
+                        cover_filename: utils::extract_filename(&post.cover)
+                            .expect("Cannot get filename"),
                         cover_path: post.cover.clone(),
                     })
                     .collect::<Vec<_>>(),
@@ -114,7 +105,6 @@ pub async fn show_post(
             content: String,
             cover_filename: String,
             cover_path: String,
-            // image_path: String,
             date: String,
             international_date: String,
             author: models::blog::posts::Author,
@@ -125,25 +115,16 @@ pub async fn show_post(
             description: post.description,
             categories,
             content: post.content,
-            cover_filename: {
-                let cover = post.cover.split('.').collect::<Vec<_>>();
-                cover.get(0).expect("Cannot get filename").to_string()
-            },
+            cover_filename: utils::extract_filename(&post.cover).expect("Cannot get filename"),
             cover_path: post.cover,
-            // image_path: "/img/showcase.jpg".to_owned(),
             date: post.date.format("%d/%m/%Y").to_string(),
             international_date: post.date.to_rfc3339(),
             author: models::blog::posts::Author {
                 fullname: post.author.fullname,
-                picture: {
-                    if let Some(picture) = post.author.picture {
-                        let picture = picture.split('.').collect::<Vec<_>>();
-
-                        picture.get(0).map(|filename| filename.to_string())
-                    } else {
-                        None
-                    }
-                },
+                picture: post
+                    .author
+                    .picture
+                    .and_then(|picture| utils::extract_filename(&picture)),
             },
         };
 
@@ -224,10 +205,8 @@ pub async fn show_category(
                     uri: post.uri.clone(),
                     date: post.date.format("%d/%m/%Y").to_string(),
                     international_date: post.date.to_rfc3339(),
-                    cover_filename: {
-                        let cover = post.cover.split('.').collect::<Vec<_>>();
-                        cover.get(0).expect("Cannot get filename").to_string()
-                    },
+                    cover_filename: utils::extract_filename(&post.cover)
+                        .expect("Cannot get filename"),
                     cover_path: post.cover.clone(),
                 })
                 .collect::<Vec<_>>(),

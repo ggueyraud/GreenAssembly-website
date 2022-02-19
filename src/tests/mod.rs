@@ -16,6 +16,7 @@ mod tests {
             .send_request(&mut app)
             .await;
 
+        println!("{:?}", resp.status());
         assert!(resp.status().is_success());
     }
 

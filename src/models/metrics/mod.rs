@@ -15,7 +15,8 @@ pub async fn exists(pool: &PgPool, id: Uuid) -> bool {
 }
 
 pub async fn add(
-    pool: &PgPool,
+    // pool: &PgPool,
+    pool: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
     belongs_to: BelongsTo,
     session_id: Option<Uuid>,
     ip: &str,

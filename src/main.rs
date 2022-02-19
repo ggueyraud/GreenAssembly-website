@@ -14,7 +14,6 @@ use rustls::{
     NoClientAuth, ServerConfig,
 };
 use std::{fs::File, io::BufReader, path::Path};
-use user_agent_parser::UserAgentParser;
 
 mod controllers;
 mod middlewares;
@@ -137,7 +136,6 @@ async fn main() -> std::io::Result<()> {
     let server = HttpServer::new(move || {
         App::new()
             .data(pool.clone())
-            .data(UserAgentParser::from_path("regexes.yaml").expect("regexes.yaml not found"))
             .wrap(Compress::default())
             .wrap(IdentityService::new(
                 CookieIdentityPolicy::new(&[0; 32])

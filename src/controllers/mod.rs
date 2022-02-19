@@ -1,8 +1,9 @@
-use crate::models;
 use crate::templates::Employee;
+use crate::{models, utils};
 use actix_web::{get, web, HttpRequest, HttpResponse};
 use askama::Template;
 use sqlx::PgPool;
+use std::ops::DerefMut;
 
 pub mod admin;
 pub mod api;
@@ -15,32 +16,35 @@ pub mod website;
 
 #[get("/")]
 pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) = models::pages::get(&pool, "/").await {
-        let mut token: Option<String> = None;
-
-        if let Ok(Some(id)) =
-            crate::controllers::metrics::add(&req, &pool, models::metrics::BelongsTo::Page(page.id))
-                .await
+    if let Ok((page, mut transaction)) =
+        futures::try_join!(models::pages::get(&pool, "/"), pool.begin())
+    {
+        if let Ok(token) = metrics::add(
+            &req,
+            transaction.deref_mut(),
+            models::metrics::BelongsTo::Page(page.id),
+        )
+        .await
         {
-            token = Some(id.to_string());
-        }
+            #[derive(Template)]
+            #[template(path = "pages/index.html")]
+            struct Index {
+                title: String,
+                description: Option<String>,
+                metrics_token: Option<String>,
+            }
 
-        #[derive(Template)]
-        #[template(path = "pages/index.html")]
-        struct Index {
-            title: String,
-            description: Option<String>,
-            metrics_token: Option<String>,
-        }
+            let page = Index {
+                title: page.title,
+                description: page.description,
+                metrics_token: token,
+            };
 
-        let page = Index {
-            title: page.title,
-            description: page.description,
-            metrics_token: token,
-        };
-
-        if let Ok(content) = page.render() {
-            return HttpResponse::Ok().content_type("text/html").body(content);
+            if let Ok(content) = page.render() {
+                if transaction.commit().await.is_ok() {
+                    return HttpResponse::Ok().content_type("text/html").body(content);
+                }
+            }
         }
     }
 
@@ -49,40 +53,42 @@ pub async fn index(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
 
 #[get("/agence-digitale-verte")]
 async fn agency(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let (Ok(page), Ok(employees)) = futures::join!(
+    if let Ok((page, mut transaction)) = futures::try_join!(
         models::pages::get(&pool, "/agence-digitale-verte"),
-        models::users::get_employees(&pool)
+        pool.begin()
     ) {
-        let mut token: Option<String> = None;
+        if let Ok((employees, token)) = futures::try_join!(
+            models::users::get_employees(&pool),
+            metrics::add(
+                &req,
+                transaction.deref_mut(),
+                models::metrics::BelongsTo::Page(page.id)
+            )
+        ) {
+            #[derive(Template)]
+            #[template(path = "pages/agency.html")]
+            struct Agency {
+                title: String,
+                description: Option<String>,
+                employees: Vec<Employee>,
+                metrics_token: Option<String>,
+            }
 
-        if let Ok(Some(id)) =
-            crate::controllers::metrics::add(&req, &pool, models::metrics::BelongsTo::Page(page.id))
-                .await
-        {
-            token = Some(id.to_string());
-        }
+            let page = Agency {
+                title: page.title,
+                description: page.description,
+                employees: employees
+                    .iter()
+                    .map(|employee| Employee::from((*employee).clone()))
+                    .collect::<Vec<Employee>>(),
+                metrics_token: token,
+            };
 
-        #[derive(Template)]
-        #[template(path = "pages/agency.html")]
-        struct Agency {
-            title: String,
-            description: Option<String>,
-            employees: Vec<Employee>,
-            metrics_token: Option<String>,
-        }
-
-        let page = Agency {
-            title: page.title,
-            description: page.description,
-            employees: employees
-                .iter()
-                .map(|employee| Employee::from((*employee).clone()))
-                .collect::<Vec<Employee>>(),
-            metrics_token: token,
-        };
-
-        if let Ok(content) = page.render() {
-            return HttpResponse::Ok().content_type("text/html").body(content);
+            if let Ok(content) = page.render() {
+                if transaction.commit().await.is_ok() {
+                    return HttpResponse::Ok().content_type("text/html").body(content);
+                }
+            }
         }
     }
 
@@ -91,22 +97,18 @@ async fn agency(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
 
 #[get("/portfolio")]
 async fn portfolio(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) = models::pages::get(&pool, "/portfolio").await {
-        if let (Ok(metric_id), Ok(_categories), Ok(projects)) = futures::join!(
+    if let Ok((page, mut transaction)) =
+        futures::try_join!(models::pages::get(&pool, "/portfolio"), pool.begin())
+    {
+        if let Ok((token, _categories, projects)) = futures::try_join!(
             crate::controllers::metrics::add(
                 &req,
-                &pool,
+                transaction.deref_mut(),
                 models::metrics::BelongsTo::Page(page.id)
             ),
             models::portfolio::categories::get_all(&pool),
-            models::portfolio::projects::get_all(&pool)
+            models::portfolio::projects::get_all(&pool),
         ) {
-            let mut token: Option<String> = None;
-
-            if let Some(id) = metric_id {
-                token = Some(id.to_string());
-            }
-
             #[derive(Template)]
             #[template(path = "components/project.html")]
             struct Project {
@@ -148,7 +150,8 @@ async fn portfolio(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
                             name: project.name.clone(),
                             fallback_illustration: format!(
                                 "{}.webp",
-                                cover.clone().split('.').collect::<Vec<_>>().get(0).unwrap()
+                                utils::extract_filename(&cover.clone())
+                                    .expect("Cannot get filename"),
                             ),
                             illustration: cover.to_string(),
                             uri: slugmin::slugify(&format!("{}-{}", project.name, project.id)),
@@ -158,7 +161,9 @@ async fn portfolio(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
                 }
 
                 if let Ok(content) = page.render() {
-                    return HttpResponse::Ok().content_type("text/html").body(content);
+                    if transaction.commit().await.is_ok() {
+                        return HttpResponse::Ok().content_type("text/html").body(content);
+                    }
                 }
             }
         }
@@ -173,67 +178,68 @@ async fn show_project(
     pool: web::Data<PgPool>,
     web::Path((_, id)): web::Path<(String, i16)>,
 ) -> HttpResponse {
-    if !models::portfolio::projects::exists(&pool, id).await {
-        return HttpResponse::NotFound().finish();
-    }
-
-    // If the project to be accessed isn't published, so we redirect to portfolio home page
-    if !models::portfolio::projects::is_published(&pool, id).await {
-        return HttpResponse::NotFound()
-            .header("Location", "/portfolio")
-            .finish();
-    }
-
-    if let (Ok(metric_id), Ok(project), Ok(mut pictures)) = futures::join!(
-        metrics::add(&req, &pool, models::metrics::BelongsTo::Project(id)),
-        models::portfolio::projects::get(&pool, id),
-        models::portfolio::pictures::get_all(&pool, id)
-    ) {
-        let mut token: Option<String> = None;
-        if let Some(id) = metric_id {
-            token = Some(id.to_string());
+    if let Ok(mut transaction) = pool.begin().await {
+        if !models::portfolio::projects::exists(&pool, id).await {
+            return HttpResponse::NotFound().finish();
         }
 
-        struct Picture {
-            filename: String,
-            path: String,
+        // If the project to be accessed isn't published, so we redirect to portfolio home page
+        if !models::portfolio::projects::is_published(&pool, id).await {
+            return HttpResponse::NotFound()
+                .header("Location", "/portfolio")
+                .finish();
         }
 
-        #[derive(Template)]
-        #[template(path = "pages/portfolio/project.html")]
-        struct PortfolioProject {
-            title: String,
-            description: Option<String>,
-            content: String,
-            first_picture: Picture,
-            pictures: Vec<Picture>,
-            metrics_token: Option<String>,
-            is_seo: Option<bool>,
-        }
+        if let Ok((token, project, mut pictures)) = futures::try_join!(
+            metrics::add(
+                &req,
+                transaction.deref_mut(),
+                models::metrics::BelongsTo::Project(id)
+            ),
+            models::portfolio::projects::get(&pool, id),
+            models::portfolio::pictures::get_all(&pool, id)
+        ) {
+            struct Picture {
+                filename: String,
+                path: String,
+            }
 
-        let cover = pictures.remove(0);
+            #[derive(Template)]
+            #[template(path = "pages/portfolio/project.html")]
+            struct PortfolioProject {
+                title: String,
+                description: Option<String>,
+                content: String,
+                first_picture: Picture,
+                pictures: Vec<Picture>,
+                metrics_token: Option<String>,
+                is_seo: Option<bool>,
+            }
 
-        let project = PortfolioProject {
-            title: project.name,
-            description: project.description,
-            content: project.content,
-            first_picture: Picture {
-                path: cover.clone(),
-                filename: crate::utils::extract_filename(&cover).unwrap(),
-            },
-            pictures: pictures
-                .iter()
-                .map(|picture| Picture {
-                    path: picture.clone(),
-                    filename: crate::utils::extract_filename(picture).unwrap(),
-                })
-                .collect::<Vec<_>>(),
-            metrics_token: token,
-            is_seo: project.is_seo,
-        };
+            let cover = pictures.remove(0);
 
-        if let Ok(content) = project.render() {
-            return HttpResponse::Ok().content_type("text/html").body(content);
+            let project = PortfolioProject {
+                title: project.name,
+                description: project.description,
+                content: project.content,
+                first_picture: Picture {
+                    path: cover.clone(),
+                    filename: crate::utils::extract_filename(&cover).unwrap(),
+                },
+                pictures: pictures
+                    .iter()
+                    .map(|picture| Picture {
+                        path: picture.clone(),
+                        filename: crate::utils::extract_filename(picture).unwrap(),
+                    })
+                    .collect::<Vec<_>>(),
+                metrics_token: token,
+                is_seo: project.is_seo,
+            };
+
+            if let Ok(content) = project.render() {
+                return HttpResponse::Ok().content_type("text/html").body(content);
+            }
         }
     }
 
@@ -242,32 +248,35 @@ async fn show_project(
 
 #[get("/mentions-legales")]
 async fn legals(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) = models::pages::get(&pool, "/mentions-legales").await {
-        let mut token: Option<String> = None;
-
-        if let Ok(Some(id)) =
-            crate::controllers::metrics::add(&req, &pool, models::metrics::BelongsTo::Page(page.id))
-                .await
+    if let Ok((page, mut transaction)) =
+        futures::try_join!(models::pages::get(&pool, "/mentions-legales"), pool.begin())
+    {
+        if let Ok(token) = metrics::add(
+            &req,
+            transaction.deref_mut(),
+            models::metrics::BelongsTo::Page(page.id),
+        )
+        .await
         {
-            token = Some(id.to_string());
-        }
+            #[derive(Template)]
+            #[template(path = "pages/legals.html")]
+            struct Legals {
+                title: String,
+                description: Option<String>,
+                metrics_token: Option<String>,
+            }
 
-        #[derive(Template)]
-        #[template(path = "pages/legals.html")]
-        struct Legals {
-            title: String,
-            description: Option<String>,
-            metrics_token: Option<String>,
-        }
+            let page = Legals {
+                title: page.title,
+                description: page.description,
+                metrics_token: token,
+            };
 
-        let page = Legals {
-            title: page.title,
-            description: page.description,
-            metrics_token: token,
-        };
-
-        if let Ok(content) = page.render() {
-            return HttpResponse::Ok().content_type("text/html").body(content);
+            if let Ok(content) = page.render() {
+                if transaction.commit().await.is_ok() {
+                    return HttpResponse::Ok().content_type("text/html").body(content);
+                }
+            }
         }
     }
 
@@ -276,23 +285,23 @@ async fn legals(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
 
 #[get("/faq")]
 async fn faq(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
-    if let Ok(page) = models::pages::get(&pool, "/faq").await {
-        let mut token: Option<String> = None;
+    if let Ok((page, mut transaction)) =
+        futures::try_join!(models::pages::get(&pool, "/faq"), pool.begin())
+    {
+        if let Ok((token, categories)) = futures::try_join!(
+            metrics::add(
+                &req,
+                transaction.deref_mut(),
+                models::metrics::BelongsTo::Page(page.id),
+            ),
+            models::faq::categories::get_all(&pool)
+        ) {
+            struct Category {
+                id: i16,
+                name: String,
+                questions: Vec<models::faq::Answer>,
+            }
 
-        if let Ok(Some(id)) =
-            crate::controllers::metrics::add(&req, &pool, models::metrics::BelongsTo::Page(page.id))
-                .await
-        {
-            token = Some(id.to_string());
-        }
-
-        struct Category {
-            id: i16,
-            name: String,
-            questions: Vec<models::faq::Answer>,
-        }
-
-        if let Ok(categories) = models::faq::categories::get_all(&pool).await {
             let mut categories = categories
                 .iter()
                 .map(|category| Category {
@@ -326,7 +335,9 @@ async fn faq(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
             };
 
             if let Ok(content) = page.render() {
-                return HttpResponse::Ok().content_type("text/html").body(content);
+                if transaction.commit().await.is_ok() {
+                    return HttpResponse::Ok().content_type("text/html").body(content);
+                }
             }
         }
     }
