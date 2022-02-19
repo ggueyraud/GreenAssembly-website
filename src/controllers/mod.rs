@@ -225,7 +225,7 @@ async fn show_project(
                 .iter()
                 .map(|picture| Picture {
                     path: picture.clone(),
-                    filename: crate::utils::extract_filename(&picture).unwrap(),
+                    filename: crate::utils::extract_filename(picture).unwrap(),
                 })
                 .collect::<Vec<_>>(),
             metrics_token: token,

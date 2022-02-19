@@ -14,13 +14,13 @@ pub struct OS {
 impl From<user_agent_parser::OS<'_>> for OS {
     fn from(os: user_agent_parser::OS) -> Self {
         OS {
-            name: os.name.and_then(|name| Some(name.into_owned())),
-            major: os.major.and_then(|major| Some(major.into_owned())),
-            minor: os.minor.and_then(|minor| Some(minor.into_owned())),
-            patch: os.patch.and_then(|patch| Some(patch.into_owned())),
+            name: os.name.map(|name| name.into_owned()),
+            major: os.major.map(|major| major.into_owned()),
+            minor: os.minor.map(|minor| minor.into_owned()),
+            patch: os.patch.map(|patch| patch.into_owned()),
             patch_minor: os
                 .patch_minor
-                .and_then(|patch_minor| Some(patch_minor.into_owned())),
+                .map(|patch_minor| patch_minor.into_owned()),
         }
     }
 }
@@ -36,10 +36,10 @@ pub struct Product {
 impl From<user_agent_parser::Product<'_>> for Product {
     fn from(product: user_agent_parser::Product) -> Self {
         Product {
-            name: product.name.and_then(|name| Some(name.into_owned())),
-            major: product.major.and_then(|major| Some(major.into_owned())),
-            minor: product.minor.and_then(|minor| Some(minor.into_owned())),
-            patch: product.patch.and_then(|patch| Some(patch.into_owned())),
+            name: product.name.map(|name| name.into_owned()),
+            major: product.major.map(|major| major.into_owned()),
+            minor: product.minor.map(|minor| minor.into_owned()),
+            patch: product.patch.map(|patch| patch.into_owned()),
         }
     }
 }
@@ -54,9 +54,9 @@ pub struct Device {
 impl From<user_agent_parser::Device<'_>> for Device {
     fn from(device: user_agent_parser::Device) -> Self {
         Device {
-            name: device.name.and_then(|name| Some(name.into_owned())),
-            brand: device.brand.and_then(|brand| Some(brand.into_owned())),
-            model: device.model.and_then(|model| Some(model.into_owned())),
+            name: device.name.map(|name| name.into_owned()),
+            brand: device.brand.map(|brand| brand.into_owned()),
+            model: device.model.map(|model| model.into_owned()),
         }
     }
 }

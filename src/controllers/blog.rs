@@ -139,11 +139,7 @@ pub async fn show_post(
                     if let Some(picture) = post.author.picture {
                         let picture = picture.split('.').collect::<Vec<_>>();
 
-                        if let Some(filename) = picture.get(0) {
-                            Some(filename.to_string())
-                        } else {
-                            None
-                        }
+                        picture.get(0).map(|filename| filename.to_string())
                     } else {
                         None
                     }
