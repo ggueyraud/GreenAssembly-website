@@ -82,7 +82,9 @@ pub async fn show_post(
     web::Path((name, id)): web::Path<(String, i16)>,
 ) -> HttpResponse {
     // If any redirection exist for the post so current path is an old one
-    if models::blog::redirections::exists(&pool, models::blog::redirections::Type::Post, id, &name).await {
+    if models::blog::redirections::exists(&pool, models::blog::redirections::Type::Post, id, &name)
+        .await
+    {
         return match models::blog::posts::get_uri(&pool, id).await {
             Ok(uri) => HttpResponse::MovedPermanently()
                 .header(actix_web::http::header::LOCATION, uri)
@@ -166,13 +168,20 @@ pub async fn show_category(
     web::Path((name, id)): web::Path<(String, i16)>,
 ) -> HttpResponse {
     // If any redirection exist for the category so current path is an old one
-    if models::blog::redirections::exists(&pool, models::blog::redirections::Type::Category, id, &name).await {
+    if models::blog::redirections::exists(
+        &pool,
+        models::blog::redirections::Type::Category,
+        id,
+        &name,
+    )
+    .await
+    {
         return match models::blog::categories::get_uri(&pool, id).await {
             Ok(uri) => HttpResponse::MovedPermanently()
                 .header(actix_web::http::header::LOCATION, uri)
                 .finish(),
-            Err(_) => HttpResponse::InternalServerError().finish()
-        }
+            Err(_) => HttpResponse::InternalServerError().finish(),
+        };
     }
 
     if !models::blog::categories::exists(&pool, id, &name).await {

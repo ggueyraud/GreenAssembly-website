@@ -68,12 +68,10 @@ pub async fn create(
 ) -> HttpResponse {
     let mut id: Option<i16> = None;
     match infos.belongs_to {
-        BelongsTo::Page => {
-            match models::pages::get_id_from_path(&pool, &infos.path).await {
-                Ok(page_id) => id = Some(page_id),
-                Err(_) => return HttpResponse::InternalServerError().finish(),
-            }
-        }
+        BelongsTo::Page => match models::pages::get_id_from_path(&pool, &infos.path).await {
+            Ok(page_id) => id = Some(page_id),
+            Err(_) => return HttpResponse::InternalServerError().finish(),
+        },
         BelongsTo::Project => match infos.path.split('-').collect::<Vec<_>>().last() {
             Some(post_id) => match post_id.parse::<i16>() {
                 Ok(post_id) => {

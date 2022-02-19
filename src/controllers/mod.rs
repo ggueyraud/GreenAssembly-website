@@ -225,7 +225,7 @@ async fn show_project(
                 .iter()
                 .map(|picture| Picture {
                     path: picture.clone(),
-                    filename: crate::utils::extract_filename(&picture).unwrap()
+                    filename: crate::utils::extract_filename(&picture).unwrap(),
                 })
                 .collect::<Vec<_>>(),
             metrics_token: token,
@@ -305,10 +305,10 @@ async fn faq(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
             for category in &mut categories {
                 match models::faq::answers::get_all(&pool, category.id).await {
                     Ok(answers) => category.questions = answers,
-                    Err(_) => return HttpResponse::InternalServerError().finish()
+                    Err(_) => return HttpResponse::InternalServerError().finish(),
                 }
             }
-        
+
             #[derive(Template)]
             #[template(path = "pages/faq.html")]
             struct Faq {
@@ -317,19 +317,19 @@ async fn faq(req: HttpRequest, pool: web::Data<PgPool>) -> HttpResponse {
                 categories: Vec<Category>,
                 metrics_token: Option<String>,
             }
-        
+
             let page = Faq {
                 title: page.title,
                 description: page.description,
                 categories,
                 metrics_token: token,
             };
-        
+
             if let Ok(content) = page.render() {
                 return HttpResponse::Ok().content_type("text/html").body(content);
             }
         }
     }
-    
+
     HttpResponse::InternalServerError().finish()
 }
