@@ -8,3 +8,14 @@ extract_filename(full_filename: &str) -> Option<String> {
         .get(0)
         .map(|first| (*first).to_string())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::extract_filename;
+
+    #[test]
+    fn extract_basic() {
+        let filename = String::from("LoremIpsum_74.jpg");
+        assert_eq!(extract_filename(&filename), Some(String::from("LoremIpsum_74")));
+    }
+}
