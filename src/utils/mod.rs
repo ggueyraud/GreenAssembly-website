@@ -1,6 +1,7 @@
 pub mod ua;
 
-pub fn extract_filename(full_filename: &str) -> Option<String> {
+pub fn
+extract_filename(full_filename: &str) -> Option<String> {
     full_filename
         .split('.')
         .collect::<Vec<_>>()
