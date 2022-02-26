@@ -37,7 +37,7 @@ fn serve_file(req: &HttpRequest, path: &Path, cache_duration: i64) -> Result<Htt
         Ok(file) => {
             use chrono::{Duration, Local};
 
-            let mut response = file.into_response(&req)?;
+            let mut response = file.into_response(req)?;
             let now = Local::now() + Duration::days(cache_duration);
             let headers = response.headers_mut();
             headers.append(EXPIRES, HeaderValue::from_str(&now.to_rfc2822()).unwrap());
@@ -76,14 +76,14 @@ async fn serve_public_file(req: HttpRequest) -> Result<HttpResponse, Error> {
         Path::new(&file_path)
     };
 
-    serve_file(&req, &path, 30)
+    serve_file(&req, path, 30)
 }
 
 #[get("/uploads/{filename:.*}")]
 async fn serve_upload_file(req: HttpRequest) -> Result<HttpResponse, Error> {
     let file_path = format!(".{}", req.path());
     let path = Path::new(&file_path);
-    serve_file(&req, &path, 30)
+    serve_file(&req, path, 30)
 }
 
 #[actix_web::main]

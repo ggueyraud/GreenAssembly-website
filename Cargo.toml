@@ -11,7 +11,7 @@ actix-files = "0.5.0"
 actix-web = { version = "3.3.3", features = ["rustls"] }
 actix-identity = "0.3.1"
 actix-rt = "2.6.0"
-askama = { version = "0.11.0", features = ["serde-json"] }
+askama = { version = "0.11.1", features = ["serde-json"] }
 env_logger = "0.9.0"
 dotenv = "0.15.0"
 rand = "0.8.5"

@@ -1,8 +1,7 @@
 pub mod ua;
 
 // Test pre-commit 2
-pub fn
-extract_filename(full_filename: &str) -> Option<String> {
+pub fn extract_filename(full_filename: &str) -> Option<String> {
     full_filename
         .split('.')
         .collect::<Vec<_>>()
@@ -17,6 +16,9 @@ mod tests {
     #[test]
     fn extract_basic() {
         let filename = String::from("LoremIpsum_74.jpg");
-        assert_eq!(extract_filename(&filename), Some(String::from("LoremIpsum_74")));
+        assert_eq!(
+            extract_filename(&filename),
+            Some(String::from("LoremIpsum_74"))
+        );
     }
 }

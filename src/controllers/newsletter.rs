@@ -1,8 +1,8 @@
 use crate::models;
 use actix_web::{get, post, web, HttpResponse};
 use askama::Template;
-// use lettre::{SmtpClient, Transport};
-// use lettre_email::EmailBuilder;
+use lettre::{SmtpClient, Transport};
+use lettre_email::EmailBuilder;
 use serde::Deserialize;
 use serde_json::json;
 use sqlx::PgPool;
@@ -38,23 +38,24 @@ pub async fn subscribe(pool: web::Data<PgPool>, form: web::Form<SubscribeForm>) 
     }
 
     // Send email for double opt-in
-    // if let Ok(email) = EmailBuilder::new()
-    //     .to(form.email.as_str())
-    //     .subject(&format!("Confirmation inscription Greenletter"))
-    //     .html("Lorem")
-    //     .build() {
-    //         if let Ok(client) = SmtpClient::new_unencrypted_localhost() {
-    //             let mut transport = client.transport();
+    if let Ok(email) = EmailBuilder::new()
+        .to(form.email.as_str())
+        .subject("Confirmation inscription Greenletter".to_string())
+        .html("Lorem")
+        .build()
+    {
+        if let Ok(client) = SmtpClient::new_unencrypted_localhost() {
+            let mut transport = client.transport();
 
-    //             if transport.send(email.into()).is_ok() {
-    transaction.commit().await.unwrap();
+            if transport.send(email.into()).is_ok() {
+                transaction.commit().await.unwrap();
 
-    return HttpResponse::Created().finish();
-    //             }
-    //         }
-    //     }
+                return HttpResponse::Created().finish();
+            }
+        }
+    }
 
-    // HttpResponse::InternalServerError().finish()
+    HttpResponse::InternalServerError().finish()
 }
 
 #[derive(Deserialize)]
@@ -84,15 +85,12 @@ pub async fn confirm_subscription(
 
     if !models::newsletters::subscribers::exists(&pool, &query.email, &query.token).await {
         page.exist = false;
+    } else if models::newsletters::subscribers::is_confirmed(&pool, &query.email).await {
+        page.already_confirmed = true;
     } else {
-        if models::newsletters::subscribers::is_confirmed(&pool, &query.email).await {
-            page.already_confirmed = true;
-        } else {
-            match models::newsletters::subscribers::confirm(&pool, &query.token, &query.email).await
-            {
-                Ok(true) => page.confirmed = true,
-                _ => page.confirmed = false,
-            }
+        match models::newsletters::subscribers::confirm(&pool, &query.token, &query.email).await {
+            Ok(true) => page.confirmed = true,
+            _ => page.confirmed = false,
         }
     }
 

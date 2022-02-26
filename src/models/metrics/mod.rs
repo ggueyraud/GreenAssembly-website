@@ -14,6 +14,7 @@ pub async fn exists(pool: &PgPool, id: Uuid) -> bool {
         .is_ok()
 }
 
+#[allow(clippy::too_many_arguments)]
 pub async fn add(
     // pool: &PgPool,
     pool: impl sqlx::Executor<'_, Database = sqlx::Postgres>,

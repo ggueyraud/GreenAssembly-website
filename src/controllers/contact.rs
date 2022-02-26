@@ -109,7 +109,7 @@ pub async fn send(mut form: web::Json<Email>) -> Result<HttpResponse, Error> {
         if let Some(company) = &form.company {
             let length = company.len();
 
-            if length < 3 || length > 120 {
+            if !(3..=120).contains(&length) {
                 return Ok(HttpResponse::BadRequest().finish());
             }
 
